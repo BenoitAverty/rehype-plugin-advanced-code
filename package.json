@@ -1,6 +1,6 @@
 {
   "name": "rehype-plugin-advanced-code",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "Syntax Highlighting and more for code tags",
   "main": "index.js",
   "scripts": {
@@ -8,11 +8,13 @@
     "lint": "eslint src/**.ts",
     "build": "tsc -b src/tsconfig.json && npm run build:cjs && npm run build:esm",
     "build:esm": "esbuild src/index.ts --platform=node --target=node11 --format=esm --outdir=dist/esm",
-    "build:cjs": "esbuild src/index.ts --bundle --platform=node --external:shiki --target=node11 --format=cjs --outdir=dist/cjs"
+    "build:cjs": "esbuild src/index.ts --bundle --platform=node --external:shiki --target=node11 --format=cjs --outdir=dist/cjs",
+    "prepublishOnly": "npm run build",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BenoitAverty/rehype-plugin-advanced-code.git"
+    "url": "https://github.com/BenoitAverty/rehype-plugin-advanced-code.git"
   },
   "keywords": [
     "rehype",
@@ -45,6 +47,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^5.1.0",
     "prettier": "^2.3.0",
+    "semantic-release": "^17.4.3",
     "typescript": "^4.2.4",
     "unified": "^9.2.1"
   },
@@ -52,5 +55,13 @@
     "hastscript": "^7.0.1",
     "shiki": "^0.9.3",
     "unist-util-visit": "^3.1.0"
-  }
+  },
+  "files": [
+    "package.json",
+    "package-lock.json",
+    "src",
+    "dist",
+    "LICENSE",
+    "README.md"
+  ]
 }
