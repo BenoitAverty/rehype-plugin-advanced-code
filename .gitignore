@@ -1,5 +1,6 @@
 dist
 node_modules
+demo/demo.mjs
 
 .idea
 *.iml

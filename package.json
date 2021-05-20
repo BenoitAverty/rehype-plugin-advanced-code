@@ -5,11 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "lint": "eslint src/**.ts",
-    "dev": "esbuild src/index.ts --bundle --platform=node --external:shiki --target=node14 --format=cjs --sourcemap --watch --outdir=dist/cjs",
-    "build": "tsc -b src/tsconfig.json && npm run build:cjs && npm run build:esm",
-    "build:esm": "esbuild src/index.ts --platform=node --target=node14 --format=esm --outdir=dist/esm",
-    "build:cjs": "esbuild src/index.ts --bundle --platform=node --external:shiki --target=node14 --format=cjs --outdir=dist/cjs",
+    "lint": "eslint src/**.ts demo/**.js",
+    "dev": "WATCH=true node build.js",
+    "build": "node build.js",
     "prepublishOnly": "npm run build",
     "semantic-release": "semantic-release"
   },
@@ -32,6 +30,10 @@
   "exports": {
     "import": "./dist/esm/index.js",
     "require": "./dist/cjs/index.js"
+  },
+  "browser": {
+    "path": false,
+    "fs": false
   },
   "homepage": "https://github.com/BenoitAverty/rehype-plugin-advanced-code#readme",
   "devDependencies": {

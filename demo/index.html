@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Rehype plugin advanced code</title>
+
+  <style type="text/css">
+      .columns {
+          width: 100%;
+          display: grid;
+          grid-template-columns: 50% 50%;
+      }
+      .columns > div {
+          padding: 1em;
+      }
+      textarea {
+          width: 100%;
+          height: 300px;
+          resize: vertical;
+      }
+  </style>
+</head>
+<body>
+<h1>Transform code with unified</h1>
+
+<p>Type HTML markup below, then click the button or press ctrl+enter</p>
+<div class="columns">
+  <form>
+    <button id="submitRehype">Convert Html</button>
+    <textarea id="editorRehype"><pre id="theCode"><code class="language-rust">
+fn main() {
+    // Print text to the console
+    println!("Hello World!");
+}</code></pre>
+    </textarea>
+  </form>
+  <div id="previewRehype"></div>
+</div>
+
+<div class="columns">
+  <form>
+    <button id="submitRemark">Convert Markdown</button>
+    <textarea id="editorRemark">
+```javascript
+function hello(name) {
+  console.log(`Hello, ${name}!`);
+}
+```
+    </textarea>
+  </form>
+  <div id="previewRemark"></div>
+</div>
+
+<script type="module" src="demo.mjs"></script>
+</body>
+</html>
