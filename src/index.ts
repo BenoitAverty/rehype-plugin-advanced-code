@@ -6,6 +6,7 @@ import { codeblockLine, stylesheet, token } from "./elements";
 import type { CodeNode } from "./utils";
 import { findCodeNodes, findHeadNode, s } from "./utils";
 import clsx from "clsx";
+import cleanupCode from "./cleanupCode";
 
 interface PreNode extends Element {
   tagName: "pre";
@@ -51,7 +52,8 @@ function transformCodeBlock(
 ) {
   const meta = parseMeta(node.data?.meta);
 
-  const code = node.children[0].value as string; // We know it's a string because of the condition in `transformCode`
+  const rawCode = node.children[0].value as string; // We know it's a string because of the condition in `transformCode`
+  const code = cleanupCode(rawCode);
   const lines = highlighter.codeToThemedTokens(code, lang);
   node.children = lines.map((line, zeroIndexedLineNumber) =>
     codeblockLine(
