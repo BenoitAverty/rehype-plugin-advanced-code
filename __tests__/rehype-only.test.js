@@ -1,16 +1,17 @@
 const fs = require("fs");
-const path = require("path");
 const advancedCodeBlock = require("../dist/cjs/index").default;
 const unified = require("unified");
 const rehypeParse = require("rehype-parse");
 const rehypeFormat = require("rehype-format");
 const rehypeStringify = require("rehype-stringify");
 
-let testCasesFolder = "./__tests__/test-cases/rehype-only/";
-let testCases = fs.readdirSync(testCasesFolder)
-    .map(fileName => [
-        fileName, String(fs.readFileSync(testCasesFolder + fileName))
-    ]);
+const testCasesFolder = "./__tests__/test-cases/rehype-only/";
+const testCases = fs
+  .readdirSync(testCasesFolder)
+  .map((fileName) => [
+    fileName,
+    String(fs.readFileSync(testCasesFolder + fileName)),
+  ]);
 
 describe("Rehype only", () => {
   test.each(testCases)("%s", async (name, markup) => {

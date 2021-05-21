@@ -6,11 +6,13 @@ const remarkRehype = require("remark-rehype");
 const rehypeFormat = require("rehype-format");
 const rehypeStringify = require("rehype-stringify");
 
-let testCasesFolder = "./__tests__/test-cases/remark-rehype/";
-let testCases = fs.readdirSync(testCasesFolder)
-    .map(fileName => [
-      fileName, String(fs.readFileSync(testCasesFolder + fileName))
-    ]);
+const testCasesFolder = "./__tests__/test-cases/remark-rehype/";
+const testCases = fs
+  .readdirSync(testCasesFolder)
+  .map((fileName) => [
+    fileName,
+    String(fs.readFileSync(testCasesFolder + fileName)),
+  ]);
 
 describe("Remark / Rehype", () => {
   test.each(testCases)("%s", async (name, markdown) => {
