@@ -1,9 +1,26 @@
 var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, {enumerable: true, configurable: true, writable: true, value}) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __markAsModule = (target) => __defProp(target, "__esModule", {value: true});
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[Object.keys(cb)[0]])((mod = {exports: {}}).exports, mod), mod.exports;
@@ -2773,7 +2790,7 @@ var require_web_namespaces = __commonJS({
 var require_hast_util_from_parse5 = __commonJS({
   "node_modules/hast-util-from-parse5/index.js"(exports, module) {
     "use strict";
-    var s2 = require_svg3();
+    var s3 = require_svg3();
     var h2 = require_hastscript();
     var find2 = require_find();
     var html3 = require_html2();
@@ -2868,7 +2885,7 @@ var require_hast_util_from_parse5 = __commonJS({
       return {type: "comment", value: ast.data};
     }
     function element(ast, children, config) {
-      var fn = config.schema.space === "svg" ? s2 : h2;
+      var fn = config.schema.space === "svg" ? s3 : h2;
       var props = {};
       var index = -1;
       var result;
@@ -4972,10 +4989,10 @@ var require_tokenizer = __commonJS({
       SCRIPT_DATA: SCRIPT_DATA_STATE,
       PLAINTEXT: PLAINTEXT_STATE
     };
-    Tokenizer.getTokenAttr = function(token, attrName) {
-      for (let i = token.attrs.length - 1; i >= 0; i--) {
-        if (token.attrs[i].name === attrName) {
-          return token.attrs[i].value;
+    Tokenizer.getTokenAttr = function(token2, attrName) {
+      for (let i = token2.attrs.length - 1; i >= 0; i--) {
+        if (token2.attrs[i].name === attrName) {
+          return token2.attrs[i].value;
         }
       }
       return null;
@@ -5639,16 +5656,16 @@ var require_formatting_element_list = __commonJS({
         this.entries.push({type: FormattingElementList.MARKER_ENTRY});
         this.length++;
       }
-      pushElement(element, token) {
+      pushElement(element, token2) {
         this._ensureNoahArkCondition(element);
         this.entries.push({
           type: FormattingElementList.ELEMENT_ENTRY,
           element,
-          token
+          token: token2
         });
         this.length++;
       }
-      insertElementAfterBookmark(element, token) {
+      insertElementAfterBookmark(element, token2) {
         let bookmarkIdx = this.length - 1;
         for (; bookmarkIdx >= 0; bookmarkIdx--) {
           if (this.entries[bookmarkIdx] === this.bookmark) {
@@ -5658,7 +5675,7 @@ var require_formatting_element_list = __commonJS({
         this.entries.splice(bookmarkIdx + 1, 0, {
           type: FormattingElementList.ELEMENT_ENTRY,
           element,
-          token
+          token: token2
         });
         this.length++;
       }
@@ -6017,32 +6034,32 @@ var require_parser_mixin = __commonJS({
               mxn._setEndLocation(this.openElements.items[i], mxn.currentToken);
             }
           },
-          _processTokenInForeignContent(token) {
-            mxn.currentToken = token;
-            orig._processTokenInForeignContent.call(this, token);
+          _processTokenInForeignContent(token2) {
+            mxn.currentToken = token2;
+            orig._processTokenInForeignContent.call(this, token2);
           },
-          _processToken(token) {
-            mxn.currentToken = token;
-            orig._processToken.call(this, token);
-            const requireExplicitUpdate = token.type === Tokenizer.END_TAG_TOKEN && (token.tagName === $.HTML || token.tagName === $.BODY && this.openElements.hasInScope($.BODY));
+          _processToken(token2) {
+            mxn.currentToken = token2;
+            orig._processToken.call(this, token2);
+            const requireExplicitUpdate = token2.type === Tokenizer.END_TAG_TOKEN && (token2.tagName === $.HTML || token2.tagName === $.BODY && this.openElements.hasInScope($.BODY));
             if (requireExplicitUpdate) {
               for (let i = this.openElements.stackTop; i >= 0; i--) {
                 const element = this.openElements.items[i];
-                if (this.treeAdapter.getTagName(element) === token.tagName) {
-                  mxn._setEndLocation(element, token);
+                if (this.treeAdapter.getTagName(element) === token2.tagName) {
+                  mxn._setEndLocation(element, token2);
                   break;
                 }
               }
             }
           },
-          _setDocumentType(token) {
-            orig._setDocumentType.call(this, token);
+          _setDocumentType(token2) {
+            orig._setDocumentType.call(this, token2);
             const documentChildren = this.treeAdapter.getChildNodes(this.document);
             const cnLength = documentChildren.length;
             for (let i = 0; i < cnLength; i++) {
               const node = documentChildren[i];
               if (this.treeAdapter.isDocumentTypeNode(node)) {
-                this.treeAdapter.setNodeSourceCodeLocation(node, token.location);
+                this.treeAdapter.setNodeSourceCodeLocation(node, token2.location);
                 break;
               }
             }
@@ -6052,17 +6069,17 @@ var require_parser_mixin = __commonJS({
             mxn.lastStartTagToken = null;
             orig._attachElementToTree.call(this, element);
           },
-          _appendElement(token, namespaceURI) {
-            mxn.lastStartTagToken = token;
-            orig._appendElement.call(this, token, namespaceURI);
+          _appendElement(token2, namespaceURI) {
+            mxn.lastStartTagToken = token2;
+            orig._appendElement.call(this, token2, namespaceURI);
           },
-          _insertElement(token, namespaceURI) {
-            mxn.lastStartTagToken = token;
-            orig._insertElement.call(this, token, namespaceURI);
+          _insertElement(token2, namespaceURI) {
+            mxn.lastStartTagToken = token2;
+            orig._insertElement.call(this, token2, namespaceURI);
           },
-          _insertTemplate(token) {
-            mxn.lastStartTagToken = token;
-            orig._insertTemplate.call(this, token);
+          _insertTemplate(token2) {
+            mxn.lastStartTagToken = token2;
+            orig._insertTemplate.call(this, token2);
             const tmplContent = this.treeAdapter.getTemplateContent(this.openElements.current);
             this.treeAdapter.setNodeSourceCodeLocation(tmplContent, null);
           },
@@ -6070,18 +6087,18 @@ var require_parser_mixin = __commonJS({
             orig._insertFakeRootElement.call(this);
             this.treeAdapter.setNodeSourceCodeLocation(this.openElements.current, null);
           },
-          _appendCommentNode(token, parent) {
-            orig._appendCommentNode.call(this, token, parent);
+          _appendCommentNode(token2, parent) {
+            orig._appendCommentNode.call(this, token2, parent);
             const children = this.treeAdapter.getChildNodes(parent);
             const commentNode = children[children.length - 1];
-            this.treeAdapter.setNodeSourceCodeLocation(commentNode, token.location);
+            this.treeAdapter.setNodeSourceCodeLocation(commentNode, token2.location);
           },
           _findFosterParentingLocation() {
             mxn.lastFosterParentingLocation = orig._findFosterParentingLocation.call(this);
             return mxn.lastFosterParentingLocation;
           },
-          _insertCharacters(token) {
-            orig._insertCharacters.call(this, token);
+          _insertCharacters(token2) {
+            orig._insertCharacters.call(this, token2);
             const hasFosterParent = this._shouldFosterParentOnInsertion();
             const parent = hasFosterParent && mxn.lastFosterParentingLocation.parent || this.openElements.currentTmplContent || this.openElements.current;
             const siblings = this.treeAdapter.getChildNodes(parent);
@@ -6089,10 +6106,10 @@ var require_parser_mixin = __commonJS({
             const textNode = siblings[textNodeIdx];
             const tnLoc = this.treeAdapter.getNodeSourceCodeLocation(textNode);
             if (tnLoc) {
-              const {endLine, endCol, endOffset} = token.location;
+              const {endLine, endCol, endOffset} = token2.location;
               this.treeAdapter.updateNodeSourceCodeLocation(textNode, {endLine, endCol, endOffset});
             } else {
-              this.treeAdapter.setNodeSourceCodeLocation(textNode, token.location);
+              this.treeAdapter.setNodeSourceCodeLocation(textNode, token2.location);
             }
           }
         };
@@ -6217,9 +6234,9 @@ var require_parser_mixin2 = __commonJS({
             Mixin.install(this.tokenizer, ErrorReportingTokenizerMixin, mxn.opts);
             Mixin.install(this.tokenizer, LocationInfoTokenizerMixin);
           },
-          _processInputToken(token) {
-            mxn.ctLoc = token.location;
-            orig._processInputToken.call(this, token);
+          _processInputToken(token2) {
+            mxn.ctLoc = token2.location;
+            orig._processInputToken.call(this, token2);
           },
           _err(code, options) {
             mxn.locBeforeToken = options && options.beforeToken;
@@ -6512,18 +6529,18 @@ var require_doctype = __commonJS({
       }
       return false;
     }
-    exports.isConforming = function(token) {
-      return token.name === VALID_DOCTYPE_NAME && token.publicId === null && (token.systemId === null || token.systemId === VALID_SYSTEM_ID);
+    exports.isConforming = function(token2) {
+      return token2.name === VALID_DOCTYPE_NAME && token2.publicId === null && (token2.systemId === null || token2.systemId === VALID_SYSTEM_ID);
     };
-    exports.getDocumentMode = function(token) {
-      if (token.name !== VALID_DOCTYPE_NAME) {
+    exports.getDocumentMode = function(token2) {
+      if (token2.name !== VALID_DOCTYPE_NAME) {
         return DOCUMENT_MODE.QUIRKS;
       }
-      const systemId = token.systemId;
+      const systemId = token2.systemId;
       if (systemId && systemId.toLowerCase() === QUIRKS_MODE_SYSTEM_ID) {
         return DOCUMENT_MODE.QUIRKS;
       }
-      let publicId = token.publicId;
+      let publicId = token2.publicId;
       if (publicId !== null) {
         publicId = publicId.toLowerCase();
         if (QUIRKS_MODE_PUBLIC_IDS.indexOf(publicId) > -1) {
@@ -6736,36 +6753,36 @@ var require_foreign_content = __commonJS({
       const isFontWithAttrs = tn === $.FONT && (Tokenizer.getTokenAttr(startTagToken, ATTRS.COLOR) !== null || Tokenizer.getTokenAttr(startTagToken, ATTRS.SIZE) !== null || Tokenizer.getTokenAttr(startTagToken, ATTRS.FACE) !== null);
       return isFontWithAttrs ? true : EXITS_FOREIGN_CONTENT[tn];
     };
-    exports.adjustTokenMathMLAttrs = function(token) {
-      for (let i = 0; i < token.attrs.length; i++) {
-        if (token.attrs[i].name === DEFINITION_URL_ATTR) {
-          token.attrs[i].name = ADJUSTED_DEFINITION_URL_ATTR;
+    exports.adjustTokenMathMLAttrs = function(token2) {
+      for (let i = 0; i < token2.attrs.length; i++) {
+        if (token2.attrs[i].name === DEFINITION_URL_ATTR) {
+          token2.attrs[i].name = ADJUSTED_DEFINITION_URL_ATTR;
           break;
         }
       }
     };
-    exports.adjustTokenSVGAttrs = function(token) {
-      for (let i = 0; i < token.attrs.length; i++) {
-        const adjustedAttrName = SVG_ATTRS_ADJUSTMENT_MAP[token.attrs[i].name];
+    exports.adjustTokenSVGAttrs = function(token2) {
+      for (let i = 0; i < token2.attrs.length; i++) {
+        const adjustedAttrName = SVG_ATTRS_ADJUSTMENT_MAP[token2.attrs[i].name];
         if (adjustedAttrName) {
-          token.attrs[i].name = adjustedAttrName;
+          token2.attrs[i].name = adjustedAttrName;
         }
       }
     };
-    exports.adjustTokenXMLAttrs = function(token) {
-      for (let i = 0; i < token.attrs.length; i++) {
-        const adjustedAttrEntry = XML_ATTRS_ADJUSTMENT_MAP[token.attrs[i].name];
+    exports.adjustTokenXMLAttrs = function(token2) {
+      for (let i = 0; i < token2.attrs.length; i++) {
+        const adjustedAttrEntry = XML_ATTRS_ADJUSTMENT_MAP[token2.attrs[i].name];
         if (adjustedAttrEntry) {
-          token.attrs[i].prefix = adjustedAttrEntry.prefix;
-          token.attrs[i].name = adjustedAttrEntry.name;
-          token.attrs[i].namespace = adjustedAttrEntry.namespace;
+          token2.attrs[i].prefix = adjustedAttrEntry.prefix;
+          token2.attrs[i].name = adjustedAttrEntry.name;
+          token2.attrs[i].namespace = adjustedAttrEntry.namespace;
         }
       }
     };
-    exports.adjustTokenSVGTagName = function(token) {
-      const adjustedTagName = SVG_TAG_NAMES_ADJUSTMENT_MAP[token.tagName];
+    exports.adjustTokenSVGTagName = function(token2) {
+      const adjustedTagName = SVG_TAG_NAMES_ADJUSTMENT_MAP[token2.tagName];
       if (adjustedTagName) {
-        token.tagName = adjustedTagName;
+        token2.tagName = adjustedTagName;
       }
     };
     function isMathMLTextIntegrationPoint(tn, ns) {
@@ -7164,20 +7181,20 @@ var require_parser = __commonJS({
       _runParsingLoop(scriptHandler) {
         while (!this.stopped) {
           this._setupTokenizerCDATAMode();
-          const token = this.tokenizer.getNextToken();
-          if (token.type === Tokenizer.HIBERNATION_TOKEN) {
+          const token2 = this.tokenizer.getNextToken();
+          if (token2.type === Tokenizer.HIBERNATION_TOKEN) {
             break;
           }
           if (this.skipNextNewLine) {
             this.skipNextNewLine = false;
-            if (token.type === Tokenizer.WHITESPACE_CHARACTER_TOKEN && token.chars[0] === "\n") {
-              if (token.chars.length === 1) {
+            if (token2.type === Tokenizer.WHITESPACE_CHARACTER_TOKEN && token2.chars[0] === "\n") {
+              if (token2.chars.length === 1) {
                 continue;
               }
-              token.chars = token.chars.substr(1);
+              token2.chars = token2.chars.substr(1);
             }
           }
-          this._processInputToken(token);
+          this._processInputToken(token2);
           if (scriptHandler && this.pendingScript) {
             break;
           }
@@ -7237,10 +7254,10 @@ var require_parser = __commonJS({
           }
         }
       }
-      _setDocumentType(token) {
-        const name = token.name || "";
-        const publicId = token.publicId || "";
-        const systemId = token.systemId || "";
+      _setDocumentType(token2) {
+        const name = token2.name || "";
+        const publicId = token2.publicId || "";
+        const systemId = token2.systemId || "";
         this.treeAdapter.setDocumentType(this.document, name, publicId, systemId);
       }
       _attachElementToTree(element) {
@@ -7251,12 +7268,12 @@ var require_parser = __commonJS({
           this.treeAdapter.appendChild(parent, element);
         }
       }
-      _appendElement(token, namespaceURI) {
-        const element = this.treeAdapter.createElement(token.tagName, namespaceURI, token.attrs);
+      _appendElement(token2, namespaceURI) {
+        const element = this.treeAdapter.createElement(token2.tagName, namespaceURI, token2.attrs);
         this._attachElementToTree(element);
       }
-      _insertElement(token, namespaceURI) {
-        const element = this.treeAdapter.createElement(token.tagName, namespaceURI, token.attrs);
+      _insertElement(token2, namespaceURI) {
+        const element = this.treeAdapter.createElement(token2.tagName, namespaceURI, token2.attrs);
         this._attachElementToTree(element);
         this.openElements.push(element);
       }
@@ -7265,8 +7282,8 @@ var require_parser = __commonJS({
         this._attachElementToTree(element);
         this.openElements.push(element);
       }
-      _insertTemplate(token) {
-        const tmpl = this.treeAdapter.createElement(token.tagName, NS.HTML, token.attrs);
+      _insertTemplate(token2) {
+        const tmpl = this.treeAdapter.createElement(token2.tagName, NS.HTML, token2.attrs);
         const content = this.treeAdapter.createDocumentFragment();
         this.treeAdapter.setTemplateContent(tmpl, content);
         this._attachElementToTree(tmpl);
@@ -7277,16 +7294,16 @@ var require_parser = __commonJS({
         this.treeAdapter.appendChild(this.openElements.current, element);
         this.openElements.push(element);
       }
-      _appendCommentNode(token, parent) {
-        const commentNode = this.treeAdapter.createCommentNode(token.data);
+      _appendCommentNode(token2, parent) {
+        const commentNode = this.treeAdapter.createCommentNode(token2.data);
         this.treeAdapter.appendChild(parent, commentNode);
       }
-      _insertCharacters(token) {
+      _insertCharacters(token2) {
         if (this._shouldFosterParentOnInsertion()) {
-          this._fosterParentText(token.chars);
+          this._fosterParentText(token2.chars);
         } else {
           const parent = this.openElements.currentTmplContent || this.openElements.current;
-          this.treeAdapter.insertText(parent, token.chars);
+          this.treeAdapter.insertText(parent, token2.chars);
         }
       }
       _adoptNodes(donor, recipient) {
@@ -7295,7 +7312,7 @@ var require_parser = __commonJS({
           this.treeAdapter.appendChild(recipient, child);
         }
       }
-      _shouldProcessTokenInForeignContent(token) {
+      _shouldProcessTokenInForeignContent(token2) {
         const current = this._getAdjustedCurrentElement();
         if (!current || current === this.document) {
           return false;
@@ -7304,47 +7321,47 @@ var require_parser = __commonJS({
         if (ns === NS.HTML) {
           return false;
         }
-        if (this.treeAdapter.getTagName(current) === $.ANNOTATION_XML && ns === NS.MATHML && token.type === Tokenizer.START_TAG_TOKEN && token.tagName === $.SVG) {
+        if (this.treeAdapter.getTagName(current) === $.ANNOTATION_XML && ns === NS.MATHML && token2.type === Tokenizer.START_TAG_TOKEN && token2.tagName === $.SVG) {
           return false;
         }
-        const isCharacterToken = token.type === Tokenizer.CHARACTER_TOKEN || token.type === Tokenizer.NULL_CHARACTER_TOKEN || token.type === Tokenizer.WHITESPACE_CHARACTER_TOKEN;
-        const isMathMLTextStartTag = token.type === Tokenizer.START_TAG_TOKEN && token.tagName !== $.MGLYPH && token.tagName !== $.MALIGNMARK;
+        const isCharacterToken = token2.type === Tokenizer.CHARACTER_TOKEN || token2.type === Tokenizer.NULL_CHARACTER_TOKEN || token2.type === Tokenizer.WHITESPACE_CHARACTER_TOKEN;
+        const isMathMLTextStartTag = token2.type === Tokenizer.START_TAG_TOKEN && token2.tagName !== $.MGLYPH && token2.tagName !== $.MALIGNMARK;
         if ((isMathMLTextStartTag || isCharacterToken) && this._isIntegrationPoint(current, NS.MATHML)) {
           return false;
         }
-        if ((token.type === Tokenizer.START_TAG_TOKEN || isCharacterToken) && this._isIntegrationPoint(current, NS.HTML)) {
+        if ((token2.type === Tokenizer.START_TAG_TOKEN || isCharacterToken) && this._isIntegrationPoint(current, NS.HTML)) {
           return false;
         }
-        return token.type !== Tokenizer.EOF_TOKEN;
+        return token2.type !== Tokenizer.EOF_TOKEN;
       }
-      _processToken(token) {
-        TOKEN_HANDLERS[this.insertionMode][token.type](this, token);
+      _processToken(token2) {
+        TOKEN_HANDLERS[this.insertionMode][token2.type](this, token2);
       }
-      _processTokenInBodyMode(token) {
-        TOKEN_HANDLERS[IN_BODY_MODE][token.type](this, token);
+      _processTokenInBodyMode(token2) {
+        TOKEN_HANDLERS[IN_BODY_MODE][token2.type](this, token2);
       }
-      _processTokenInForeignContent(token) {
-        if (token.type === Tokenizer.CHARACTER_TOKEN) {
-          characterInForeignContent(this, token);
-        } else if (token.type === Tokenizer.NULL_CHARACTER_TOKEN) {
-          nullCharacterInForeignContent(this, token);
-        } else if (token.type === Tokenizer.WHITESPACE_CHARACTER_TOKEN) {
-          insertCharacters(this, token);
-        } else if (token.type === Tokenizer.COMMENT_TOKEN) {
-          appendComment(this, token);
-        } else if (token.type === Tokenizer.START_TAG_TOKEN) {
-          startTagInForeignContent(this, token);
-        } else if (token.type === Tokenizer.END_TAG_TOKEN) {
-          endTagInForeignContent(this, token);
+      _processTokenInForeignContent(token2) {
+        if (token2.type === Tokenizer.CHARACTER_TOKEN) {
+          characterInForeignContent(this, token2);
+        } else if (token2.type === Tokenizer.NULL_CHARACTER_TOKEN) {
+          nullCharacterInForeignContent(this, token2);
+        } else if (token2.type === Tokenizer.WHITESPACE_CHARACTER_TOKEN) {
+          insertCharacters(this, token2);
+        } else if (token2.type === Tokenizer.COMMENT_TOKEN) {
+          appendComment(this, token2);
+        } else if (token2.type === Tokenizer.START_TAG_TOKEN) {
+          startTagInForeignContent(this, token2);
+        } else if (token2.type === Tokenizer.END_TAG_TOKEN) {
+          endTagInForeignContent(this, token2);
         }
       }
-      _processInputToken(token) {
-        if (this._shouldProcessTokenInForeignContent(token)) {
-          this._processTokenInForeignContent(token);
+      _processInputToken(token2) {
+        if (this._shouldProcessTokenInForeignContent(token2)) {
+          this._processTokenInForeignContent(token2);
         } else {
-          this._processToken(token);
+          this._processToken(token2);
         }
-        if (token.type === Tokenizer.START_TAG_TOKEN && token.selfClosing && !token.ackSelfClosing) {
+        if (token2.type === Tokenizer.START_TAG_TOKEN && token2.selfClosing && !token2.ackSelfClosing) {
           this._err(ERR.nonVoidHtmlElementStartTagWithTrailingSolidus);
         }
       }
@@ -7501,17 +7518,17 @@ var require_parser = __commonJS({
       }
     };
     module.exports = Parser;
-    function aaObtainFormattingElementEntry(p, token) {
-      let formattingElementEntry = p.activeFormattingElements.getElementEntryInScopeWithTagName(token.tagName);
+    function aaObtainFormattingElementEntry(p, token2) {
+      let formattingElementEntry = p.activeFormattingElements.getElementEntryInScopeWithTagName(token2.tagName);
       if (formattingElementEntry) {
         if (!p.openElements.contains(formattingElementEntry.element)) {
           p.activeFormattingElements.removeEntry(formattingElementEntry);
           formattingElementEntry = null;
-        } else if (!p.openElements.hasInScope(token.tagName)) {
+        } else if (!p.openElements.hasInScope(token2.tagName)) {
           formattingElementEntry = null;
         }
       } else {
-        genericEndTagInBody(p, token);
+        genericEndTagInBody(p, token2);
       }
       return formattingElementEntry;
     }
@@ -7578,8 +7595,8 @@ var require_parser = __commonJS({
     }
     function aaReplaceFormattingElement(p, furthestBlock, formattingElementEntry) {
       const ns = p.treeAdapter.getNamespaceURI(formattingElementEntry.element);
-      const token = formattingElementEntry.token;
-      const newElement = p.treeAdapter.createElement(token.tagName, ns, token.attrs);
+      const token2 = formattingElementEntry.token;
+      const newElement = p.treeAdapter.createElement(token2.tagName, ns, token2.attrs);
       p._adoptNodes(furthestBlock, newElement);
       p.treeAdapter.appendChild(furthestBlock, newElement);
       p.activeFormattingElements.insertElementAfterBookmark(newElement, formattingElementEntry.token);
@@ -7587,10 +7604,10 @@ var require_parser = __commonJS({
       p.openElements.remove(formattingElementEntry.element);
       p.openElements.insertAfter(furthestBlock, newElement);
     }
-    function callAdoptionAgency(p, token) {
+    function callAdoptionAgency(p, token2) {
       let formattingElementEntry;
       for (let i = 0; i < AA_OUTER_LOOP_ITER; i++) {
-        formattingElementEntry = aaObtainFormattingElementEntry(p, token, formattingElementEntry);
+        formattingElementEntry = aaObtainFormattingElementEntry(p, token2, formattingElementEntry);
         if (!formattingElementEntry) {
           break;
         }
@@ -7611,103 +7628,103 @@ var require_parser = __commonJS({
     function misplacedDoctype(p) {
       p._err(ERR.misplacedDoctype);
     }
-    function appendComment(p, token) {
-      p._appendCommentNode(token, p.openElements.currentTmplContent || p.openElements.current);
+    function appendComment(p, token2) {
+      p._appendCommentNode(token2, p.openElements.currentTmplContent || p.openElements.current);
     }
-    function appendCommentToRootHtmlElement(p, token) {
-      p._appendCommentNode(token, p.openElements.items[0]);
+    function appendCommentToRootHtmlElement(p, token2) {
+      p._appendCommentNode(token2, p.openElements.items[0]);
     }
-    function appendCommentToDocument(p, token) {
-      p._appendCommentNode(token, p.document);
+    function appendCommentToDocument(p, token2) {
+      p._appendCommentNode(token2, p.document);
     }
-    function insertCharacters(p, token) {
-      p._insertCharacters(token);
+    function insertCharacters(p, token2) {
+      p._insertCharacters(token2);
     }
     function stopParsing(p) {
       p.stopped = true;
     }
-    function doctypeInInitialMode(p, token) {
-      p._setDocumentType(token);
-      const mode = token.forceQuirks ? HTML.DOCUMENT_MODE.QUIRKS : doctype.getDocumentMode(token);
-      if (!doctype.isConforming(token)) {
+    function doctypeInInitialMode(p, token2) {
+      p._setDocumentType(token2);
+      const mode = token2.forceQuirks ? HTML.DOCUMENT_MODE.QUIRKS : doctype.getDocumentMode(token2);
+      if (!doctype.isConforming(token2)) {
         p._err(ERR.nonConformingDoctype);
       }
       p.treeAdapter.setDocumentMode(p.document, mode);
       p.insertionMode = BEFORE_HTML_MODE;
     }
-    function tokenInInitialMode(p, token) {
+    function tokenInInitialMode(p, token2) {
       p._err(ERR.missingDoctype, {beforeToken: true});
       p.treeAdapter.setDocumentMode(p.document, HTML.DOCUMENT_MODE.QUIRKS);
       p.insertionMode = BEFORE_HTML_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function startTagBeforeHtml(p, token) {
-      if (token.tagName === $.HTML) {
-        p._insertElement(token, NS.HTML);
+    function startTagBeforeHtml(p, token2) {
+      if (token2.tagName === $.HTML) {
+        p._insertElement(token2, NS.HTML);
         p.insertionMode = BEFORE_HEAD_MODE;
       } else {
-        tokenBeforeHtml(p, token);
+        tokenBeforeHtml(p, token2);
       }
     }
-    function endTagBeforeHtml(p, token) {
-      const tn = token.tagName;
+    function endTagBeforeHtml(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML || tn === $.HEAD || tn === $.BODY || tn === $.BR) {
-        tokenBeforeHtml(p, token);
+        tokenBeforeHtml(p, token2);
       }
     }
-    function tokenBeforeHtml(p, token) {
+    function tokenBeforeHtml(p, token2) {
       p._insertFakeRootElement();
       p.insertionMode = BEFORE_HEAD_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function startTagBeforeHead(p, token) {
-      const tn = token.tagName;
+    function startTagBeforeHead(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML) {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       } else if (tn === $.HEAD) {
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
         p.headElement = p.openElements.current;
         p.insertionMode = IN_HEAD_MODE;
       } else {
-        tokenBeforeHead(p, token);
+        tokenBeforeHead(p, token2);
       }
     }
-    function endTagBeforeHead(p, token) {
-      const tn = token.tagName;
+    function endTagBeforeHead(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HEAD || tn === $.BODY || tn === $.HTML || tn === $.BR) {
-        tokenBeforeHead(p, token);
+        tokenBeforeHead(p, token2);
       } else {
         p._err(ERR.endTagWithoutMatchingOpenElement);
       }
     }
-    function tokenBeforeHead(p, token) {
+    function tokenBeforeHead(p, token2) {
       p._insertFakeElement($.HEAD);
       p.headElement = p.openElements.current;
       p.insertionMode = IN_HEAD_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function startTagInHead(p, token) {
-      const tn = token.tagName;
+    function startTagInHead(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML) {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       } else if (tn === $.BASE || tn === $.BASEFONT || tn === $.BGSOUND || tn === $.LINK || tn === $.META) {
-        p._appendElement(token, NS.HTML);
-        token.ackSelfClosing = true;
+        p._appendElement(token2, NS.HTML);
+        token2.ackSelfClosing = true;
       } else if (tn === $.TITLE) {
-        p._switchToTextParsing(token, Tokenizer.MODE.RCDATA);
+        p._switchToTextParsing(token2, Tokenizer.MODE.RCDATA);
       } else if (tn === $.NOSCRIPT) {
         if (p.options.scriptingEnabled) {
-          p._switchToTextParsing(token, Tokenizer.MODE.RAWTEXT);
+          p._switchToTextParsing(token2, Tokenizer.MODE.RAWTEXT);
         } else {
-          p._insertElement(token, NS.HTML);
+          p._insertElement(token2, NS.HTML);
           p.insertionMode = IN_HEAD_NO_SCRIPT_MODE;
         }
       } else if (tn === $.NOFRAMES || tn === $.STYLE) {
-        p._switchToTextParsing(token, Tokenizer.MODE.RAWTEXT);
+        p._switchToTextParsing(token2, Tokenizer.MODE.RAWTEXT);
       } else if (tn === $.SCRIPT) {
-        p._switchToTextParsing(token, Tokenizer.MODE.SCRIPT_DATA);
+        p._switchToTextParsing(token2, Tokenizer.MODE.SCRIPT_DATA);
       } else if (tn === $.TEMPLATE) {
-        p._insertTemplate(token, NS.HTML);
+        p._insertTemplate(token2, NS.HTML);
         p.activeFormattingElements.insertMarker();
         p.framesetOk = false;
         p.insertionMode = IN_TEMPLATE_MODE;
@@ -7715,16 +7732,16 @@ var require_parser = __commonJS({
       } else if (tn === $.HEAD) {
         p._err(ERR.misplacedStartTagForHeadElement);
       } else {
-        tokenInHead(p, token);
+        tokenInHead(p, token2);
       }
     }
-    function endTagInHead(p, token) {
-      const tn = token.tagName;
+    function endTagInHead(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HEAD) {
         p.openElements.pop();
         p.insertionMode = AFTER_HEAD_MODE;
       } else if (tn === $.BODY || tn === $.BR || tn === $.HTML) {
-        tokenInHead(p, token);
+        tokenInHead(p, token2);
       } else if (tn === $.TEMPLATE) {
         if (p.openElements.tmplCount > 0) {
           p.openElements.generateImpliedEndTagsThoroughly();
@@ -7742,115 +7759,115 @@ var require_parser = __commonJS({
         p._err(ERR.endTagWithoutMatchingOpenElement);
       }
     }
-    function tokenInHead(p, token) {
+    function tokenInHead(p, token2) {
       p.openElements.pop();
       p.insertionMode = AFTER_HEAD_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function startTagInHeadNoScript(p, token) {
-      const tn = token.tagName;
+    function startTagInHeadNoScript(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML) {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       } else if (tn === $.BASEFONT || tn === $.BGSOUND || tn === $.HEAD || tn === $.LINK || tn === $.META || tn === $.NOFRAMES || tn === $.STYLE) {
-        startTagInHead(p, token);
+        startTagInHead(p, token2);
       } else if (tn === $.NOSCRIPT) {
         p._err(ERR.nestedNoscriptInHead);
       } else {
-        tokenInHeadNoScript(p, token);
+        tokenInHeadNoScript(p, token2);
       }
     }
-    function endTagInHeadNoScript(p, token) {
-      const tn = token.tagName;
+    function endTagInHeadNoScript(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.NOSCRIPT) {
         p.openElements.pop();
         p.insertionMode = IN_HEAD_MODE;
       } else if (tn === $.BR) {
-        tokenInHeadNoScript(p, token);
+        tokenInHeadNoScript(p, token2);
       } else {
         p._err(ERR.endTagWithoutMatchingOpenElement);
       }
     }
-    function tokenInHeadNoScript(p, token) {
-      const errCode = token.type === Tokenizer.EOF_TOKEN ? ERR.openElementsLeftAfterEof : ERR.disallowedContentInNoscriptInHead;
+    function tokenInHeadNoScript(p, token2) {
+      const errCode = token2.type === Tokenizer.EOF_TOKEN ? ERR.openElementsLeftAfterEof : ERR.disallowedContentInNoscriptInHead;
       p._err(errCode);
       p.openElements.pop();
       p.insertionMode = IN_HEAD_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function startTagAfterHead(p, token) {
-      const tn = token.tagName;
+    function startTagAfterHead(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML) {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       } else if (tn === $.BODY) {
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
         p.framesetOk = false;
         p.insertionMode = IN_BODY_MODE;
       } else if (tn === $.FRAMESET) {
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
         p.insertionMode = IN_FRAMESET_MODE;
       } else if (tn === $.BASE || tn === $.BASEFONT || tn === $.BGSOUND || tn === $.LINK || tn === $.META || tn === $.NOFRAMES || tn === $.SCRIPT || tn === $.STYLE || tn === $.TEMPLATE || tn === $.TITLE) {
         p._err(ERR.abandonedHeadElementChild);
         p.openElements.push(p.headElement);
-        startTagInHead(p, token);
+        startTagInHead(p, token2);
         p.openElements.remove(p.headElement);
       } else if (tn === $.HEAD) {
         p._err(ERR.misplacedStartTagForHeadElement);
       } else {
-        tokenAfterHead(p, token);
+        tokenAfterHead(p, token2);
       }
     }
-    function endTagAfterHead(p, token) {
-      const tn = token.tagName;
+    function endTagAfterHead(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.BODY || tn === $.HTML || tn === $.BR) {
-        tokenAfterHead(p, token);
+        tokenAfterHead(p, token2);
       } else if (tn === $.TEMPLATE) {
-        endTagInHead(p, token);
+        endTagInHead(p, token2);
       } else {
         p._err(ERR.endTagWithoutMatchingOpenElement);
       }
     }
-    function tokenAfterHead(p, token) {
+    function tokenAfterHead(p, token2) {
       p._insertFakeElement($.BODY);
       p.insertionMode = IN_BODY_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function whitespaceCharacterInBody(p, token) {
+    function whitespaceCharacterInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      p._insertCharacters(token);
+      p._insertCharacters(token2);
     }
-    function characterInBody(p, token) {
+    function characterInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      p._insertCharacters(token);
+      p._insertCharacters(token2);
       p.framesetOk = false;
     }
-    function htmlStartTagInBody(p, token) {
+    function htmlStartTagInBody(p, token2) {
       if (p.openElements.tmplCount === 0) {
-        p.treeAdapter.adoptAttributes(p.openElements.items[0], token.attrs);
+        p.treeAdapter.adoptAttributes(p.openElements.items[0], token2.attrs);
       }
     }
-    function bodyStartTagInBody(p, token) {
+    function bodyStartTagInBody(p, token2) {
       const bodyElement = p.openElements.tryPeekProperlyNestedBodyElement();
       if (bodyElement && p.openElements.tmplCount === 0) {
         p.framesetOk = false;
-        p.treeAdapter.adoptAttributes(bodyElement, token.attrs);
+        p.treeAdapter.adoptAttributes(bodyElement, token2.attrs);
       }
     }
-    function framesetStartTagInBody(p, token) {
+    function framesetStartTagInBody(p, token2) {
       const bodyElement = p.openElements.tryPeekProperlyNestedBodyElement();
       if (p.framesetOk && bodyElement) {
         p.treeAdapter.detachNode(bodyElement);
         p.openElements.popAllUpToHtmlElement();
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
         p.insertionMode = IN_FRAMESET_MODE;
       }
     }
-    function addressStartTagInBody(p, token) {
+    function addressStartTagInBody(p, token2) {
       if (p.openElements.hasInButtonScope($.P)) {
         p._closePElement();
       }
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
     }
-    function numberedHeaderStartTagInBody(p, token) {
+    function numberedHeaderStartTagInBody(p, token2) {
       if (p.openElements.hasInButtonScope($.P)) {
         p._closePElement();
       }
@@ -7858,31 +7875,31 @@ var require_parser = __commonJS({
       if (tn === $.H1 || tn === $.H2 || tn === $.H3 || tn === $.H4 || tn === $.H5 || tn === $.H6) {
         p.openElements.pop();
       }
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
     }
-    function preStartTagInBody(p, token) {
+    function preStartTagInBody(p, token2) {
       if (p.openElements.hasInButtonScope($.P)) {
         p._closePElement();
       }
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
       p.skipNextNewLine = true;
       p.framesetOk = false;
     }
-    function formStartTagInBody(p, token) {
+    function formStartTagInBody(p, token2) {
       const inTemplate = p.openElements.tmplCount > 0;
       if (!p.formElement || inTemplate) {
         if (p.openElements.hasInButtonScope($.P)) {
           p._closePElement();
         }
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
         if (!inTemplate) {
           p.formElement = p.openElements.current;
         }
       }
     }
-    function listItemStartTagInBody(p, token) {
+    function listItemStartTagInBody(p, token2) {
       p.framesetOk = false;
-      const tn = token.tagName;
+      const tn = token2.tagName;
       for (let i = p.openElements.stackTop; i >= 0; i--) {
         const element = p.openElements.items[i];
         const elementTn = p.treeAdapter.getTagName(element);
@@ -7904,120 +7921,120 @@ var require_parser = __commonJS({
       if (p.openElements.hasInButtonScope($.P)) {
         p._closePElement();
       }
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
     }
-    function plaintextStartTagInBody(p, token) {
+    function plaintextStartTagInBody(p, token2) {
       if (p.openElements.hasInButtonScope($.P)) {
         p._closePElement();
       }
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
       p.tokenizer.state = Tokenizer.MODE.PLAINTEXT;
     }
-    function buttonStartTagInBody(p, token) {
+    function buttonStartTagInBody(p, token2) {
       if (p.openElements.hasInScope($.BUTTON)) {
         p.openElements.generateImpliedEndTags();
         p.openElements.popUntilTagNamePopped($.BUTTON);
       }
       p._reconstructActiveFormattingElements();
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
       p.framesetOk = false;
     }
-    function aStartTagInBody(p, token) {
+    function aStartTagInBody(p, token2) {
       const activeElementEntry = p.activeFormattingElements.getElementEntryInScopeWithTagName($.A);
       if (activeElementEntry) {
-        callAdoptionAgency(p, token);
+        callAdoptionAgency(p, token2);
         p.openElements.remove(activeElementEntry.element);
         p.activeFormattingElements.removeEntry(activeElementEntry);
       }
       p._reconstructActiveFormattingElements();
-      p._insertElement(token, NS.HTML);
-      p.activeFormattingElements.pushElement(p.openElements.current, token);
+      p._insertElement(token2, NS.HTML);
+      p.activeFormattingElements.pushElement(p.openElements.current, token2);
     }
-    function bStartTagInBody(p, token) {
+    function bStartTagInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      p._insertElement(token, NS.HTML);
-      p.activeFormattingElements.pushElement(p.openElements.current, token);
+      p._insertElement(token2, NS.HTML);
+      p.activeFormattingElements.pushElement(p.openElements.current, token2);
     }
-    function nobrStartTagInBody(p, token) {
+    function nobrStartTagInBody(p, token2) {
       p._reconstructActiveFormattingElements();
       if (p.openElements.hasInScope($.NOBR)) {
-        callAdoptionAgency(p, token);
+        callAdoptionAgency(p, token2);
         p._reconstructActiveFormattingElements();
       }
-      p._insertElement(token, NS.HTML);
-      p.activeFormattingElements.pushElement(p.openElements.current, token);
+      p._insertElement(token2, NS.HTML);
+      p.activeFormattingElements.pushElement(p.openElements.current, token2);
     }
-    function appletStartTagInBody(p, token) {
+    function appletStartTagInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
       p.activeFormattingElements.insertMarker();
       p.framesetOk = false;
     }
-    function tableStartTagInBody(p, token) {
+    function tableStartTagInBody(p, token2) {
       if (p.treeAdapter.getDocumentMode(p.document) !== HTML.DOCUMENT_MODE.QUIRKS && p.openElements.hasInButtonScope($.P)) {
         p._closePElement();
       }
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
       p.framesetOk = false;
       p.insertionMode = IN_TABLE_MODE;
     }
-    function areaStartTagInBody(p, token) {
+    function areaStartTagInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      p._appendElement(token, NS.HTML);
+      p._appendElement(token2, NS.HTML);
       p.framesetOk = false;
-      token.ackSelfClosing = true;
+      token2.ackSelfClosing = true;
     }
-    function inputStartTagInBody(p, token) {
+    function inputStartTagInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      p._appendElement(token, NS.HTML);
-      const inputType = Tokenizer.getTokenAttr(token, ATTRS.TYPE);
+      p._appendElement(token2, NS.HTML);
+      const inputType = Tokenizer.getTokenAttr(token2, ATTRS.TYPE);
       if (!inputType || inputType.toLowerCase() !== HIDDEN_INPUT_TYPE) {
         p.framesetOk = false;
       }
-      token.ackSelfClosing = true;
+      token2.ackSelfClosing = true;
     }
-    function paramStartTagInBody(p, token) {
-      p._appendElement(token, NS.HTML);
-      token.ackSelfClosing = true;
+    function paramStartTagInBody(p, token2) {
+      p._appendElement(token2, NS.HTML);
+      token2.ackSelfClosing = true;
     }
-    function hrStartTagInBody(p, token) {
+    function hrStartTagInBody(p, token2) {
       if (p.openElements.hasInButtonScope($.P)) {
         p._closePElement();
       }
-      p._appendElement(token, NS.HTML);
+      p._appendElement(token2, NS.HTML);
       p.framesetOk = false;
-      token.ackSelfClosing = true;
+      token2.ackSelfClosing = true;
     }
-    function imageStartTagInBody(p, token) {
-      token.tagName = $.IMG;
-      areaStartTagInBody(p, token);
+    function imageStartTagInBody(p, token2) {
+      token2.tagName = $.IMG;
+      areaStartTagInBody(p, token2);
     }
-    function textareaStartTagInBody(p, token) {
-      p._insertElement(token, NS.HTML);
+    function textareaStartTagInBody(p, token2) {
+      p._insertElement(token2, NS.HTML);
       p.skipNextNewLine = true;
       p.tokenizer.state = Tokenizer.MODE.RCDATA;
       p.originalInsertionMode = p.insertionMode;
       p.framesetOk = false;
       p.insertionMode = TEXT_MODE;
     }
-    function xmpStartTagInBody(p, token) {
+    function xmpStartTagInBody(p, token2) {
       if (p.openElements.hasInButtonScope($.P)) {
         p._closePElement();
       }
       p._reconstructActiveFormattingElements();
       p.framesetOk = false;
-      p._switchToTextParsing(token, Tokenizer.MODE.RAWTEXT);
+      p._switchToTextParsing(token2, Tokenizer.MODE.RAWTEXT);
     }
-    function iframeStartTagInBody(p, token) {
+    function iframeStartTagInBody(p, token2) {
       p.framesetOk = false;
-      p._switchToTextParsing(token, Tokenizer.MODE.RAWTEXT);
+      p._switchToTextParsing(token2, Tokenizer.MODE.RAWTEXT);
     }
-    function noembedStartTagInBody(p, token) {
-      p._switchToTextParsing(token, Tokenizer.MODE.RAWTEXT);
+    function noembedStartTagInBody(p, token2) {
+      p._switchToTextParsing(token2, Tokenizer.MODE.RAWTEXT);
     }
-    function selectStartTagInBody(p, token) {
+    function selectStartTagInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
       p.framesetOk = false;
       if (p.insertionMode === IN_TABLE_MODE || p.insertionMode === IN_CAPTION_MODE || p.insertionMode === IN_TABLE_BODY_MODE || p.insertionMode === IN_ROW_MODE || p.insertionMode === IN_CELL_MODE) {
         p.insertionMode = IN_SELECT_IN_TABLE_MODE;
@@ -8025,236 +8042,236 @@ var require_parser = __commonJS({
         p.insertionMode = IN_SELECT_MODE;
       }
     }
-    function optgroupStartTagInBody(p, token) {
+    function optgroupStartTagInBody(p, token2) {
       if (p.openElements.currentTagName === $.OPTION) {
         p.openElements.pop();
       }
       p._reconstructActiveFormattingElements();
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
     }
-    function rbStartTagInBody(p, token) {
+    function rbStartTagInBody(p, token2) {
       if (p.openElements.hasInScope($.RUBY)) {
         p.openElements.generateImpliedEndTags();
       }
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
     }
-    function rtStartTagInBody(p, token) {
+    function rtStartTagInBody(p, token2) {
       if (p.openElements.hasInScope($.RUBY)) {
         p.openElements.generateImpliedEndTagsWithExclusion($.RTC);
       }
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
     }
-    function menuStartTagInBody(p, token) {
+    function menuStartTagInBody(p, token2) {
       if (p.openElements.hasInButtonScope($.P)) {
         p._closePElement();
       }
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
     }
-    function mathStartTagInBody(p, token) {
+    function mathStartTagInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      foreignContent.adjustTokenMathMLAttrs(token);
-      foreignContent.adjustTokenXMLAttrs(token);
-      if (token.selfClosing) {
-        p._appendElement(token, NS.MATHML);
+      foreignContent.adjustTokenMathMLAttrs(token2);
+      foreignContent.adjustTokenXMLAttrs(token2);
+      if (token2.selfClosing) {
+        p._appendElement(token2, NS.MATHML);
       } else {
-        p._insertElement(token, NS.MATHML);
+        p._insertElement(token2, NS.MATHML);
       }
-      token.ackSelfClosing = true;
+      token2.ackSelfClosing = true;
     }
-    function svgStartTagInBody(p, token) {
+    function svgStartTagInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      foreignContent.adjustTokenSVGAttrs(token);
-      foreignContent.adjustTokenXMLAttrs(token);
-      if (token.selfClosing) {
-        p._appendElement(token, NS.SVG);
+      foreignContent.adjustTokenSVGAttrs(token2);
+      foreignContent.adjustTokenXMLAttrs(token2);
+      if (token2.selfClosing) {
+        p._appendElement(token2, NS.SVG);
       } else {
-        p._insertElement(token, NS.SVG);
+        p._insertElement(token2, NS.SVG);
       }
-      token.ackSelfClosing = true;
+      token2.ackSelfClosing = true;
     }
-    function genericStartTagInBody(p, token) {
+    function genericStartTagInBody(p, token2) {
       p._reconstructActiveFormattingElements();
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
     }
-    function startTagInBody(p, token) {
-      const tn = token.tagName;
+    function startTagInBody(p, token2) {
+      const tn = token2.tagName;
       switch (tn.length) {
         case 1:
           if (tn === $.I || tn === $.S || tn === $.B || tn === $.U) {
-            bStartTagInBody(p, token);
+            bStartTagInBody(p, token2);
           } else if (tn === $.P) {
-            addressStartTagInBody(p, token);
+            addressStartTagInBody(p, token2);
           } else if (tn === $.A) {
-            aStartTagInBody(p, token);
+            aStartTagInBody(p, token2);
           } else {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         case 2:
           if (tn === $.DL || tn === $.OL || tn === $.UL) {
-            addressStartTagInBody(p, token);
+            addressStartTagInBody(p, token2);
           } else if (tn === $.H1 || tn === $.H2 || tn === $.H3 || tn === $.H4 || tn === $.H5 || tn === $.H6) {
-            numberedHeaderStartTagInBody(p, token);
+            numberedHeaderStartTagInBody(p, token2);
           } else if (tn === $.LI || tn === $.DD || tn === $.DT) {
-            listItemStartTagInBody(p, token);
+            listItemStartTagInBody(p, token2);
           } else if (tn === $.EM || tn === $.TT) {
-            bStartTagInBody(p, token);
+            bStartTagInBody(p, token2);
           } else if (tn === $.BR) {
-            areaStartTagInBody(p, token);
+            areaStartTagInBody(p, token2);
           } else if (tn === $.HR) {
-            hrStartTagInBody(p, token);
+            hrStartTagInBody(p, token2);
           } else if (tn === $.RB) {
-            rbStartTagInBody(p, token);
+            rbStartTagInBody(p, token2);
           } else if (tn === $.RT || tn === $.RP) {
-            rtStartTagInBody(p, token);
+            rtStartTagInBody(p, token2);
           } else if (tn !== $.TH && tn !== $.TD && tn !== $.TR) {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         case 3:
           if (tn === $.DIV || tn === $.DIR || tn === $.NAV) {
-            addressStartTagInBody(p, token);
+            addressStartTagInBody(p, token2);
           } else if (tn === $.PRE) {
-            preStartTagInBody(p, token);
+            preStartTagInBody(p, token2);
           } else if (tn === $.BIG) {
-            bStartTagInBody(p, token);
+            bStartTagInBody(p, token2);
           } else if (tn === $.IMG || tn === $.WBR) {
-            areaStartTagInBody(p, token);
+            areaStartTagInBody(p, token2);
           } else if (tn === $.XMP) {
-            xmpStartTagInBody(p, token);
+            xmpStartTagInBody(p, token2);
           } else if (tn === $.SVG) {
-            svgStartTagInBody(p, token);
+            svgStartTagInBody(p, token2);
           } else if (tn === $.RTC) {
-            rbStartTagInBody(p, token);
+            rbStartTagInBody(p, token2);
           } else if (tn !== $.COL) {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         case 4:
           if (tn === $.HTML) {
-            htmlStartTagInBody(p, token);
+            htmlStartTagInBody(p, token2);
           } else if (tn === $.BASE || tn === $.LINK || tn === $.META) {
-            startTagInHead(p, token);
+            startTagInHead(p, token2);
           } else if (tn === $.BODY) {
-            bodyStartTagInBody(p, token);
+            bodyStartTagInBody(p, token2);
           } else if (tn === $.MAIN || tn === $.MENU) {
-            addressStartTagInBody(p, token);
+            addressStartTagInBody(p, token2);
           } else if (tn === $.FORM) {
-            formStartTagInBody(p, token);
+            formStartTagInBody(p, token2);
           } else if (tn === $.CODE || tn === $.FONT) {
-            bStartTagInBody(p, token);
+            bStartTagInBody(p, token2);
           } else if (tn === $.NOBR) {
-            nobrStartTagInBody(p, token);
+            nobrStartTagInBody(p, token2);
           } else if (tn === $.AREA) {
-            areaStartTagInBody(p, token);
+            areaStartTagInBody(p, token2);
           } else if (tn === $.MATH) {
-            mathStartTagInBody(p, token);
+            mathStartTagInBody(p, token2);
           } else if (tn === $.MENU) {
-            menuStartTagInBody(p, token);
+            menuStartTagInBody(p, token2);
           } else if (tn !== $.HEAD) {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         case 5:
           if (tn === $.STYLE || tn === $.TITLE) {
-            startTagInHead(p, token);
+            startTagInHead(p, token2);
           } else if (tn === $.ASIDE) {
-            addressStartTagInBody(p, token);
+            addressStartTagInBody(p, token2);
           } else if (tn === $.SMALL) {
-            bStartTagInBody(p, token);
+            bStartTagInBody(p, token2);
           } else if (tn === $.TABLE) {
-            tableStartTagInBody(p, token);
+            tableStartTagInBody(p, token2);
           } else if (tn === $.EMBED) {
-            areaStartTagInBody(p, token);
+            areaStartTagInBody(p, token2);
           } else if (tn === $.INPUT) {
-            inputStartTagInBody(p, token);
+            inputStartTagInBody(p, token2);
           } else if (tn === $.PARAM || tn === $.TRACK) {
-            paramStartTagInBody(p, token);
+            paramStartTagInBody(p, token2);
           } else if (tn === $.IMAGE) {
-            imageStartTagInBody(p, token);
+            imageStartTagInBody(p, token2);
           } else if (tn !== $.FRAME && tn !== $.TBODY && tn !== $.TFOOT && tn !== $.THEAD) {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         case 6:
           if (tn === $.SCRIPT) {
-            startTagInHead(p, token);
+            startTagInHead(p, token2);
           } else if (tn === $.CENTER || tn === $.FIGURE || tn === $.FOOTER || tn === $.HEADER || tn === $.HGROUP || tn === $.DIALOG) {
-            addressStartTagInBody(p, token);
+            addressStartTagInBody(p, token2);
           } else if (tn === $.BUTTON) {
-            buttonStartTagInBody(p, token);
+            buttonStartTagInBody(p, token2);
           } else if (tn === $.STRIKE || tn === $.STRONG) {
-            bStartTagInBody(p, token);
+            bStartTagInBody(p, token2);
           } else if (tn === $.APPLET || tn === $.OBJECT) {
-            appletStartTagInBody(p, token);
+            appletStartTagInBody(p, token2);
           } else if (tn === $.KEYGEN) {
-            areaStartTagInBody(p, token);
+            areaStartTagInBody(p, token2);
           } else if (tn === $.SOURCE) {
-            paramStartTagInBody(p, token);
+            paramStartTagInBody(p, token2);
           } else if (tn === $.IFRAME) {
-            iframeStartTagInBody(p, token);
+            iframeStartTagInBody(p, token2);
           } else if (tn === $.SELECT) {
-            selectStartTagInBody(p, token);
+            selectStartTagInBody(p, token2);
           } else if (tn === $.OPTION) {
-            optgroupStartTagInBody(p, token);
+            optgroupStartTagInBody(p, token2);
           } else {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         case 7:
           if (tn === $.BGSOUND) {
-            startTagInHead(p, token);
+            startTagInHead(p, token2);
           } else if (tn === $.DETAILS || tn === $.ADDRESS || tn === $.ARTICLE || tn === $.SECTION || tn === $.SUMMARY) {
-            addressStartTagInBody(p, token);
+            addressStartTagInBody(p, token2);
           } else if (tn === $.LISTING) {
-            preStartTagInBody(p, token);
+            preStartTagInBody(p, token2);
           } else if (tn === $.MARQUEE) {
-            appletStartTagInBody(p, token);
+            appletStartTagInBody(p, token2);
           } else if (tn === $.NOEMBED) {
-            noembedStartTagInBody(p, token);
+            noembedStartTagInBody(p, token2);
           } else if (tn !== $.CAPTION) {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         case 8:
           if (tn === $.BASEFONT) {
-            startTagInHead(p, token);
+            startTagInHead(p, token2);
           } else if (tn === $.FRAMESET) {
-            framesetStartTagInBody(p, token);
+            framesetStartTagInBody(p, token2);
           } else if (tn === $.FIELDSET) {
-            addressStartTagInBody(p, token);
+            addressStartTagInBody(p, token2);
           } else if (tn === $.TEXTAREA) {
-            textareaStartTagInBody(p, token);
+            textareaStartTagInBody(p, token2);
           } else if (tn === $.TEMPLATE) {
-            startTagInHead(p, token);
+            startTagInHead(p, token2);
           } else if (tn === $.NOSCRIPT) {
             if (p.options.scriptingEnabled) {
-              noembedStartTagInBody(p, token);
+              noembedStartTagInBody(p, token2);
             } else {
-              genericStartTagInBody(p, token);
+              genericStartTagInBody(p, token2);
             }
           } else if (tn === $.OPTGROUP) {
-            optgroupStartTagInBody(p, token);
+            optgroupStartTagInBody(p, token2);
           } else if (tn !== $.COLGROUP) {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         case 9:
           if (tn === $.PLAINTEXT) {
-            plaintextStartTagInBody(p, token);
+            plaintextStartTagInBody(p, token2);
           } else {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         case 10:
           if (tn === $.BLOCKQUOTE || tn === $.FIGCAPTION) {
-            addressStartTagInBody(p, token);
+            addressStartTagInBody(p, token2);
           } else {
-            genericStartTagInBody(p, token);
+            genericStartTagInBody(p, token2);
           }
           break;
         default:
-          genericStartTagInBody(p, token);
+          genericStartTagInBody(p, token2);
       }
     }
     function bodyEndTagInBody(p) {
@@ -8262,14 +8279,14 @@ var require_parser = __commonJS({
         p.insertionMode = AFTER_BODY_MODE;
       }
     }
-    function htmlEndTagInBody(p, token) {
+    function htmlEndTagInBody(p, token2) {
       if (p.openElements.hasInScope($.BODY)) {
         p.insertionMode = AFTER_BODY_MODE;
-        p._processToken(token);
+        p._processToken(token2);
       }
     }
-    function addressEndTagInBody(p, token) {
-      const tn = token.tagName;
+    function addressEndTagInBody(p, token2) {
+      const tn = token2.tagName;
       if (p.openElements.hasInScope(tn)) {
         p.openElements.generateImpliedEndTags();
         p.openElements.popUntilTagNamePopped(tn);
@@ -8302,8 +8319,8 @@ var require_parser = __commonJS({
         p.openElements.popUntilTagNamePopped($.LI);
       }
     }
-    function ddEndTagInBody(p, token) {
-      const tn = token.tagName;
+    function ddEndTagInBody(p, token2) {
+      const tn = token2.tagName;
       if (p.openElements.hasInScope(tn)) {
         p.openElements.generateImpliedEndTagsWithExclusion(tn);
         p.openElements.popUntilTagNamePopped(tn);
@@ -8315,8 +8332,8 @@ var require_parser = __commonJS({
         p.openElements.popUntilNumberedHeaderPopped();
       }
     }
-    function appletEndTagInBody(p, token) {
-      const tn = token.tagName;
+    function appletEndTagInBody(p, token2) {
+      const tn = token2.tagName;
       if (p.openElements.hasInScope(tn)) {
         p.openElements.generateImpliedEndTags();
         p.openElements.popUntilTagNamePopped(tn);
@@ -8329,8 +8346,8 @@ var require_parser = __commonJS({
       p.openElements.pop();
       p.framesetOk = false;
     }
-    function genericEndTagInBody(p, token) {
-      const tn = token.tagName;
+    function genericEndTagInBody(p, token2) {
+      const tn = token2.tagName;
       for (let i = p.openElements.stackTop; i > 0; i--) {
         const element = p.openElements.items[i];
         if (p.treeAdapter.getTagName(element) === tn) {
@@ -8343,282 +8360,282 @@ var require_parser = __commonJS({
         }
       }
     }
-    function endTagInBody(p, token) {
-      const tn = token.tagName;
+    function endTagInBody(p, token2) {
+      const tn = token2.tagName;
       switch (tn.length) {
         case 1:
           if (tn === $.A || tn === $.B || tn === $.I || tn === $.S || tn === $.U) {
-            callAdoptionAgency(p, token);
+            callAdoptionAgency(p, token2);
           } else if (tn === $.P) {
-            pEndTagInBody(p, token);
+            pEndTagInBody(p, token2);
           } else {
-            genericEndTagInBody(p, token);
+            genericEndTagInBody(p, token2);
           }
           break;
         case 2:
           if (tn === $.DL || tn === $.UL || tn === $.OL) {
-            addressEndTagInBody(p, token);
+            addressEndTagInBody(p, token2);
           } else if (tn === $.LI) {
-            liEndTagInBody(p, token);
+            liEndTagInBody(p, token2);
           } else if (tn === $.DD || tn === $.DT) {
-            ddEndTagInBody(p, token);
+            ddEndTagInBody(p, token2);
           } else if (tn === $.H1 || tn === $.H2 || tn === $.H3 || tn === $.H4 || tn === $.H5 || tn === $.H6) {
-            numberedHeaderEndTagInBody(p, token);
+            numberedHeaderEndTagInBody(p, token2);
           } else if (tn === $.BR) {
-            brEndTagInBody(p, token);
+            brEndTagInBody(p, token2);
           } else if (tn === $.EM || tn === $.TT) {
-            callAdoptionAgency(p, token);
+            callAdoptionAgency(p, token2);
           } else {
-            genericEndTagInBody(p, token);
+            genericEndTagInBody(p, token2);
           }
           break;
         case 3:
           if (tn === $.BIG) {
-            callAdoptionAgency(p, token);
+            callAdoptionAgency(p, token2);
           } else if (tn === $.DIR || tn === $.DIV || tn === $.NAV || tn === $.PRE) {
-            addressEndTagInBody(p, token);
+            addressEndTagInBody(p, token2);
           } else {
-            genericEndTagInBody(p, token);
+            genericEndTagInBody(p, token2);
           }
           break;
         case 4:
           if (tn === $.BODY) {
-            bodyEndTagInBody(p, token);
+            bodyEndTagInBody(p, token2);
           } else if (tn === $.HTML) {
-            htmlEndTagInBody(p, token);
+            htmlEndTagInBody(p, token2);
           } else if (tn === $.FORM) {
-            formEndTagInBody(p, token);
+            formEndTagInBody(p, token2);
           } else if (tn === $.CODE || tn === $.FONT || tn === $.NOBR) {
-            callAdoptionAgency(p, token);
+            callAdoptionAgency(p, token2);
           } else if (tn === $.MAIN || tn === $.MENU) {
-            addressEndTagInBody(p, token);
+            addressEndTagInBody(p, token2);
           } else {
-            genericEndTagInBody(p, token);
+            genericEndTagInBody(p, token2);
           }
           break;
         case 5:
           if (tn === $.ASIDE) {
-            addressEndTagInBody(p, token);
+            addressEndTagInBody(p, token2);
           } else if (tn === $.SMALL) {
-            callAdoptionAgency(p, token);
+            callAdoptionAgency(p, token2);
           } else {
-            genericEndTagInBody(p, token);
+            genericEndTagInBody(p, token2);
           }
           break;
         case 6:
           if (tn === $.CENTER || tn === $.FIGURE || tn === $.FOOTER || tn === $.HEADER || tn === $.HGROUP || tn === $.DIALOG) {
-            addressEndTagInBody(p, token);
+            addressEndTagInBody(p, token2);
           } else if (tn === $.APPLET || tn === $.OBJECT) {
-            appletEndTagInBody(p, token);
+            appletEndTagInBody(p, token2);
           } else if (tn === $.STRIKE || tn === $.STRONG) {
-            callAdoptionAgency(p, token);
+            callAdoptionAgency(p, token2);
           } else {
-            genericEndTagInBody(p, token);
+            genericEndTagInBody(p, token2);
           }
           break;
         case 7:
           if (tn === $.ADDRESS || tn === $.ARTICLE || tn === $.DETAILS || tn === $.SECTION || tn === $.SUMMARY || tn === $.LISTING) {
-            addressEndTagInBody(p, token);
+            addressEndTagInBody(p, token2);
           } else if (tn === $.MARQUEE) {
-            appletEndTagInBody(p, token);
+            appletEndTagInBody(p, token2);
           } else {
-            genericEndTagInBody(p, token);
+            genericEndTagInBody(p, token2);
           }
           break;
         case 8:
           if (tn === $.FIELDSET) {
-            addressEndTagInBody(p, token);
+            addressEndTagInBody(p, token2);
           } else if (tn === $.TEMPLATE) {
-            endTagInHead(p, token);
+            endTagInHead(p, token2);
           } else {
-            genericEndTagInBody(p, token);
+            genericEndTagInBody(p, token2);
           }
           break;
         case 10:
           if (tn === $.BLOCKQUOTE || tn === $.FIGCAPTION) {
-            addressEndTagInBody(p, token);
+            addressEndTagInBody(p, token2);
           } else {
-            genericEndTagInBody(p, token);
+            genericEndTagInBody(p, token2);
           }
           break;
         default:
-          genericEndTagInBody(p, token);
+          genericEndTagInBody(p, token2);
       }
     }
-    function eofInBody(p, token) {
+    function eofInBody(p, token2) {
       if (p.tmplInsertionModeStackTop > -1) {
-        eofInTemplate(p, token);
+        eofInTemplate(p, token2);
       } else {
         p.stopped = true;
       }
     }
-    function endTagInText(p, token) {
-      if (token.tagName === $.SCRIPT) {
+    function endTagInText(p, token2) {
+      if (token2.tagName === $.SCRIPT) {
         p.pendingScript = p.openElements.current;
       }
       p.openElements.pop();
       p.insertionMode = p.originalInsertionMode;
     }
-    function eofInText(p, token) {
+    function eofInText(p, token2) {
       p._err(ERR.eofInElementThatCanContainOnlyText);
       p.openElements.pop();
       p.insertionMode = p.originalInsertionMode;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function characterInTable(p, token) {
+    function characterInTable(p, token2) {
       const curTn = p.openElements.currentTagName;
       if (curTn === $.TABLE || curTn === $.TBODY || curTn === $.TFOOT || curTn === $.THEAD || curTn === $.TR) {
         p.pendingCharacterTokens = [];
         p.hasNonWhitespacePendingCharacterToken = false;
         p.originalInsertionMode = p.insertionMode;
         p.insertionMode = IN_TABLE_TEXT_MODE;
-        p._processToken(token);
+        p._processToken(token2);
       } else {
-        tokenInTable(p, token);
+        tokenInTable(p, token2);
       }
     }
-    function captionStartTagInTable(p, token) {
+    function captionStartTagInTable(p, token2) {
       p.openElements.clearBackToTableContext();
       p.activeFormattingElements.insertMarker();
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
       p.insertionMode = IN_CAPTION_MODE;
     }
-    function colgroupStartTagInTable(p, token) {
+    function colgroupStartTagInTable(p, token2) {
       p.openElements.clearBackToTableContext();
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
       p.insertionMode = IN_COLUMN_GROUP_MODE;
     }
-    function colStartTagInTable(p, token) {
+    function colStartTagInTable(p, token2) {
       p.openElements.clearBackToTableContext();
       p._insertFakeElement($.COLGROUP);
       p.insertionMode = IN_COLUMN_GROUP_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function tbodyStartTagInTable(p, token) {
+    function tbodyStartTagInTable(p, token2) {
       p.openElements.clearBackToTableContext();
-      p._insertElement(token, NS.HTML);
+      p._insertElement(token2, NS.HTML);
       p.insertionMode = IN_TABLE_BODY_MODE;
     }
-    function tdStartTagInTable(p, token) {
+    function tdStartTagInTable(p, token2) {
       p.openElements.clearBackToTableContext();
       p._insertFakeElement($.TBODY);
       p.insertionMode = IN_TABLE_BODY_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function tableStartTagInTable(p, token) {
+    function tableStartTagInTable(p, token2) {
       if (p.openElements.hasInTableScope($.TABLE)) {
         p.openElements.popUntilTagNamePopped($.TABLE);
         p._resetInsertionMode();
-        p._processToken(token);
+        p._processToken(token2);
       }
     }
-    function inputStartTagInTable(p, token) {
-      const inputType = Tokenizer.getTokenAttr(token, ATTRS.TYPE);
+    function inputStartTagInTable(p, token2) {
+      const inputType = Tokenizer.getTokenAttr(token2, ATTRS.TYPE);
       if (inputType && inputType.toLowerCase() === HIDDEN_INPUT_TYPE) {
-        p._appendElement(token, NS.HTML);
+        p._appendElement(token2, NS.HTML);
       } else {
-        tokenInTable(p, token);
+        tokenInTable(p, token2);
       }
-      token.ackSelfClosing = true;
+      token2.ackSelfClosing = true;
     }
-    function formStartTagInTable(p, token) {
+    function formStartTagInTable(p, token2) {
       if (!p.formElement && p.openElements.tmplCount === 0) {
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
         p.formElement = p.openElements.current;
         p.openElements.pop();
       }
     }
-    function startTagInTable(p, token) {
-      const tn = token.tagName;
+    function startTagInTable(p, token2) {
+      const tn = token2.tagName;
       switch (tn.length) {
         case 2:
           if (tn === $.TD || tn === $.TH || tn === $.TR) {
-            tdStartTagInTable(p, token);
+            tdStartTagInTable(p, token2);
           } else {
-            tokenInTable(p, token);
+            tokenInTable(p, token2);
           }
           break;
         case 3:
           if (tn === $.COL) {
-            colStartTagInTable(p, token);
+            colStartTagInTable(p, token2);
           } else {
-            tokenInTable(p, token);
+            tokenInTable(p, token2);
           }
           break;
         case 4:
           if (tn === $.FORM) {
-            formStartTagInTable(p, token);
+            formStartTagInTable(p, token2);
           } else {
-            tokenInTable(p, token);
+            tokenInTable(p, token2);
           }
           break;
         case 5:
           if (tn === $.TABLE) {
-            tableStartTagInTable(p, token);
+            tableStartTagInTable(p, token2);
           } else if (tn === $.STYLE) {
-            startTagInHead(p, token);
+            startTagInHead(p, token2);
           } else if (tn === $.TBODY || tn === $.TFOOT || tn === $.THEAD) {
-            tbodyStartTagInTable(p, token);
+            tbodyStartTagInTable(p, token2);
           } else if (tn === $.INPUT) {
-            inputStartTagInTable(p, token);
+            inputStartTagInTable(p, token2);
           } else {
-            tokenInTable(p, token);
+            tokenInTable(p, token2);
           }
           break;
         case 6:
           if (tn === $.SCRIPT) {
-            startTagInHead(p, token);
+            startTagInHead(p, token2);
           } else {
-            tokenInTable(p, token);
+            tokenInTable(p, token2);
           }
           break;
         case 7:
           if (tn === $.CAPTION) {
-            captionStartTagInTable(p, token);
+            captionStartTagInTable(p, token2);
           } else {
-            tokenInTable(p, token);
+            tokenInTable(p, token2);
           }
           break;
         case 8:
           if (tn === $.COLGROUP) {
-            colgroupStartTagInTable(p, token);
+            colgroupStartTagInTable(p, token2);
           } else if (tn === $.TEMPLATE) {
-            startTagInHead(p, token);
+            startTagInHead(p, token2);
           } else {
-            tokenInTable(p, token);
+            tokenInTable(p, token2);
           }
           break;
         default:
-          tokenInTable(p, token);
+          tokenInTable(p, token2);
       }
     }
-    function endTagInTable(p, token) {
-      const tn = token.tagName;
+    function endTagInTable(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.TABLE) {
         if (p.openElements.hasInTableScope($.TABLE)) {
           p.openElements.popUntilTagNamePopped($.TABLE);
           p._resetInsertionMode();
         }
       } else if (tn === $.TEMPLATE) {
-        endTagInHead(p, token);
+        endTagInHead(p, token2);
       } else if (tn !== $.BODY && tn !== $.CAPTION && tn !== $.COL && tn !== $.COLGROUP && tn !== $.HTML && tn !== $.TBODY && tn !== $.TD && tn !== $.TFOOT && tn !== $.TH && tn !== $.THEAD && tn !== $.TR) {
-        tokenInTable(p, token);
+        tokenInTable(p, token2);
       }
     }
-    function tokenInTable(p, token) {
+    function tokenInTable(p, token2) {
       const savedFosterParentingState = p.fosterParentingEnabled;
       p.fosterParentingEnabled = true;
-      p._processTokenInBodyMode(token);
+      p._processTokenInBodyMode(token2);
       p.fosterParentingEnabled = savedFosterParentingState;
     }
-    function whitespaceCharacterInTableText(p, token) {
-      p.pendingCharacterTokens.push(token);
+    function whitespaceCharacterInTableText(p, token2) {
+      p.pendingCharacterTokens.push(token2);
     }
-    function characterInTableText(p, token) {
-      p.pendingCharacterTokens.push(token);
+    function characterInTableText(p, token2) {
+      p.pendingCharacterTokens.push(token2);
       p.hasNonWhitespacePendingCharacterToken = true;
     }
-    function tokenInTableText(p, token) {
+    function tokenInTableText(p, token2) {
       let i = 0;
       if (p.hasNonWhitespacePendingCharacterToken) {
         for (; i < p.pendingCharacterTokens.length; i++) {
@@ -8630,24 +8647,24 @@ var require_parser = __commonJS({
         }
       }
       p.insertionMode = p.originalInsertionMode;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function startTagInCaption(p, token) {
-      const tn = token.tagName;
+    function startTagInCaption(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.CAPTION || tn === $.COL || tn === $.COLGROUP || tn === $.TBODY || tn === $.TD || tn === $.TFOOT || tn === $.TH || tn === $.THEAD || tn === $.TR) {
         if (p.openElements.hasInTableScope($.CAPTION)) {
           p.openElements.generateImpliedEndTags();
           p.openElements.popUntilTagNamePopped($.CAPTION);
           p.activeFormattingElements.clearToLastMarker();
           p.insertionMode = IN_TABLE_MODE;
-          p._processToken(token);
+          p._processToken(token2);
         }
       } else {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       }
     }
-    function endTagInCaption(p, token) {
-      const tn = token.tagName;
+    function endTagInCaption(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.CAPTION || tn === $.TABLE) {
         if (p.openElements.hasInTableScope($.CAPTION)) {
           p.openElements.generateImpliedEndTags();
@@ -8655,70 +8672,70 @@ var require_parser = __commonJS({
           p.activeFormattingElements.clearToLastMarker();
           p.insertionMode = IN_TABLE_MODE;
           if (tn === $.TABLE) {
-            p._processToken(token);
+            p._processToken(token2);
           }
         }
       } else if (tn !== $.BODY && tn !== $.COL && tn !== $.COLGROUP && tn !== $.HTML && tn !== $.TBODY && tn !== $.TD && tn !== $.TFOOT && tn !== $.TH && tn !== $.THEAD && tn !== $.TR) {
-        endTagInBody(p, token);
+        endTagInBody(p, token2);
       }
     }
-    function startTagInColumnGroup(p, token) {
-      const tn = token.tagName;
+    function startTagInColumnGroup(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML) {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       } else if (tn === $.COL) {
-        p._appendElement(token, NS.HTML);
-        token.ackSelfClosing = true;
+        p._appendElement(token2, NS.HTML);
+        token2.ackSelfClosing = true;
       } else if (tn === $.TEMPLATE) {
-        startTagInHead(p, token);
+        startTagInHead(p, token2);
       } else {
-        tokenInColumnGroup(p, token);
+        tokenInColumnGroup(p, token2);
       }
     }
-    function endTagInColumnGroup(p, token) {
-      const tn = token.tagName;
+    function endTagInColumnGroup(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.COLGROUP) {
         if (p.openElements.currentTagName === $.COLGROUP) {
           p.openElements.pop();
           p.insertionMode = IN_TABLE_MODE;
         }
       } else if (tn === $.TEMPLATE) {
-        endTagInHead(p, token);
+        endTagInHead(p, token2);
       } else if (tn !== $.COL) {
-        tokenInColumnGroup(p, token);
+        tokenInColumnGroup(p, token2);
       }
     }
-    function tokenInColumnGroup(p, token) {
+    function tokenInColumnGroup(p, token2) {
       if (p.openElements.currentTagName === $.COLGROUP) {
         p.openElements.pop();
         p.insertionMode = IN_TABLE_MODE;
-        p._processToken(token);
+        p._processToken(token2);
       }
     }
-    function startTagInTableBody(p, token) {
-      const tn = token.tagName;
+    function startTagInTableBody(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.TR) {
         p.openElements.clearBackToTableBodyContext();
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
         p.insertionMode = IN_ROW_MODE;
       } else if (tn === $.TH || tn === $.TD) {
         p.openElements.clearBackToTableBodyContext();
         p._insertFakeElement($.TR);
         p.insertionMode = IN_ROW_MODE;
-        p._processToken(token);
+        p._processToken(token2);
       } else if (tn === $.CAPTION || tn === $.COL || tn === $.COLGROUP || tn === $.TBODY || tn === $.TFOOT || tn === $.THEAD) {
         if (p.openElements.hasTableBodyContextInTableScope()) {
           p.openElements.clearBackToTableBodyContext();
           p.openElements.pop();
           p.insertionMode = IN_TABLE_MODE;
-          p._processToken(token);
+          p._processToken(token2);
         }
       } else {
-        startTagInTable(p, token);
+        startTagInTable(p, token2);
       }
     }
-    function endTagInTableBody(p, token) {
-      const tn = token.tagName;
+    function endTagInTableBody(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.TBODY || tn === $.TFOOT || tn === $.THEAD) {
         if (p.openElements.hasInTableScope(tn)) {
           p.openElements.clearBackToTableBodyContext();
@@ -8730,17 +8747,17 @@ var require_parser = __commonJS({
           p.openElements.clearBackToTableBodyContext();
           p.openElements.pop();
           p.insertionMode = IN_TABLE_MODE;
-          p._processToken(token);
+          p._processToken(token2);
         }
       } else if (tn !== $.BODY && tn !== $.CAPTION && tn !== $.COL && tn !== $.COLGROUP || tn !== $.HTML && tn !== $.TD && tn !== $.TH && tn !== $.TR) {
-        endTagInTable(p, token);
+        endTagInTable(p, token2);
       }
     }
-    function startTagInRow(p, token) {
-      const tn = token.tagName;
+    function startTagInRow(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.TH || tn === $.TD) {
         p.openElements.clearBackToTableRowContext();
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
         p.insertionMode = IN_CELL_MODE;
         p.activeFormattingElements.insertMarker();
       } else if (tn === $.CAPTION || tn === $.COL || tn === $.COLGROUP || tn === $.TBODY || tn === $.TFOOT || tn === $.THEAD || tn === $.TR) {
@@ -8748,14 +8765,14 @@ var require_parser = __commonJS({
           p.openElements.clearBackToTableRowContext();
           p.openElements.pop();
           p.insertionMode = IN_TABLE_BODY_MODE;
-          p._processToken(token);
+          p._processToken(token2);
         }
       } else {
-        startTagInTable(p, token);
+        startTagInTable(p, token2);
       }
     }
-    function endTagInRow(p, token) {
-      const tn = token.tagName;
+    function endTagInRow(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.TR) {
         if (p.openElements.hasInTableScope($.TR)) {
           p.openElements.clearBackToTableRowContext();
@@ -8767,32 +8784,32 @@ var require_parser = __commonJS({
           p.openElements.clearBackToTableRowContext();
           p.openElements.pop();
           p.insertionMode = IN_TABLE_BODY_MODE;
-          p._processToken(token);
+          p._processToken(token2);
         }
       } else if (tn === $.TBODY || tn === $.TFOOT || tn === $.THEAD) {
         if (p.openElements.hasInTableScope(tn) || p.openElements.hasInTableScope($.TR)) {
           p.openElements.clearBackToTableRowContext();
           p.openElements.pop();
           p.insertionMode = IN_TABLE_BODY_MODE;
-          p._processToken(token);
+          p._processToken(token2);
         }
       } else if (tn !== $.BODY && tn !== $.CAPTION && tn !== $.COL && tn !== $.COLGROUP || tn !== $.HTML && tn !== $.TD && tn !== $.TH) {
-        endTagInTable(p, token);
+        endTagInTable(p, token2);
       }
     }
-    function startTagInCell(p, token) {
-      const tn = token.tagName;
+    function startTagInCell(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.CAPTION || tn === $.COL || tn === $.COLGROUP || tn === $.TBODY || tn === $.TD || tn === $.TFOOT || tn === $.TH || tn === $.THEAD || tn === $.TR) {
         if (p.openElements.hasInTableScope($.TD) || p.openElements.hasInTableScope($.TH)) {
           p._closeTableCell();
-          p._processToken(token);
+          p._processToken(token2);
         }
       } else {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       }
     }
-    function endTagInCell(p, token) {
-      const tn = token.tagName;
+    function endTagInCell(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.TD || tn === $.TH) {
         if (p.openElements.hasInTableScope(tn)) {
           p.openElements.generateImpliedEndTags();
@@ -8803,21 +8820,21 @@ var require_parser = __commonJS({
       } else if (tn === $.TABLE || tn === $.TBODY || tn === $.TFOOT || tn === $.THEAD || tn === $.TR) {
         if (p.openElements.hasInTableScope(tn)) {
           p._closeTableCell();
-          p._processToken(token);
+          p._processToken(token2);
         }
       } else if (tn !== $.BODY && tn !== $.CAPTION && tn !== $.COL && tn !== $.COLGROUP && tn !== $.HTML) {
-        endTagInBody(p, token);
+        endTagInBody(p, token2);
       }
     }
-    function startTagInSelect(p, token) {
-      const tn = token.tagName;
+    function startTagInSelect(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML) {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       } else if (tn === $.OPTION) {
         if (p.openElements.currentTagName === $.OPTION) {
           p.openElements.pop();
         }
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
       } else if (tn === $.OPTGROUP) {
         if (p.openElements.currentTagName === $.OPTION) {
           p.openElements.pop();
@@ -8825,21 +8842,21 @@ var require_parser = __commonJS({
         if (p.openElements.currentTagName === $.OPTGROUP) {
           p.openElements.pop();
         }
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
       } else if (tn === $.INPUT || tn === $.KEYGEN || tn === $.TEXTAREA || tn === $.SELECT) {
         if (p.openElements.hasInSelectScope($.SELECT)) {
           p.openElements.popUntilTagNamePopped($.SELECT);
           p._resetInsertionMode();
           if (tn !== $.SELECT) {
-            p._processToken(token);
+            p._processToken(token2);
           }
         }
       } else if (tn === $.SCRIPT || tn === $.TEMPLATE) {
-        startTagInHead(p, token);
+        startTagInHead(p, token2);
       }
     }
-    function endTagInSelect(p, token) {
-      const tn = token.tagName;
+    function endTagInSelect(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.OPTGROUP) {
         const prevOpenElement = p.openElements.items[p.openElements.stackTop - 1];
         const prevOpenElementTn = prevOpenElement && p.treeAdapter.getTagName(prevOpenElement);
@@ -8857,172 +8874,172 @@ var require_parser = __commonJS({
         p.openElements.popUntilTagNamePopped($.SELECT);
         p._resetInsertionMode();
       } else if (tn === $.TEMPLATE) {
-        endTagInHead(p, token);
+        endTagInHead(p, token2);
       }
     }
-    function startTagInSelectInTable(p, token) {
-      const tn = token.tagName;
+    function startTagInSelectInTable(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.CAPTION || tn === $.TABLE || tn === $.TBODY || tn === $.TFOOT || tn === $.THEAD || tn === $.TR || tn === $.TD || tn === $.TH) {
         p.openElements.popUntilTagNamePopped($.SELECT);
         p._resetInsertionMode();
-        p._processToken(token);
+        p._processToken(token2);
       } else {
-        startTagInSelect(p, token);
+        startTagInSelect(p, token2);
       }
     }
-    function endTagInSelectInTable(p, token) {
-      const tn = token.tagName;
+    function endTagInSelectInTable(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.CAPTION || tn === $.TABLE || tn === $.TBODY || tn === $.TFOOT || tn === $.THEAD || tn === $.TR || tn === $.TD || tn === $.TH) {
         if (p.openElements.hasInTableScope(tn)) {
           p.openElements.popUntilTagNamePopped($.SELECT);
           p._resetInsertionMode();
-          p._processToken(token);
+          p._processToken(token2);
         }
       } else {
-        endTagInSelect(p, token);
+        endTagInSelect(p, token2);
       }
     }
-    function startTagInTemplate(p, token) {
-      const tn = token.tagName;
+    function startTagInTemplate(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.BASE || tn === $.BASEFONT || tn === $.BGSOUND || tn === $.LINK || tn === $.META || tn === $.NOFRAMES || tn === $.SCRIPT || tn === $.STYLE || tn === $.TEMPLATE || tn === $.TITLE) {
-        startTagInHead(p, token);
+        startTagInHead(p, token2);
       } else {
         const newInsertionMode = TEMPLATE_INSERTION_MODE_SWITCH_MAP[tn] || IN_BODY_MODE;
         p._popTmplInsertionMode();
         p._pushTmplInsertionMode(newInsertionMode);
         p.insertionMode = newInsertionMode;
-        p._processToken(token);
+        p._processToken(token2);
       }
     }
-    function endTagInTemplate(p, token) {
-      if (token.tagName === $.TEMPLATE) {
-        endTagInHead(p, token);
+    function endTagInTemplate(p, token2) {
+      if (token2.tagName === $.TEMPLATE) {
+        endTagInHead(p, token2);
       }
     }
-    function eofInTemplate(p, token) {
+    function eofInTemplate(p, token2) {
       if (p.openElements.tmplCount > 0) {
         p.openElements.popUntilTagNamePopped($.TEMPLATE);
         p.activeFormattingElements.clearToLastMarker();
         p._popTmplInsertionMode();
         p._resetInsertionMode();
-        p._processToken(token);
+        p._processToken(token2);
       } else {
         p.stopped = true;
       }
     }
-    function startTagAfterBody(p, token) {
-      if (token.tagName === $.HTML) {
-        startTagInBody(p, token);
+    function startTagAfterBody(p, token2) {
+      if (token2.tagName === $.HTML) {
+        startTagInBody(p, token2);
       } else {
-        tokenAfterBody(p, token);
+        tokenAfterBody(p, token2);
       }
     }
-    function endTagAfterBody(p, token) {
-      if (token.tagName === $.HTML) {
+    function endTagAfterBody(p, token2) {
+      if (token2.tagName === $.HTML) {
         if (!p.fragmentContext) {
           p.insertionMode = AFTER_AFTER_BODY_MODE;
         }
       } else {
-        tokenAfterBody(p, token);
+        tokenAfterBody(p, token2);
       }
     }
-    function tokenAfterBody(p, token) {
+    function tokenAfterBody(p, token2) {
       p.insertionMode = IN_BODY_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function startTagInFrameset(p, token) {
-      const tn = token.tagName;
+    function startTagInFrameset(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML) {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       } else if (tn === $.FRAMESET) {
-        p._insertElement(token, NS.HTML);
+        p._insertElement(token2, NS.HTML);
       } else if (tn === $.FRAME) {
-        p._appendElement(token, NS.HTML);
-        token.ackSelfClosing = true;
+        p._appendElement(token2, NS.HTML);
+        token2.ackSelfClosing = true;
       } else if (tn === $.NOFRAMES) {
-        startTagInHead(p, token);
+        startTagInHead(p, token2);
       }
     }
-    function endTagInFrameset(p, token) {
-      if (token.tagName === $.FRAMESET && !p.openElements.isRootHtmlElementCurrent()) {
+    function endTagInFrameset(p, token2) {
+      if (token2.tagName === $.FRAMESET && !p.openElements.isRootHtmlElementCurrent()) {
         p.openElements.pop();
         if (!p.fragmentContext && p.openElements.currentTagName !== $.FRAMESET) {
           p.insertionMode = AFTER_FRAMESET_MODE;
         }
       }
     }
-    function startTagAfterFrameset(p, token) {
-      const tn = token.tagName;
+    function startTagAfterFrameset(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML) {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       } else if (tn === $.NOFRAMES) {
-        startTagInHead(p, token);
+        startTagInHead(p, token2);
       }
     }
-    function endTagAfterFrameset(p, token) {
-      if (token.tagName === $.HTML) {
+    function endTagAfterFrameset(p, token2) {
+      if (token2.tagName === $.HTML) {
         p.insertionMode = AFTER_AFTER_FRAMESET_MODE;
       }
     }
-    function startTagAfterAfterBody(p, token) {
-      if (token.tagName === $.HTML) {
-        startTagInBody(p, token);
+    function startTagAfterAfterBody(p, token2) {
+      if (token2.tagName === $.HTML) {
+        startTagInBody(p, token2);
       } else {
-        tokenAfterAfterBody(p, token);
+        tokenAfterAfterBody(p, token2);
       }
     }
-    function tokenAfterAfterBody(p, token) {
+    function tokenAfterAfterBody(p, token2) {
       p.insertionMode = IN_BODY_MODE;
-      p._processToken(token);
+      p._processToken(token2);
     }
-    function startTagAfterAfterFrameset(p, token) {
-      const tn = token.tagName;
+    function startTagAfterAfterFrameset(p, token2) {
+      const tn = token2.tagName;
       if (tn === $.HTML) {
-        startTagInBody(p, token);
+        startTagInBody(p, token2);
       } else if (tn === $.NOFRAMES) {
-        startTagInHead(p, token);
+        startTagInHead(p, token2);
       }
     }
-    function nullCharacterInForeignContent(p, token) {
-      token.chars = unicode.REPLACEMENT_CHARACTER;
-      p._insertCharacters(token);
+    function nullCharacterInForeignContent(p, token2) {
+      token2.chars = unicode.REPLACEMENT_CHARACTER;
+      p._insertCharacters(token2);
     }
-    function characterInForeignContent(p, token) {
-      p._insertCharacters(token);
+    function characterInForeignContent(p, token2) {
+      p._insertCharacters(token2);
       p.framesetOk = false;
     }
-    function startTagInForeignContent(p, token) {
-      if (foreignContent.causesExit(token) && !p.fragmentContext) {
+    function startTagInForeignContent(p, token2) {
+      if (foreignContent.causesExit(token2) && !p.fragmentContext) {
         while (p.treeAdapter.getNamespaceURI(p.openElements.current) !== NS.HTML && !p._isIntegrationPoint(p.openElements.current)) {
           p.openElements.pop();
         }
-        p._processToken(token);
+        p._processToken(token2);
       } else {
         const current = p._getAdjustedCurrentElement();
         const currentNs = p.treeAdapter.getNamespaceURI(current);
         if (currentNs === NS.MATHML) {
-          foreignContent.adjustTokenMathMLAttrs(token);
+          foreignContent.adjustTokenMathMLAttrs(token2);
         } else if (currentNs === NS.SVG) {
-          foreignContent.adjustTokenSVGTagName(token);
-          foreignContent.adjustTokenSVGAttrs(token);
+          foreignContent.adjustTokenSVGTagName(token2);
+          foreignContent.adjustTokenSVGAttrs(token2);
         }
-        foreignContent.adjustTokenXMLAttrs(token);
-        if (token.selfClosing) {
-          p._appendElement(token, currentNs);
+        foreignContent.adjustTokenXMLAttrs(token2);
+        if (token2.selfClosing) {
+          p._appendElement(token2, currentNs);
         } else {
-          p._insertElement(token, currentNs);
+          p._insertElement(token2, currentNs);
         }
-        token.ackSelfClosing = true;
+        token2.ackSelfClosing = true;
       }
     }
-    function endTagInForeignContent(p, token) {
+    function endTagInForeignContent(p, token2) {
       for (let i = p.openElements.stackTop; i > 0; i--) {
         const element = p.openElements.items[i];
         if (p.treeAdapter.getNamespaceURI(element) === NS.HTML) {
-          p._processToken(token);
+          p._processToken(token2);
           break;
         }
-        if (p.treeAdapter.getTagName(element).toLowerCase() === token.tagName) {
+        if (p.treeAdapter.getTagName(element).toLowerCase() === token2.tagName) {
           p.openElements.popUntilElementPopped(element);
           break;
         }
@@ -9519,14 +9536,14 @@ var require_content = __commonJS({
         return lineStart(code);
       }
       function lineStart(code) {
-        var token = effects.enter("chunkText", {
+        var token2 = effects.enter("chunkText", {
           contentType: "text",
           previous
         });
         if (previous) {
-          previous.next = token;
+          previous.next = token2;
         }
-        previous = token;
+        previous = token2;
         return data(code);
       }
       function data(code) {
@@ -9652,13 +9669,13 @@ var require_document = __commonJS({
         continued = 0;
         return start(code);
       }
-      function continueFlow(token) {
+      function continueFlow(token2) {
         if (childToken)
-          childToken.next = token;
-        childToken = token;
+          childToken.next = token2;
+        childToken = token2;
         childFlow.lazy = inspectResult && inspectResult.lazy;
-        childFlow.defineSkip(token.start);
-        childFlow.write(self.sliceStream(token));
+        childFlow.defineSkip(token2.start);
+        childFlow.write(self.sliceStream(token2));
       }
       function exitContainers(size, end) {
         var index = stack.length;
@@ -9888,11 +9905,11 @@ var require_subtokenize = __commonJS({
       return !more;
     }
     function subcontent(events, eventIndex) {
-      var token = events[eventIndex][1];
+      var token2 = events[eventIndex][1];
       var context = events[eventIndex][2];
       var startPosition = eventIndex - 1;
       var startPositions = [];
-      var tokenizer = token._tokenizer || context.parser[token.contentType](token.start);
+      var tokenizer = token2._tokenizer || context.parser[token2.contentType](token2.start);
       var childEvents = tokenizer.events;
       var jumps = [];
       var gaps = {};
@@ -9902,42 +9919,42 @@ var require_subtokenize = __commonJS({
       var entered;
       var end;
       var adjust;
-      while (token) {
-        while (events[++startPosition][1] !== token) {
+      while (token2) {
+        while (events[++startPosition][1] !== token2) {
         }
         startPositions.push(startPosition);
-        if (!token._tokenizer) {
-          stream = context.sliceStream(token);
-          if (!token.next) {
+        if (!token2._tokenizer) {
+          stream = context.sliceStream(token2);
+          if (!token2.next) {
             stream.push(null);
           }
           if (previous) {
-            tokenizer.defineSkip(token.start);
+            tokenizer.defineSkip(token2.start);
           }
-          if (token.isInFirstContentOfListItem) {
+          if (token2.isInFirstContentOfListItem) {
             tokenizer._gfmTasklistFirstContentOfListItem = true;
           }
           tokenizer.write(stream);
-          if (token.isInFirstContentOfListItem) {
+          if (token2.isInFirstContentOfListItem) {
             tokenizer._gfmTasklistFirstContentOfListItem = void 0;
           }
         }
-        previous = token;
-        token = token.next;
+        previous = token2;
+        token2 = token2.next;
       }
-      token = previous;
+      token2 = previous;
       index = childEvents.length;
       while (index--) {
         if (childEvents[index][0] === "enter") {
           entered = true;
         } else if (entered && childEvents[index][1].type === childEvents[index - 1][1].type && childEvents[index][1].start.line !== childEvents[index][1].end.line) {
           add(childEvents.slice(index + 1, end));
-          token._tokenizer = token.next = void 0;
-          token = token.previous;
+          token2._tokenizer = token2.next = void 0;
+          token2 = token2.previous;
           end = index + 1;
         }
       }
-      tokenizer.events = token._tokenizer = token.next = void 0;
+      tokenizer.events = token2._tokenizer = token2.next = void 0;
       add(childEvents.slice(0, end));
       index = -1;
       adjust = 0;
@@ -10166,7 +10183,7 @@ var require_text = __commonJS({
       var bufferIndex;
       var size;
       var tabs;
-      var token;
+      var token2;
       while (++eventIndex <= events.length) {
         if ((eventIndex === events.length || events[eventIndex][1].type === "lineEnding") && events[eventIndex - 1][1].type === "data") {
           data = events[eventIndex - 1][1];
@@ -10197,7 +10214,7 @@ var require_text = __commonJS({
             }
           }
           if (size) {
-            token = {
+            token2 = {
               type: eventIndex === events.length || tabs || size < 2 ? "lineSuffix" : "hardBreakTrailing",
               start: {
                 line: data.end.line,
@@ -10208,11 +10225,11 @@ var require_text = __commonJS({
               },
               end: shallow(data.end)
             };
-            data.end = shallow(token.start);
+            data.end = shallow(token2.start);
             if (data.start.offset === data.end.offset) {
-              assign(data, token);
+              assign(data, token2);
             } else {
-              events.splice(eventIndex, 0, ["enter", token, context], ["exit", token, context]);
+              events.splice(eventIndex, 0, ["enter", token2, context], ["exit", token2, context]);
               eventIndex += 2;
             }
           }
@@ -10360,11 +10377,11 @@ var require_serialize_chunks = __commonJS({
 var require_slice_chunks = __commonJS({
   "node_modules/micromark/dist/util/slice-chunks.js"(exports, module) {
     "use strict";
-    function sliceChunks(chunks, token) {
-      var startIndex = token.start._index;
-      var startBufferIndex = token.start._bufferIndex;
-      var endIndex = token.end._index;
-      var endBufferIndex = token.end._bufferIndex;
+    function sliceChunks(chunks, token2) {
+      var startIndex = token2.start._index;
+      var startBufferIndex = token2.start._bufferIndex;
+      var endIndex = token2.end._index;
+      var endBufferIndex = token2.end._bufferIndex;
       var view;
       if (startIndex === endIndex) {
         view = [chunks[startIndex].slice(startBufferIndex, endBufferIndex)];
@@ -10446,11 +10463,11 @@ var require_create_tokenizer = __commonJS({
         context.events = resolveAll(resolveAllConstructs, context.events, context);
         return context.events;
       }
-      function sliceSerialize(token) {
-        return serializeChunks(sliceStream(token));
+      function sliceSerialize(token2) {
+        return serializeChunks(sliceStream(token2));
       }
-      function sliceStream(token) {
-        return sliceChunks(chunks, token);
+      function sliceStream(token2) {
+        return sliceChunks(chunks, token2);
       }
       function now() {
         return shallow(point);
@@ -10502,18 +10519,18 @@ var require_create_tokenizer = __commonJS({
         context.previous = code;
       }
       function enter(type, fields) {
-        var token = fields || {};
-        token.type = type;
-        token.start = now();
-        context.events.push(["enter", token, context]);
-        stack.push(token);
-        return token;
+        var token2 = fields || {};
+        token2.type = type;
+        token2.start = now();
+        context.events.push(["enter", token2, context]);
+        stack.push(token2);
+        return token2;
       }
       function exit(type) {
-        var token = stack.pop();
-        token.end = now();
-        context.events.push(["exit", token, context]);
-        return token;
+        var token2 = stack.pop();
+        token2.end = now();
+        context.events.push(["exit", token2, context]);
+        return token2;
       }
       function onsuccessfulconstruct(construct, info) {
         addResult(construct, info.from);
@@ -10807,7 +10824,7 @@ var require_attention = __commonJS({
         return sequence(code);
       }
       function sequence(code) {
-        var token;
+        var token2;
         var after;
         var open;
         var close;
@@ -10815,12 +10832,12 @@ var require_attention = __commonJS({
           effects.consume(code);
           return sequence;
         }
-        token = effects.exit("attentionSequence");
+        token2 = effects.exit("attentionSequence");
         after = classifyCharacter(code);
         open = !after || after === 2 && before;
         close = !before || before === 2 && after;
-        token._open = marker === 42 ? open : open && (before || !close);
-        token._close = marker === 42 ? close : close && (after || !open);
+        token2._open = marker === 42 ? open : open && (before || !close);
+        token2._close = marker === 42 ? close : close && (after || !open);
         return ok2(code);
       }
     }
@@ -11166,10 +11183,10 @@ var require_character_reference = __commonJS({
         return value(code);
       }
       function value(code) {
-        var token;
+        var token2;
         if (code === 59 && size) {
-          token = effects.exit("characterReferenceValue");
-          if (test === asciiAlphanumeric && !decodeEntity__default["default"](self.sliceSerialize(token))) {
+          token2 = effects.exit("characterReferenceValue");
+          if (test === asciiAlphanumeric && !decodeEntity__default["default"](self.sliceSerialize(token2))) {
             return nok(code);
           }
           effects.enter("characterReferenceMarker");
@@ -11449,7 +11466,7 @@ var require_code_text = __commonJS({
     function tokenizeCodeText(effects, ok2, nok) {
       var sizeOpen = 0;
       var size;
-      var token;
+      var token2;
       return start;
       function start(code) {
         effects.enter("codeText");
@@ -11470,7 +11487,7 @@ var require_code_text = __commonJS({
           return nok(code);
         }
         if (code === 96) {
-          token = effects.enter("codeTextSequence");
+          token2 = effects.enter("codeTextSequence");
           size = 0;
           return closingSequence(code);
         }
@@ -11508,7 +11525,7 @@ var require_code_text = __commonJS({
           effects.exit("codeText");
           return ok2(code);
         }
-        token.type = "codeTextData";
+        token2.type = "codeTextData";
         return data(code);
       }
     }
@@ -12783,12 +12800,12 @@ var require_label_end = __commonJS({
     };
     function resolveAllLabelEnd(events) {
       var index = -1;
-      var token;
+      var token2;
       while (++index < events.length) {
-        token = events[index][1];
-        if (!token._used && (token.type === "labelImage" || token.type === "labelLink" || token.type === "labelEnd")) {
-          events.splice(index + 1, token.type === "labelImage" ? 4 : 2);
-          token.type = "data";
+        token2 = events[index][1];
+        if (!token2._used && (token2.type === "labelImage" || token2.type === "labelLink" || token2.type === "labelEnd")) {
+          events.splice(index + 1, token2.type === "labelImage" ? 4 : 2);
+          token2.type = "data";
           index++;
         }
       }
@@ -12800,28 +12817,28 @@ var require_label_end = __commonJS({
       var group;
       var label;
       var text;
-      var token;
+      var token2;
       var open;
       var close;
       var media;
       while (index--) {
-        token = events[index][1];
+        token2 = events[index][1];
         if (open) {
-          if (token.type === "link" || token.type === "labelLink" && token._inactive) {
+          if (token2.type === "link" || token2.type === "labelLink" && token2._inactive) {
             break;
           }
-          if (events[index][0] === "enter" && token.type === "labelLink") {
-            token._inactive = true;
+          if (events[index][0] === "enter" && token2.type === "labelLink") {
+            token2._inactive = true;
           }
         } else if (close) {
-          if (events[index][0] === "enter" && (token.type === "labelImage" || token.type === "labelLink") && !token._balanced) {
+          if (events[index][0] === "enter" && (token2.type === "labelImage" || token2.type === "labelLink") && !token2._balanced) {
             open = index;
-            if (token.type !== "labelLink") {
+            if (token2.type !== "labelLink") {
               offset = 2;
               break;
             }
           }
-        } else if (token.type === "labelEnd") {
+        } else if (token2.type === "labelEnd") {
           close = index;
         }
       }
@@ -13825,39 +13842,39 @@ var require_dist = __commonJS({
       }
       function opener(create2, and) {
         return open;
-        function open(token) {
-          enter.call(this, create2(token), token);
+        function open(token2) {
+          enter.call(this, create2(token2), token2);
           if (and)
-            and.call(this, token);
+            and.call(this, token2);
         }
       }
       function buffer() {
         this.stack.push({type: "fragment", children: []});
       }
-      function enter(node, token) {
+      function enter(node, token2) {
         this.stack[this.stack.length - 1].children.push(node);
         this.stack.push(node);
-        this.tokenStack.push(token);
-        node.position = {start: point(token.start)};
+        this.tokenStack.push(token2);
+        node.position = {start: point(token2.start)};
         return node;
       }
       function closer(and) {
         return close;
-        function close(token) {
+        function close(token2) {
           if (and)
-            and.call(this, token);
-          exit.call(this, token);
+            and.call(this, token2);
+          exit.call(this, token2);
         }
       }
-      function exit(token) {
+      function exit(token2) {
         var node = this.stack.pop();
         var open = this.tokenStack.pop();
         if (!open) {
-          throw new Error("Cannot close `" + token.type + "` (" + stringifyPosition({start: token.start, end: token.end}) + "): it\u2019s not open");
-        } else if (open.type !== token.type) {
-          throw new Error("Cannot close `" + token.type + "` (" + stringifyPosition({start: token.start, end: token.end}) + "): a different token (`" + open.type + "`, " + stringifyPosition({start: open.start, end: open.end}) + ") is open");
+          throw new Error("Cannot close `" + token2.type + "` (" + stringifyPosition({start: token2.start, end: token2.end}) + "): it\u2019s not open");
+        } else if (open.type !== token2.type) {
+          throw new Error("Cannot close `" + token2.type + "` (" + stringifyPosition({start: token2.start, end: token2.end}) + "): a different token (`" + open.type + "`, " + stringifyPosition({start: open.start, end: open.end}) + ") is open");
         }
-        node.position.end = point(token.end);
+        node.position.end = point(token2.end);
         return node;
       }
       function resume() {
@@ -13866,9 +13883,9 @@ var require_dist = __commonJS({
       function onenterlistordered() {
         setData("expectingFirstListItemValue", true);
       }
-      function onenterlistitemvalue(token) {
+      function onenterlistitemvalue(token2) {
         if (getData("expectingFirstListItemValue")) {
-          this.stack[this.stack.length - 2].start = parseInt(this.sliceSerialize(token), 10);
+          this.stack[this.stack.length - 2].start = parseInt(this.sliceSerialize(token2), 10);
           setData("expectingFirstListItemValue");
         }
       }
@@ -13895,10 +13912,10 @@ var require_dist = __commonJS({
         var data2 = this.resume();
         this.stack[this.stack.length - 1].value = data2;
       }
-      function onexitdefinitionlabelstring(token) {
+      function onexitdefinitionlabelstring(token2) {
         var label = this.resume();
         this.stack[this.stack.length - 1].label = label;
-        this.stack[this.stack.length - 1].identifier = normalizeIdentifier(this.sliceSerialize(token)).toLowerCase();
+        this.stack[this.stack.length - 1].identifier = normalizeIdentifier(this.sliceSerialize(token2)).toLowerCase();
       }
       function onexitdefinitiontitlestring() {
         var data2 = this.resume();
@@ -13908,45 +13925,45 @@ var require_dist = __commonJS({
         var data2 = this.resume();
         this.stack[this.stack.length - 1].url = data2;
       }
-      function onexitatxheadingsequence(token) {
+      function onexitatxheadingsequence(token2) {
         if (!this.stack[this.stack.length - 1].depth) {
-          this.stack[this.stack.length - 1].depth = this.sliceSerialize(token).length;
+          this.stack[this.stack.length - 1].depth = this.sliceSerialize(token2).length;
         }
       }
       function onexitsetextheadingtext() {
         setData("setextHeadingSlurpLineEnding", true);
       }
-      function onexitsetextheadinglinesequence(token) {
-        this.stack[this.stack.length - 1].depth = this.sliceSerialize(token).charCodeAt(0) === 61 ? 1 : 2;
+      function onexitsetextheadinglinesequence(token2) {
+        this.stack[this.stack.length - 1].depth = this.sliceSerialize(token2).charCodeAt(0) === 61 ? 1 : 2;
       }
       function onexitsetextheading() {
         setData("setextHeadingSlurpLineEnding");
       }
-      function onenterdata(token) {
+      function onenterdata(token2) {
         var siblings = this.stack[this.stack.length - 1].children;
         var tail = siblings[siblings.length - 1];
         if (!tail || tail.type !== "text") {
           tail = text();
-          tail.position = {start: point(token.start)};
+          tail.position = {start: point(token2.start)};
           this.stack[this.stack.length - 1].children.push(tail);
         }
         this.stack.push(tail);
       }
-      function onexitdata(token) {
+      function onexitdata(token2) {
         var tail = this.stack.pop();
-        tail.value += this.sliceSerialize(token);
-        tail.position.end = point(token.end);
+        tail.value += this.sliceSerialize(token2);
+        tail.position.end = point(token2.end);
       }
-      function onexitlineending(token) {
+      function onexitlineending(token2) {
         var context = this.stack[this.stack.length - 1];
         if (getData("atHardBreak")) {
-          context.children[context.children.length - 1].position.end = point(token.end);
+          context.children[context.children.length - 1].position.end = point(token2.end);
           setData("atHardBreak");
           return;
         }
         if (!getData("setextHeadingSlurpLineEnding") && config.canContainEols.indexOf(context.type) > -1) {
-          onenterdata.call(this, token);
-          onexitdata.call(this, token);
+          onenterdata.call(this, token2);
+          onexitdata.call(this, token2);
         }
       }
       function onexithardbreak() {
@@ -13992,8 +14009,8 @@ var require_dist = __commonJS({
         }
         setData("referenceType");
       }
-      function onexitlabeltext(token) {
-        this.stack[this.stack.length - 2].identifier = normalizeIdentifier(this.sliceSerialize(token)).toLowerCase();
+      function onexitlabeltext(token2) {
+        this.stack[this.stack.length - 2].identifier = normalizeIdentifier(this.sliceSerialize(token2)).toLowerCase();
       }
       function onexitlabel() {
         var fragment = this.stack[this.stack.length - 1];
@@ -14020,17 +14037,17 @@ var require_dist = __commonJS({
       function onenterreference() {
         setData("referenceType", "collapsed");
       }
-      function onexitreferencestring(token) {
+      function onexitreferencestring(token2) {
         var label = this.resume();
         this.stack[this.stack.length - 1].label = label;
-        this.stack[this.stack.length - 1].identifier = normalizeIdentifier(this.sliceSerialize(token)).toLowerCase();
+        this.stack[this.stack.length - 1].identifier = normalizeIdentifier(this.sliceSerialize(token2)).toLowerCase();
         setData("referenceType", "full");
       }
-      function onexitcharacterreferencemarker(token) {
-        setData("characterReferenceType", token.type);
+      function onexitcharacterreferencemarker(token2) {
+        setData("characterReferenceType", token2.type);
       }
-      function onexitcharacterreferencevalue(token) {
-        var data2 = this.sliceSerialize(token);
+      function onexitcharacterreferencevalue(token2) {
+        var data2 = this.sliceSerialize(token2);
         var type = getData("characterReferenceType");
         var value;
         var tail;
@@ -14042,15 +14059,15 @@ var require_dist = __commonJS({
         }
         tail = this.stack.pop();
         tail.value += value;
-        tail.position.end = point(token.end);
+        tail.position.end = point(token2.end);
       }
-      function onexitautolinkprotocol(token) {
-        onexitdata.call(this, token);
-        this.stack[this.stack.length - 1].url = this.sliceSerialize(token);
+      function onexitautolinkprotocol(token2) {
+        onexitdata.call(this, token2);
+        this.stack[this.stack.length - 1].url = this.sliceSerialize(token2);
       }
-      function onexitautolinkemail(token) {
-        onexitdata.call(this, token);
-        this.stack[this.stack.length - 1].url = "mailto:" + this.sliceSerialize(token);
+      function onexitautolinkemail(token2) {
+        onexitdata.call(this, token2);
+        this.stack[this.stack.length - 1].url = "mailto:" + this.sliceSerialize(token2);
       }
       function blockQuote() {
         return {type: "blockquote", children: []};
@@ -14088,19 +14105,19 @@ var require_dist = __commonJS({
       function link() {
         return {type: "link", title: null, url: "", children: []};
       }
-      function list(token) {
+      function list(token2) {
         return {
           type: "list",
-          ordered: token.type === "listOrdered",
+          ordered: token2.type === "listOrdered",
           start: null,
-          spread: token._spread,
+          spread: token2._spread,
           children: []
         };
       }
-      function listItem(token) {
+      function listItem(token2) {
         return {
           type: "listItem",
-          spread: token._spread,
+          spread: token2._spread,
           checked: null,
           children: []
         };
@@ -16089,12 +16106,12 @@ var require_onigasm = __commonJS({
           var __cxa_demangle_func = Module["___cxa_demangle"] || Module["__cxa_demangle"];
           assert(__cxa_demangle_func);
           try {
-            var s2 = func;
-            if (s2.startsWith("__Z"))
-              s2 = s2.substr(1);
-            var len = lengthBytesUTF8(s2) + 1;
+            var s3 = func;
+            if (s3.startsWith("__Z"))
+              s3 = s3.substr(1);
+            var len = lengthBytesUTF8(s3) + 1;
             var buf = _malloc(len);
-            stringToUTF8(s2, buf, len);
+            stringToUTF8(s3, buf, len);
             var status = _malloc(4);
             var ret = __cxa_demangle_func(buf, 0, 0, status);
             if (HEAP32[status >> 2] === 0 && ret) {
@@ -17609,7 +17626,7 @@ var require_main = __commonJS({
           Object.defineProperty(t2, "__esModule", {value: true}), t2.UseOnigurumaFindOptions = t2.DebugFlags = void 0, t2.DebugFlags = {InDebugMode: typeof process != "undefined" && !!process.env.VSCODE_TEXTMATE_DEBUG}, t2.UseOnigurumaFindOptions = false;
         }, 527: (e2, t2, n) => {
           Object.defineProperty(t2, "__esModule", {value: true}), t2.LocalStackElement = t2.StackElement = t2.ScopeListElement = t2.StackElementMetadata = t2.Grammar = t2.ScopeMetadata = t2.collectDependencies = t2.collectSpecificDependencies = t2.ScopeDependencyCollector = t2.PartialScopeDependency = t2.FullScopeDependency = t2.createGrammar = void 0;
-          var r = n(878), i = n(792), o = n(736), s2 = n(350), a = typeof performance == "undefined" ? function() {
+          var r = n(878), i = n(792), o = n(736), s3 = n(350), a = typeof performance == "undefined" ? function() {
             return Date.now();
           } : function() {
             return performance.now();
@@ -17639,8 +17656,8 @@ var require_main = __commonJS({
             }, e3;
           }();
           function h2(e3, t3, n2, i2, o2) {
-            for (var s3 = 0, a2 = i2; s3 < a2.length; s3++) {
-              var l2 = a2[s3];
+            for (var s4 = 0, a2 = i2; s4 < a2.length; s4++) {
+              var l2 = a2[s4];
               if (!e3.visitedRule.has(l2)) {
                 e3.visitedRule.add(l2);
                 var f2 = l2.repository ? r.mergeObjects({}, o2, l2.repository) : o2;
@@ -17694,10 +17711,10 @@ var require_main = __commonJS({
               return false;
             });
           }
-          function m(e3, t3, n2, r2, s3) {
-            for (var a2 = o.createMatchers(t3, g), c2 = i.RuleFactory.getCompiledRuleId(n2, r2, s3.repository), u2 = 0, l2 = a2; u2 < l2.length; u2++) {
+          function m(e3, t3, n2, r2, s4) {
+            for (var a2 = o.createMatchers(t3, g), c2 = i.RuleFactory.getCompiledRuleId(n2, r2, s4.repository), u2 = 0, l2 = a2; u2 < l2.length; u2++) {
               var h3 = l2[u2];
-              e3.push({matcher: h3.matcher, ruleId: c2, grammar: s3, priority: h3.priority});
+              e3.push({matcher: h3.matcher, ruleId: c2, grammar: s4, priority: h3.priority});
             }
           }
           t2.ScopeDependencyCollector = l, t2.collectSpecificDependencies = p, t2.collectDependencies = d;
@@ -17708,7 +17725,7 @@ var require_main = __commonJS({
           var y = function() {
             function e3(t3, n2, r2) {
               if (this._initialLanguage = t3, this._themeProvider = n2, this._cache = new Map(), this._defaultMetaData = new _("", this._initialLanguage, 0, [this._themeProvider.getDefaults()]), this._embeddedLanguages = Object.create(null), r2)
-                for (var i2 = Object.keys(r2), o2 = 0, s3 = i2.length; o2 < s3; o2++) {
+                for (var i2 = Object.keys(r2), o2 = 0, s4 = i2.length; o2 < s4; o2++) {
                   var a2 = i2[o2], c2 = r2[a2];
                   typeof c2 == "number" && c2 !== 0 ? this._embeddedLanguages[a2] = c2 : console.warn("Invalid embedded language found at scope " + a2 + ": <<" + c2 + ">>");
                 }
@@ -17755,8 +17772,8 @@ var require_main = __commonJS({
               throw new Error("Unexpected match for standard token type!");
             }, e3._NULL_SCOPE_METADATA = new _("", 0, 0, null), e3.STANDARD_TOKEN_TYPE_REGEXP = /\b(comment|string|regex|meta\.embedded)\b/, e3;
           }(), v = function() {
-            function e3(e4, t3, n2, r2, i2, s3) {
-              if (this._scopeMetadataProvider = new y(t3, i2, n2), this._onigLib = s3, this._rootId = -1, this._lastRuleId = 0, this._ruleId2desc = [null], this._includedGrammars = {}, this._grammarRepository = i2, this._grammar = C(e4, null), this._injections = null, this._tokenTypeMatchers = [], r2)
+            function e3(e4, t3, n2, r2, i2, s4) {
+              if (this._scopeMetadataProvider = new y(t3, i2, n2), this._onigLib = s4, this._rootId = -1, this._lastRuleId = 0, this._ruleId2desc = [null], this._includedGrammars = {}, this._grammarRepository = i2, this._grammar = C(e4, null), this._injections = null, this._tokenTypeMatchers = [], r2)
                 for (var a2 = 0, c2 = Object.keys(r2); a2 < c2.length; a2++)
                   for (var u2 = c2[a2], l2 = 0, h3 = o.createMatchers(u2, g); l2 < h3.length; l2++) {
                     var p2 = h3[l2];
@@ -17825,7 +17842,7 @@ var require_main = __commonJS({
                 r2 = false, t3.reset();
               else {
                 r2 = true;
-                var o2 = this._scopeMetadataProvider.getDefaultMetadata(), s3 = o2.themeData[0], a2 = I.set(0, o2.languageId, o2.tokenType, s3.fontStyle, s3.foreground, s3.background), c2 = this.getRule(this._rootId).getName(null, null), u2 = this._scopeMetadataProvider.getMetadataForScope(c2), l2 = x.mergeMetadata(a2, null, u2), h3 = new x(null, c2 === null ? "unknown" : c2, l2);
+                var o2 = this._scopeMetadataProvider.getDefaultMetadata(), s4 = o2.themeData[0], a2 = I.set(0, o2.languageId, o2.tokenType, s4.fontStyle, s4.foreground, s4.background), c2 = this.getRule(this._rootId).getName(null, null), u2 = this._scopeMetadataProvider.getMetadataForScope(c2), l2 = x.mergeMetadata(a2, null, u2), h3 = new x(null, c2 === null ? "unknown" : c2, l2);
                 t3 = new T(null, this._rootId, -1, -1, false, null, h3, h3);
               }
               e4 += "\n";
@@ -17839,22 +17856,22 @@ var require_main = __commonJS({
           function C(e3, t3) {
             return (e3 = r.clone(e3)).repository = e3.repository || {}, e3.repository.$self = {$vscodeTextmateLocation: e3.$vscodeTextmateLocation, patterns: e3.patterns, name: e3.scopeName}, e3.repository.$base = t3 || e3.repository.$self, e3;
           }
-          function R(e3, t3, n2, r2, i2, o2, s3) {
+          function R(e3, t3, n2, r2, i2, o2, s4) {
             if (o2.length !== 0) {
-              for (var a2 = t3.content, c2 = Math.min(o2.length, s3.length), u2 = [], l2 = s3[0].end, h3 = 0; h3 < c2; h3++) {
+              for (var a2 = t3.content, c2 = Math.min(o2.length, s4.length), u2 = [], l2 = s4[0].end, h3 = 0; h3 < c2; h3++) {
                 var p2 = o2[h3];
                 if (p2 !== null) {
-                  var d2 = s3[h3];
+                  var d2 = s4[h3];
                   if (d2.length !== 0) {
                     if (d2.start > l2)
                       break;
                     for (; u2.length > 0 && u2[u2.length - 1].endPos <= d2.start; )
                       i2.produceFromScopes(u2[u2.length - 1].scopes, u2[u2.length - 1].endPos), u2.pop();
                     if (u2.length > 0 ? i2.produceFromScopes(u2[u2.length - 1].scopes, d2.start) : i2.produce(r2, d2.start), p2.retokenizeCapturedWithRuleId) {
-                      var f2 = p2.getName(a2, s3), g2 = r2.contentNameScopesList.push(e3, f2), m2 = p2.getContentName(a2, s3), _2 = g2.push(e3, m2), y2 = r2.push(p2.retokenizeCapturedWithRuleId, d2.start, -1, false, null, g2, _2), v2 = e3.createOnigString(a2.substring(0, d2.end));
+                      var f2 = p2.getName(a2, s4), g2 = r2.contentNameScopesList.push(e3, f2), m2 = p2.getContentName(a2, s4), _2 = g2.push(e3, m2), y2 = r2.push(p2.retokenizeCapturedWithRuleId, d2.start, -1, false, null, g2, _2), v2 = e3.createOnigString(a2.substring(0, d2.end));
                       A(e3, v2, n2 && d2.start === 0, d2.start, y2, i2, false), b(v2);
                     } else {
-                      var C2 = p2.getName(a2, s3);
+                      var C2 = p2.getName(a2, s4);
                       if (C2 !== null) {
                         var R2 = (u2.length > 0 ? u2[u2.length - 1].scopes : r2.contentNameScopesList).push(e3, C2);
                         u2.push(new G(R2, d2.end));
@@ -17877,10 +17894,10 @@ var require_main = __commonJS({
             return e3 || (n2 |= 1), t3 || (n2 |= 4), n2;
           }
           function k(e3, t3, n2, r2, i2) {
-            return s2.UseOnigurumaFindOptions ? {ruleScanner: e3.compile(t3, n2), findOptions: P(r2, i2)} : {ruleScanner: e3.compileAG(t3, n2, r2, i2), findOptions: 0};
+            return s3.UseOnigurumaFindOptions ? {ruleScanner: e3.compile(t3, n2), findOptions: P(r2, i2)} : {ruleScanner: e3.compileAG(t3, n2, r2, i2), findOptions: 0};
           }
           function w(e3, t3, n2, r2, i2) {
-            return s2.UseOnigurumaFindOptions ? {ruleScanner: e3.compileWhile(t3, n2), findOptions: P(r2, i2)} : {ruleScanner: e3.compileWhileAG(t3, n2, r2, i2), findOptions: 0};
+            return s3.UseOnigurumaFindOptions ? {ruleScanner: e3.compileWhile(t3, n2), findOptions: P(r2, i2)} : {ruleScanner: e3.compileWhileAG(t3, n2, r2, i2), findOptions: 0};
           }
           function A(e3, t3, n2, r2, o2, c2, u2) {
             var l2 = t3.content.length, h3 = false, p2 = -1;
@@ -17892,8 +17909,8 @@ var require_main = __commonJS({
                 }
                 for (var p3 = u3.pop(); p3; p3 = u3.pop()) {
                   var d3 = w(p3.rule, e4, p3.stack.endRule, n3, r3 === c3), f3 = d3.ruleScanner, g2 = d3.findOptions, m2 = f3.scanner.findNextMatchSync(t4, r3, g2);
-                  if (s2.DebugFlags.InDebugMode && (console.log("  scanning for while rule"), console.log(S(f3))), !m2) {
-                    s2.DebugFlags.InDebugMode && console.log("  popping " + p3.rule.debugName + " - " + p3.rule.debugWhileRegExp), o3 = p3.stack.pop();
+                  if (s3.DebugFlags.InDebugMode && (console.log("  scanning for while rule"), console.log(S(f3))), !m2) {
+                    s3.DebugFlags.InDebugMode && console.log("  popping " + p3.rule.debugName + " - " + p3.rule.debugWhileRegExp), o3 = p3.stack.pop();
                     break;
                   }
                   if (f3.rules[m2.index] !== -2) {
@@ -17909,13 +17926,13 @@ var require_main = __commonJS({
             for (; !h3; )
               f2();
             function f2() {
-              s2.DebugFlags.InDebugMode && (console.log(""), console.log("@@scanNext " + r2 + ": |" + t3.content.substr(r2).replace(/\n$/, "\\n") + "|"));
+              s3.DebugFlags.InDebugMode && (console.log(""), console.log("@@scanNext " + r2 + ": |" + t3.content.substr(r2).replace(/\n$/, "\\n") + "|"));
               var u3 = function(e4, t4, n3, r3, i2, o3) {
                 var c3 = function(e5, t5, n4, r4, i3, o4) {
                   var c4 = i3.getRule(e5), u5 = k(c4, e5, i3.endRule, n4, r4 === o4), l4 = u5.ruleScanner, h5 = u5.findOptions, p4 = 0;
-                  s2.DebugFlags.InDebugMode && (p4 = a());
+                  s3.DebugFlags.InDebugMode && (p4 = a());
                   var d4 = l4.scanner.findNextMatchSync(t5, r4, h5);
-                  if (s2.DebugFlags.InDebugMode) {
+                  if (s3.DebugFlags.InDebugMode) {
                     var f4 = a() - p4;
                     f4 > 5 && console.warn("Rule " + c4.debugName + " (" + c4.id + ") matching took " + f4 + " against '" + t5 + "'"), d4 && console.log("matched rule id: " + l4.rules[d4.index] + " from " + d4.captureIndices[0].start + " to " + d4.captureIndices[0].end);
                   }
@@ -17928,7 +17945,7 @@ var require_main = __commonJS({
                     var g3 = e5[d4];
                     if (g3.matcher(p4)) {
                       var m3 = k(t5.getRule(g3.ruleId), t5, null, r4, i3 === a2), _3 = m3.ruleScanner, y3 = m3.findOptions, v3 = _3.scanner.findNextMatchSync(n4, i3, y3);
-                      if (s2.DebugFlags.InDebugMode && (console.log("  scanning for injections"), console.log(S(_3))), v3) {
+                      if (s3.DebugFlags.InDebugMode && (console.log("  scanning for injections"), console.log(S(_3))), v3) {
                         var b3 = v3.captureIndices[0].start;
                         if (!(b3 >= u5) && (u5 = b3, l4 = v3.captureIndices, c4 = _3.rules[v3.index], h5 = g3.priority, u5 === i3))
                           break;
@@ -17945,31 +17962,31 @@ var require_main = __commonJS({
                 return p3 < h4 || l3.priorityMatch && p3 === h4 ? l3 : c3;
               }(e3, t3, n2, r2, o2, p2);
               if (!u3)
-                return s2.DebugFlags.InDebugMode && console.log("  no more matches."), c2.produce(o2, l2), void (h3 = true);
+                return s3.DebugFlags.InDebugMode && console.log("  no more matches."), c2.produce(o2, l2), void (h3 = true);
               var d3 = u3.captureIndices, f3 = u3.matchedRuleId, g2 = !!(d3 && d3.length > 0) && d3[0].end > r2;
               if (f3 === -1) {
                 var m2 = o2.getRule(e3);
-                s2.DebugFlags.InDebugMode && console.log("  popping " + m2.debugName + " - " + m2.debugEndRegExp), c2.produce(o2, d3[0].start), o2 = o2.setContentNameScopesList(o2.nameScopesList), R(e3, t3, n2, o2, c2, m2.endCaptures, d3), c2.produce(o2, d3[0].end);
+                s3.DebugFlags.InDebugMode && console.log("  popping " + m2.debugName + " - " + m2.debugEndRegExp), c2.produce(o2, d3[0].start), o2 = o2.setContentNameScopesList(o2.nameScopesList), R(e3, t3, n2, o2, c2, m2.endCaptures, d3), c2.produce(o2, d3[0].end);
                 var _2 = o2;
                 if (o2 = o2.pop(), p2 = _2.getAnchorPos(), !g2 && _2.getEnterPos() === r2)
-                  return s2.DebugFlags.InDebugMode && console.error("[1] - Grammar is in an endless loop - Grammar pushed & popped a rule without advancing"), o2 = _2, c2.produce(o2, l2), void (h3 = true);
+                  return s3.DebugFlags.InDebugMode && console.error("[1] - Grammar is in an endless loop - Grammar pushed & popped a rule without advancing"), o2 = _2, c2.produce(o2, l2), void (h3 = true);
               } else {
                 var y2 = e3.getRule(f3);
                 c2.produce(o2, d3[0].start);
                 var v2 = o2, b2 = y2.getName(t3.content, d3), C2 = o2.contentNameScopesList.push(e3, b2);
                 if (o2 = o2.push(f3, r2, p2, d3[0].end === l2, null, C2, C2), y2 instanceof i.BeginEndRule) {
                   var P2 = y2;
-                  s2.DebugFlags.InDebugMode && console.log("  pushing " + P2.debugName + " - " + P2.debugBeginRegExp), R(e3, t3, n2, o2, c2, P2.beginCaptures, d3), c2.produce(o2, d3[0].end), p2 = d3[0].end;
+                  s3.DebugFlags.InDebugMode && console.log("  pushing " + P2.debugName + " - " + P2.debugBeginRegExp), R(e3, t3, n2, o2, c2, P2.beginCaptures, d3), c2.produce(o2, d3[0].end), p2 = d3[0].end;
                   var w2 = P2.getContentName(t3.content, d3), A2 = C2.push(e3, w2);
                   if (o2 = o2.setContentNameScopesList(A2), P2.endHasBackReferences && (o2 = o2.setEndRule(P2.getEndWithResolvedBackReferences(t3.content, d3))), !g2 && v2.hasSameRuleAs(o2))
-                    return s2.DebugFlags.InDebugMode && console.error("[2] - Grammar is in an endless loop - Grammar pushed the same rule without advancing"), o2 = o2.pop(), c2.produce(o2, l2), void (h3 = true);
+                    return s3.DebugFlags.InDebugMode && console.error("[2] - Grammar is in an endless loop - Grammar pushed the same rule without advancing"), o2 = o2.pop(), c2.produce(o2, l2), void (h3 = true);
                 } else if (y2 instanceof i.BeginWhileRule) {
-                  if (P2 = y2, s2.DebugFlags.InDebugMode && console.log("  pushing " + P2.debugName), R(e3, t3, n2, o2, c2, P2.beginCaptures, d3), c2.produce(o2, d3[0].end), p2 = d3[0].end, w2 = P2.getContentName(t3.content, d3), A2 = C2.push(e3, w2), o2 = o2.setContentNameScopesList(A2), P2.whileHasBackReferences && (o2 = o2.setEndRule(P2.getWhileWithResolvedBackReferences(t3.content, d3))), !g2 && v2.hasSameRuleAs(o2))
-                    return s2.DebugFlags.InDebugMode && console.error("[3] - Grammar is in an endless loop - Grammar pushed the same rule without advancing"), o2 = o2.pop(), c2.produce(o2, l2), void (h3 = true);
+                  if (P2 = y2, s3.DebugFlags.InDebugMode && console.log("  pushing " + P2.debugName), R(e3, t3, n2, o2, c2, P2.beginCaptures, d3), c2.produce(o2, d3[0].end), p2 = d3[0].end, w2 = P2.getContentName(t3.content, d3), A2 = C2.push(e3, w2), o2 = o2.setContentNameScopesList(A2), P2.whileHasBackReferences && (o2 = o2.setEndRule(P2.getWhileWithResolvedBackReferences(t3.content, d3))), !g2 && v2.hasSameRuleAs(o2))
+                    return s3.DebugFlags.InDebugMode && console.error("[3] - Grammar is in an endless loop - Grammar pushed the same rule without advancing"), o2 = o2.pop(), c2.produce(o2, l2), void (h3 = true);
                 } else {
                   var I2 = y2;
-                  if (s2.DebugFlags.InDebugMode && console.log("  matched " + I2.debugName + " - " + I2.debugMatchRegExp), R(e3, t3, n2, o2, c2, I2.captures, d3), c2.produce(o2, d3[0].end), o2 = o2.pop(), !g2)
-                    return s2.DebugFlags.InDebugMode && console.error("[4] - Grammar is in an endless loop - Grammar is not advancing, nor is it pushing/popping"), o2 = o2.safePop(), c2.produce(o2, l2), void (h3 = true);
+                  if (s3.DebugFlags.InDebugMode && console.log("  matched " + I2.debugName + " - " + I2.debugMatchRegExp), R(e3, t3, n2, o2, c2, I2.captures, d3), c2.produce(o2, d3[0].end), o2 = o2.pop(), !g2)
+                    return s3.DebugFlags.InDebugMode && console.error("[4] - Grammar is in an endless loop - Grammar is not advancing, nor is it pushing/popping"), o2 = o2.safePop(), c2.produce(o2, l2), void (h3 = true);
                 }
               }
               d3[0].end > r2 && (r2 = d3[0].end, n2 = false);
@@ -17985,8 +18002,8 @@ var require_main = __commonJS({
                 t3 = "0" + t3;
               return t3;
             }, e3.printMetadata = function(t3) {
-              var n2 = e3.getLanguageId(t3), r2 = e3.getTokenType(t3), i2 = e3.getFontStyle(t3), o2 = e3.getForeground(t3), s3 = e3.getBackground(t3);
-              console.log({languageId: n2, tokenType: r2, fontStyle: i2, foreground: o2, background: s3});
+              var n2 = e3.getLanguageId(t3), r2 = e3.getTokenType(t3), i2 = e3.getFontStyle(t3), o2 = e3.getForeground(t3), s4 = e3.getBackground(t3);
+              console.log({languageId: n2, tokenType: r2, fontStyle: i2, foreground: o2, background: s4});
             }, e3.getLanguageId = function(e4) {
               return (255 & e4) >>> 0;
             }, e3.getTokenType = function(e4) {
@@ -17997,9 +18014,9 @@ var require_main = __commonJS({
               return (8372224 & e4) >>> 14;
             }, e3.getBackground = function(e4) {
               return (4286578688 & e4) >>> 23;
-            }, e3.set = function(t3, n2, r2, i2, o2, s3) {
+            }, e3.set = function(t3, n2, r2, i2, o2, s4) {
               var a2 = e3.getLanguageId(t3), c2 = e3.getTokenType(t3), u2 = e3.getFontStyle(t3), l2 = e3.getForeground(t3), h3 = e3.getBackground(t3);
-              return n2 !== 0 && (a2 = n2), r2 !== 0 && (c2 = r2 === 8 ? 0 : r2), i2 !== -1 && (u2 = i2), o2 !== 0 && (l2 = o2), s3 !== 0 && (h3 = s3), (a2 << 0 | c2 << 8 | u2 << 11 | l2 << 14 | h3 << 23) >>> 0;
+              return n2 !== 0 && (a2 = n2), r2 !== 0 && (c2 = r2 === 8 ? 0 : r2), i2 !== -1 && (u2 = i2), o2 !== 0 && (l2 = o2), s4 !== 0 && (h3 = s4), (a2 << 0 | c2 << 8 | u2 << 11 | l2 << 14 | h3 << 23) >>> 0;
             }, e3;
           }();
           t2.StackElementMetadata = I;
@@ -18040,8 +18057,8 @@ var require_main = __commonJS({
                 return e4;
               var r2 = -1, i2 = 0, o2 = 0;
               if (n2.themeData !== null)
-                for (var s3 = 0, a2 = n2.themeData.length; s3 < a2; s3++) {
-                  var c2 = n2.themeData[s3];
+                for (var s4 = 0, a2 = n2.themeData.length; s4 < a2; s4++) {
+                  var c2 = n2.themeData[s4];
                   if (this._matches(t3, c2.parentScopes)) {
                     r2 = c2.fontStyle, i2 = c2.foreground, o2 = c2.background;
                     break;
@@ -18050,8 +18067,8 @@ var require_main = __commonJS({
               return I.set(e4, n2.languageId, n2.tokenType, r2, i2, o2);
             }, e3._push = function(t3, n2, r2) {
               for (var i2 = 0, o2 = r2.length; i2 < o2; i2++) {
-                var s3 = r2[i2], a2 = n2.getMetadataForScope(s3), c2 = e3.mergeMetadata(t3.metadata, t3, a2);
-                t3 = new e3(t3, s3, c2);
+                var s4 = r2[i2], a2 = n2.getMetadataForScope(s4), c2 = e3.mergeMetadata(t3.metadata, t3, a2);
+                t3 = new e3(t3, s4, c2);
               }
               return t3;
             }, e3.prototype.push = function(t3, n2) {
@@ -18066,8 +18083,8 @@ var require_main = __commonJS({
           }();
           t2.ScopeListElement = x;
           var T = function() {
-            function e3(e4, t3, n2, r2, i2, o2, s3, a2) {
-              this.parent = e4, this.depth = this.parent ? this.parent.depth + 1 : 1, this.ruleId = t3, this._enterPos = n2, this._anchorPos = r2, this.beginRuleCapturedEOL = i2, this.endRule = o2, this.nameScopesList = s3, this.contentNameScopesList = a2;
+            function e3(e4, t3, n2, r2, i2, o2, s4, a2) {
+              this.parent = e4, this.depth = this.parent ? this.parent.depth + 1 : 1, this.ruleId = t3, this._enterPos = n2, this._anchorPos = r2, this.beginRuleCapturedEOL = i2, this.endRule = o2, this.nameScopesList = s4, this.contentNameScopesList = a2;
             }
             return e3._structuralEquals = function(e4, t3) {
               for (; ; ) {
@@ -18096,8 +18113,8 @@ var require_main = __commonJS({
               return this.parent;
             }, e3.prototype.safePop = function() {
               return this.parent ? this.parent : this;
-            }, e3.prototype.push = function(t3, n2, r2, i2, o2, s3, a2) {
-              return new e3(this, t3, n2, r2, i2, o2, s3, a2);
+            }, e3.prototype.push = function(t3, n2, r2, i2, o2, s4, a2) {
+              return new e3(this, t3, n2, r2, i2, o2, s4, a2);
             }, e3.prototype.getEnterPos = function() {
               return this._enterPos;
             }, e3.prototype.getAnchorPos = function() {
@@ -18129,7 +18146,7 @@ var require_main = __commonJS({
           t2.LocalStackElement = G;
           var L = function() {
             function e3(e4, t3, n2) {
-              this._emitBinaryTokens = e4, this._tokenTypeOverrides = n2, s2.DebugFlags.InDebugMode ? this._lineText = t3 : this._lineText = null, this._tokens = [], this._binaryTokens = [], this._lastTokenEndIndex = 0;
+              this._emitBinaryTokens = e4, this._tokenTypeOverrides = n2, s3.DebugFlags.InDebugMode ? this._lineText = t3 : this._lineText = null, this._tokens = [], this._binaryTokens = [], this._lastTokenEndIndex = 0;
             }
             return e3.prototype.produce = function(e4, t3) {
               this.produceFromScopes(e4.contentNameScopesList, t3);
@@ -18143,7 +18160,7 @@ var require_main = __commonJS({
                   return this._binaryTokens.length > 0 && this._binaryTokens[this._binaryTokens.length - 1] === n2 || (this._binaryTokens.push(this._lastTokenEndIndex), this._binaryTokens.push(n2)), void (this._lastTokenEndIndex = t3);
                 }
                 var a2 = e4.generateScopes();
-                if (s2.DebugFlags.InDebugMode) {
+                if (s3.DebugFlags.InDebugMode) {
                   console.log("  token: |" + this._lineText.substring(this._lastTokenEndIndex, t3).replace(/\n$/, "\\n") + "|");
                   for (var c2 = 0; c2 < a2.length; c2++)
                     console.log("      * " + a2[c2]);
@@ -18176,16 +18193,16 @@ var require_main = __commonJS({
           Object.defineProperty(t2, "__esModule", {value: true}), t2.parseRawGrammar = void 0;
           var r = n(69), i = n(350), o = n(974);
           t2.parseRawGrammar = function(e3, t3) {
-            return t3 === void 0 && (t3 = null), t3 !== null && /\.json$/.test(t3) ? (n2 = e3, s2 = t3, i.DebugFlags.InDebugMode ? o.parse(n2, s2, true) : JSON.parse(n2)) : function(e4, t4) {
+            return t3 === void 0 && (t3 = null), t3 !== null && /\.json$/.test(t3) ? (n2 = e3, s3 = t3, i.DebugFlags.InDebugMode ? o.parse(n2, s3, true) : JSON.parse(n2)) : function(e4, t4) {
               return i.DebugFlags.InDebugMode ? r.parseWithLocation(e4, t4, "$vscodeTextmateLocation") : r.parse(e4);
             }(e3, t3);
-            var n2, s2;
+            var n2, s3;
           };
         }, 974: (e2, t2) => {
           function n(e3, t3) {
             throw new Error("Near offset " + e3.pos + ": " + t3 + " ~~~" + e3.source.substr(e3.pos, 50) + "~~~");
           }
-          Object.defineProperty(t2, "__esModule", {value: true}), t2.parse = void 0, t2.parse = function(e3, t3, s2) {
+          Object.defineProperty(t2, "__esModule", {value: true}), t2.parse = void 0, t2.parse = function(e3, t3, s3) {
             var a = new r(e3), c = new i(), u = 0, l = null, h2 = [], p = [];
             function d() {
               h2.push(u), p.push(l);
@@ -18199,7 +18216,7 @@ var require_main = __commonJS({
             for (; o(a, c); ) {
               if (u === 0) {
                 if (l !== null && g("too many constructs in root"), c.type === 3) {
-                  l = {}, s2 && (l.$vscodeTextmateLocation = c.toLocation(t3)), d(), u = 1;
+                  l = {}, s3 && (l.$vscodeTextmateLocation = c.toLocation(t3)), d(), u = 1;
                   continue;
                 }
                 if (c.type === 2) {
@@ -18253,7 +18270,7 @@ var require_main = __commonJS({
                   }
                   if (c.type === 3) {
                     var y = {};
-                    s2 && (y.$vscodeTextmateLocation = c.toLocation(t3)), l[m] = y, d(), u = 1, l = y;
+                    s3 && (y.$vscodeTextmateLocation = c.toLocation(t3)), l[m] = y, d(), u = 1, l = y;
                     continue;
                   }
                 }
@@ -18300,7 +18317,7 @@ var require_main = __commonJS({
                   continue;
                 }
                 if (c.type === 3) {
-                  y = {}, s2 && (y.$vscodeTextmateLocation = c.toLocation(t3)), l.push(y), d(), u = 1, l = y;
+                  y = {}, s3 && (y.$vscodeTextmateLocation = c.toLocation(t3)), l.push(y), d(), u = 1, l = y;
                   continue;
                 }
                 g("unexpected token in array");
@@ -18321,8 +18338,8 @@ var require_main = __commonJS({
           }();
           function o(e3, t3) {
             t3.value = null, t3.type = 0, t3.offset = -1, t3.len = -1, t3.line = -1, t3.char = -1;
-            for (var r2, i2 = e3.source, o2 = e3.pos, s2 = e3.len, a = e3.line, c = e3.char; ; ) {
-              if (o2 >= s2)
+            for (var r2, i2 = e3.source, o2 = e3.pos, s3 = e3.len, a = e3.line, c = e3.char; ; ) {
+              if (o2 >= s3)
                 return false;
               if ((r2 = i2.charCodeAt(o2)) !== 32 && r2 !== 9 && r2 !== 13) {
                 if (r2 !== 10)
@@ -18333,7 +18350,7 @@ var require_main = __commonJS({
             }
             if (t3.offset = o2, t3.line = a, t3.char = c, r2 === 34) {
               for (t3.type = 1, o2++, c++; ; ) {
-                if (o2 >= s2)
+                if (o2 >= s3)
                   return false;
                 if (r2 = i2.charCodeAt(o2), o2++, c++, r2 !== 92) {
                   if (r2 === 34)
@@ -18406,7 +18423,7 @@ var require_main = __commonJS({
               o2++, c++;
             } else
               for (t3.type = 11; ; ) {
-                if (o2 >= s2)
+                if (o2 >= s3)
                   return false;
                 if (!((r2 = i2.charCodeAt(o2)) === 46 || r2 >= 48 && r2 <= 57 || r2 === 101 || r2 === 69 || r2 === 45 || r2 === 43))
                   break;
@@ -18426,7 +18443,7 @@ var require_main = __commonJS({
               n2 === "default" || Object.prototype.hasOwnProperty.call(t3, n2) || r(t3, e3, n2);
           }, o = this && this.__awaiter || function(e3, t3, n2, r2) {
             return new (n2 || (n2 = Promise))(function(i2, o2) {
-              function s3(e4) {
+              function s4(e4) {
                 try {
                   c2(r2.next(e4));
                 } catch (e5) {
@@ -18444,12 +18461,12 @@ var require_main = __commonJS({
                 var t4;
                 e4.done ? i2(e4.value) : (t4 = e4.value, t4 instanceof n2 ? t4 : new n2(function(e5) {
                   e5(t4);
-                })).then(s3, a2);
+                })).then(s4, a2);
               }
               c2((r2 = r2.apply(e3, t3 || [])).next());
             });
-          }, s2 = this && this.__generator || function(e3, t3) {
-            var n2, r2, i2, o2, s3 = {label: 0, sent: function() {
+          }, s3 = this && this.__generator || function(e3, t3) {
+            var n2, r2, i2, o2, s4 = {label: 0, sent: function() {
               if (1 & i2[0])
                 throw i2[1];
               return i2[1];
@@ -18462,7 +18479,7 @@ var require_main = __commonJS({
                 return function(o4) {
                   if (n2)
                     throw new TypeError("Generator is already executing.");
-                  for (; s3; )
+                  for (; s4; )
                     try {
                       if (n2 = 1, r2 && (i2 = 2 & o4[0] ? r2.return : o4[0] ? r2.throw || ((i2 = r2.return) && i2.call(r2), 0) : r2.next) && !(i2 = i2.call(r2, o4[1])).done)
                         return i2;
@@ -18472,34 +18489,34 @@ var require_main = __commonJS({
                           i2 = o4;
                           break;
                         case 4:
-                          return s3.label++, {value: o4[1], done: false};
+                          return s4.label++, {value: o4[1], done: false};
                         case 5:
-                          s3.label++, r2 = o4[1], o4 = [0];
+                          s4.label++, r2 = o4[1], o4 = [0];
                           continue;
                         case 7:
-                          o4 = s3.ops.pop(), s3.trys.pop();
+                          o4 = s4.ops.pop(), s4.trys.pop();
                           continue;
                         default:
-                          if (!((i2 = (i2 = s3.trys).length > 0 && i2[i2.length - 1]) || o4[0] !== 6 && o4[0] !== 2)) {
-                            s3 = 0;
+                          if (!((i2 = (i2 = s4.trys).length > 0 && i2[i2.length - 1]) || o4[0] !== 6 && o4[0] !== 2)) {
+                            s4 = 0;
                             continue;
                           }
                           if (o4[0] === 3 && (!i2 || o4[1] > i2[0] && o4[1] < i2[3])) {
-                            s3.label = o4[1];
+                            s4.label = o4[1];
                             break;
                           }
-                          if (o4[0] === 6 && s3.label < i2[1]) {
-                            s3.label = i2[1], i2 = o4;
+                          if (o4[0] === 6 && s4.label < i2[1]) {
+                            s4.label = i2[1], i2 = o4;
                             break;
                           }
-                          if (i2 && s3.label < i2[2]) {
-                            s3.label = i2[2], s3.ops.push(o4);
+                          if (i2 && s4.label < i2[2]) {
+                            s4.label = i2[2], s4.ops.push(o4);
                             break;
                           }
-                          i2[2] && s3.ops.pop(), s3.trys.pop();
+                          i2[2] && s4.ops.pop(), s4.trys.pop();
                           continue;
                       }
-                      o4 = t3.call(e3, s3);
+                      o4 = t3.call(e3, s4);
                     } catch (e4) {
                       o4 = [6, e4], r2 = 0;
                     } finally {
@@ -18534,7 +18551,7 @@ var require_main = __commonJS({
             }, e3.prototype._doLoadSingleGrammar = function(e4) {
               return o(this, void 0, void 0, function() {
                 var t3, n2;
-                return s2(this, function(r2) {
+                return s3(this, function(r2) {
                   switch (r2.label) {
                     case 0:
                       return [4, this._options.loadGrammar(e4)];
@@ -18545,7 +18562,7 @@ var require_main = __commonJS({
               });
             }, e3.prototype._loadSingleGrammar = function(e4) {
               return o(this, void 0, void 0, function() {
-                return s2(this, function(t3) {
+                return s3(this, function(t3) {
                   return this._ensureGrammarCache.has(e4) || this._ensureGrammarCache.set(e4, this._doLoadSingleGrammar(e4)), [2, this._ensureGrammarCache.get(e4)];
                 });
               });
@@ -18555,8 +18572,8 @@ var require_main = __commonJS({
                 n2 instanceof l.FullScopeDependency ? l.collectDependencies(t3, this._syncRegistry.lookup(e4), r2) : l.collectSpecificDependencies(t3, this._syncRegistry.lookup(e4), r2, n2.include);
                 var i2 = this._syncRegistry.injections(n2.scopeName);
                 if (i2)
-                  for (var o2 = 0, s3 = i2; o2 < s3.length; o2++) {
-                    var a2 = s3[o2];
+                  for (var o2 = 0, s4 = i2; o2 < s4.length; o2++) {
+                    var a2 = s4[o2];
                     t3.add(new l.FullScopeDependency(a2));
                   }
               } else if (n2.scopeName === e4)
@@ -18564,16 +18581,16 @@ var require_main = __commonJS({
             }, e3.prototype._loadGrammar = function(e4, t3, n2, r2) {
               return o(this, void 0, void 0, function() {
                 var i2, o2, a2, c2, u2, h3, p, d, f, g, m, _, y = this;
-                return s2(this, function(s3) {
-                  switch (s3.label) {
+                return s3(this, function(s4) {
+                  switch (s4.label) {
                     case 0:
-                      i2 = new Set(), o2 = new Set(), i2.add(e4), a2 = [new l.FullScopeDependency(e4)], s3.label = 1;
+                      i2 = new Set(), o2 = new Set(), i2.add(e4), a2 = [new l.FullScopeDependency(e4)], s4.label = 1;
                     case 1:
                       return a2.length > 0 ? (c2 = a2, a2 = [], [4, Promise.all(c2.map(function(e5) {
                         return y._loadSingleGrammar(e5.scopeName);
                       }))]) : [3, 3];
                     case 2:
-                      for (s3.sent(), u2 = new l.ScopeDependencyCollector(), h3 = 0, p = c2; h3 < p.length; h3++)
+                      for (s4.sent(), u2 = new l.ScopeDependencyCollector(), h3 = 0, p = c2; h3 < p.length; h3++)
                         _ = p[h3], this._collectDependenciesForDep(e4, u2, _);
                       for (d = 0, f = u2.full; d < f.length; d++)
                         _ = f[d], i2.has(_.scopeName) || (i2.add(_.scopeName), a2.push(_));
@@ -18587,7 +18604,7 @@ var require_main = __commonJS({
               });
             }, e3.prototype.addGrammar = function(e4, t3, n2, r2) {
               return t3 === void 0 && (t3 = []), n2 === void 0 && (n2 = 0), r2 === void 0 && (r2 = null), o(this, void 0, void 0, function() {
-                return s2(this, function(i2) {
+                return s3(this, function(i2) {
                   switch (i2.label) {
                     case 0:
                       return this._syncRegistry.addGrammar(e4, t3), [4, this.grammarForScopeName(e4.scopeName, n2, r2)];
@@ -18606,7 +18623,7 @@ var require_main = __commonJS({
             return !!e3 && !!e3.match(/[\w\.:]+/);
           }
           Object.defineProperty(t2, "__esModule", {value: true}), t2.createMatchers = void 0, t2.createMatchers = function(e3, t3) {
-            for (var r, i, o, s2 = [], a = (o = (i = /([LR]:|[\w\.:][\w\.:\-]*|[\,\|\-\(\)])/g).exec(r = e3), {next: function() {
+            for (var r, i, o, s3 = [], a = (o = (i = /([LR]:|[\w\.:][\w\.:\-]*|[\,\|\-\(\)])/g).exec(r = e3), {next: function() {
               if (!o)
                 return null;
               var e4 = o[0];
@@ -18627,11 +18644,11 @@ var require_main = __commonJS({
                 c = a.next();
               }
               var l = p();
-              if (s2.push({matcher: l, priority: u}), c !== ",")
+              if (s3.push({matcher: l, priority: u}), c !== ",")
                 break;
               c = a.next();
             }
-            return s2;
+            return s3;
             function h2() {
               if (c === "-") {
                 c = a.next();
@@ -18680,13 +18697,13 @@ var require_main = __commonJS({
           };
         }, 69: (e2, t2) => {
           function n(e3, t3, n2) {
-            var r = e3.length, i = 0, o = 1, s2 = 0;
+            var r = e3.length, i = 0, o = 1, s3 = 0;
             function a(t4) {
               if (n2 === null)
                 i += t4;
               else
                 for (; t4 > 0; )
-                  e3.charCodeAt(i) === 10 ? (i++, o++, s2 = 0) : (i++, s2++), t4--;
+                  e3.charCodeAt(i) === 10 ? (i++, o++, s3 = 0) : (i++, s3++), t4--;
             }
             function c(e4) {
               n2 === null ? i = e4 : a(e4 - i);
@@ -18731,7 +18748,7 @@ var require_main = __commonJS({
               if (_ === null)
                 return b("missing <key>");
               var e4 = {};
-              n2 !== null && (e4[n2] = {filename: t3, line: o, char: s2}), f[_] = e4, _ = null, y(1, e4);
+              n2 !== null && (e4[n2] = {filename: t3, line: o, char: s3}), f[_] = e4, _ = null, y(1, e4);
             }, A = function() {
               if (_ === null)
                 return b("missing <key>");
@@ -18849,7 +18866,7 @@ var require_main = __commonJS({
                   var j = (R = void 0, S = void 0, S = false, (R = p(">")).charCodeAt(R.length - 1) === 47 && (S = true, R = R.substring(0, R.length - 1)), {name: R.trim(), isClosed: S});
                   switch (j.name) {
                     case "dict":
-                      d === 1 ? w() : d === 2 ? (k = void 0, k = {}, n2 !== null && (k[n2] = {filename: t3, line: o, char: s2}), f.push(k), y(1, k)) : (f = {}, n2 !== null && (f[n2] = {filename: t3, line: o, char: s2}), y(1, f)), j.isClosed && I();
+                      d === 1 ? w() : d === 2 ? (k = void 0, k = {}, n2 !== null && (k[n2] = {filename: t3, line: o, char: s3}), f.push(k), y(1, k)) : (f = {}, n2 !== null && (f[n2] = {filename: t3, line: o, char: s3}), y(1, f)), j.isClosed && I();
                       continue;
                     case "array":
                       d === 1 ? A() : d === 2 ? (P = void 0, P = [], f.push(P), y(2, P)) : y(2, f = []), j.isClosed && x();
@@ -18901,7 +18918,7 @@ var require_main = __commonJS({
         }, 652: function(e2, t2, n) {
           var r = this && this.__awaiter || function(e3, t3, n2, r2) {
             return new (n2 || (n2 = Promise))(function(i2, o2) {
-              function s3(e4) {
+              function s4(e4) {
                 try {
                   c(r2.next(e4));
                 } catch (e5) {
@@ -18919,12 +18936,12 @@ var require_main = __commonJS({
                 var t4;
                 e4.done ? i2(e4.value) : (t4 = e4.value, t4 instanceof n2 ? t4 : new n2(function(e5) {
                   e5(t4);
-                })).then(s3, a);
+                })).then(s4, a);
               }
               c((r2 = r2.apply(e3, t3 || [])).next());
             });
           }, i = this && this.__generator || function(e3, t3) {
-            var n2, r2, i2, o2, s3 = {label: 0, sent: function() {
+            var n2, r2, i2, o2, s4 = {label: 0, sent: function() {
               if (1 & i2[0])
                 throw i2[1];
               return i2[1];
@@ -18937,7 +18954,7 @@ var require_main = __commonJS({
                 return function(o4) {
                   if (n2)
                     throw new TypeError("Generator is already executing.");
-                  for (; s3; )
+                  for (; s4; )
                     try {
                       if (n2 = 1, r2 && (i2 = 2 & o4[0] ? r2.return : o4[0] ? r2.throw || ((i2 = r2.return) && i2.call(r2), 0) : r2.next) && !(i2 = i2.call(r2, o4[1])).done)
                         return i2;
@@ -18947,34 +18964,34 @@ var require_main = __commonJS({
                           i2 = o4;
                           break;
                         case 4:
-                          return s3.label++, {value: o4[1], done: false};
+                          return s4.label++, {value: o4[1], done: false};
                         case 5:
-                          s3.label++, r2 = o4[1], o4 = [0];
+                          s4.label++, r2 = o4[1], o4 = [0];
                           continue;
                         case 7:
-                          o4 = s3.ops.pop(), s3.trys.pop();
+                          o4 = s4.ops.pop(), s4.trys.pop();
                           continue;
                         default:
-                          if (!((i2 = (i2 = s3.trys).length > 0 && i2[i2.length - 1]) || o4[0] !== 6 && o4[0] !== 2)) {
-                            s3 = 0;
+                          if (!((i2 = (i2 = s4.trys).length > 0 && i2[i2.length - 1]) || o4[0] !== 6 && o4[0] !== 2)) {
+                            s4 = 0;
                             continue;
                           }
                           if (o4[0] === 3 && (!i2 || o4[1] > i2[0] && o4[1] < i2[3])) {
-                            s3.label = o4[1];
+                            s4.label = o4[1];
                             break;
                           }
-                          if (o4[0] === 6 && s3.label < i2[1]) {
-                            s3.label = i2[1], i2 = o4;
+                          if (o4[0] === 6 && s4.label < i2[1]) {
+                            s4.label = i2[1], i2 = o4;
                             break;
                           }
-                          if (i2 && s3.label < i2[2]) {
-                            s3.label = i2[2], s3.ops.push(o4);
+                          if (i2 && s4.label < i2[2]) {
+                            s4.label = i2[2], s4.ops.push(o4);
                             break;
                           }
-                          i2[2] && s3.ops.pop(), s3.trys.pop();
+                          i2[2] && s4.ops.pop(), s4.trys.pop();
                           continue;
                       }
-                      o4 = t3.call(e3, s3);
+                      o4 = t3.call(e3, s4);
                     } catch (e4) {
                       o4 = [6, e4], r2 = 0;
                     } finally {
@@ -18988,7 +19005,7 @@ var require_main = __commonJS({
             }
           };
           Object.defineProperty(t2, "__esModule", {value: true}), t2.SyncRegistry = void 0;
-          var o = n(527), s2 = function() {
+          var o = n(527), s3 = function() {
             function e3(e4, t3) {
               this._theme = e4, this._grammars = {}, this._rawGrammars = {}, this._injectionGrammars = {}, this._onigLibPromise = t3;
             }
@@ -19012,13 +19029,13 @@ var require_main = __commonJS({
               return this._theme.getDefaults();
             }, e3.prototype.themeMatch = function(e4) {
               return this._theme.match(e4);
-            }, e3.prototype.grammarForScopeName = function(e4, t3, n2, s3) {
+            }, e3.prototype.grammarForScopeName = function(e4, t3, n2, s4) {
               return r(this, void 0, void 0, function() {
                 var r2, a, c, u, l;
                 return i(this, function(i2) {
                   switch (i2.label) {
                     case 0:
-                      return this._grammars[e4] ? [3, 2] : (r2 = this._rawGrammars[e4]) ? (a = this._grammars, c = e4, u = o.createGrammar, l = [r2, t3, n2, s3, this], [4, this._onigLibPromise]) : [2, null];
+                      return this._grammars[e4] ? [3, 2] : (r2 = this._rawGrammars[e4]) ? (a = this._grammars, c = e4, u = o.createGrammar, l = [r2, t3, n2, s4, this], [4, this._onigLibPromise]) : [2, null];
                     case 1:
                       a[c] = u.apply(void 0, l.concat([i2.sent()])), i2.label = 2;
                     case 2:
@@ -19028,7 +19045,7 @@ var require_main = __commonJS({
               });
             }, e3;
           }();
-          t2.SyncRegistry = s2;
+          t2.SyncRegistry = s3;
         }, 792: function(e2, t2, n) {
           var r, i = this && this.__extends || (r = function(e3, t3) {
             return (r = Object.setPrototypeOf || {__proto__: []} instanceof Array && function(e4, t4) {
@@ -19046,7 +19063,7 @@ var require_main = __commonJS({
             r(e3, t3), e3.prototype = t3 === null ? Object.create(t3) : (n2.prototype = t3.prototype, new n2());
           });
           Object.defineProperty(t2, "__esModule", {value: true}), t2.RuleFactory = t2.BeginWhileRule = t2.BeginEndRule = t2.IncludeOnlyRule = t2.MatchRule = t2.RegExpSourceList = t2.RegExpSource = t2.CaptureRule = t2.Rule = t2.CompiledRule = void 0;
-          var o = n(878), s2 = /\\(\d+)/, a = /\\(\d+)/g, c = function() {
+          var o = n(878), s3 = /\\(\d+)/, a = /\\(\d+)/g, c = function() {
             function e3(e4, t3, n2) {
               this.debugRegExps = t3, this.rules = n2, this.scanner = e4.createOnigScanner(t3);
             }
@@ -19071,8 +19088,8 @@ var require_main = __commonJS({
           t2.Rule = u;
           var l = function(e3) {
             function t3(t4, n2, r2, i2, o2) {
-              var s3 = e3.call(this, t4, n2, r2, i2) || this;
-              return s3.retokenizeCapturedWithRuleId = o2, s3;
+              var s4 = e3.call(this, t4, n2, r2, i2) || this;
+              return s4.retokenizeCapturedWithRuleId = o2, s4;
             }
             return i(t3, e3), t3.prototype.dispose = function() {
             }, t3.prototype.collectPatternsRecursive = function(e4, t4, n2) {
@@ -19098,7 +19115,7 @@ var require_main = __commonJS({
                   this.hasAnchor = false, this.source = e4;
               else
                 this.hasAnchor = false, this.source = e4;
-              this.hasAnchor ? this._anchorCache = this._buildAnchorCache() : this._anchorCache = null, this.ruleId = t3, this.hasBackReferences = s2.test(this.source);
+              this.hasAnchor ? this._anchorCache = this._buildAnchorCache() : this._anchorCache = null, this.ruleId = t3, this.hasBackReferences = s3.test(this.source);
             }
             return e3.prototype.clone = function() {
               return new e3(this.source, this.ruleId, true);
@@ -19112,10 +19129,10 @@ var require_main = __commonJS({
                 return (n2[parseInt(t4, 10)] || "").replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, "\\$&");
               });
             }, e3.prototype._buildAnchorCache = function() {
-              var e4, t3, n2, r2, i2 = [], o2 = [], s3 = [], a2 = [];
+              var e4, t3, n2, r2, i2 = [], o2 = [], s4 = [], a2 = [];
               for (e4 = 0, t3 = this.source.length; e4 < t3; e4++)
-                n2 = this.source.charAt(e4), i2[e4] = n2, o2[e4] = n2, s3[e4] = n2, a2[e4] = n2, n2 === "\\" && e4 + 1 < t3 && ((r2 = this.source.charAt(e4 + 1)) === "A" ? (i2[e4 + 1] = "\uFFFF", o2[e4 + 1] = "\uFFFF", s3[e4 + 1] = "A", a2[e4 + 1] = "A") : r2 === "G" ? (i2[e4 + 1] = "\uFFFF", o2[e4 + 1] = "G", s3[e4 + 1] = "\uFFFF", a2[e4 + 1] = "G") : (i2[e4 + 1] = r2, o2[e4 + 1] = r2, s3[e4 + 1] = r2, a2[e4 + 1] = r2), e4++);
-              return {A0_G0: i2.join(""), A0_G1: o2.join(""), A1_G0: s3.join(""), A1_G1: a2.join("")};
+                n2 = this.source.charAt(e4), i2[e4] = n2, o2[e4] = n2, s4[e4] = n2, a2[e4] = n2, n2 === "\\" && e4 + 1 < t3 && ((r2 = this.source.charAt(e4 + 1)) === "A" ? (i2[e4 + 1] = "\uFFFF", o2[e4 + 1] = "\uFFFF", s4[e4 + 1] = "A", a2[e4 + 1] = "A") : r2 === "G" ? (i2[e4 + 1] = "\uFFFF", o2[e4 + 1] = "G", s4[e4 + 1] = "\uFFFF", a2[e4 + 1] = "G") : (i2[e4 + 1] = r2, o2[e4 + 1] = r2, s4[e4 + 1] = r2, a2[e4 + 1] = r2), e4++);
+              return {A0_G0: i2.join(""), A0_G1: o2.join(""), A1_G0: s4.join(""), A1_G1: a2.join("")};
             }, e3.prototype.resolveAnchors = function(e4, t3) {
               return this.hasAnchor && this._anchorCache ? e4 ? t3 ? this._anchorCache.A1_G1 : this._anchorCache.A1_G0 : t3 ? this._anchorCache.A0_G1 : this._anchorCache.A0_G0 : this.source;
             }, e3;
@@ -19161,8 +19178,8 @@ var require_main = __commonJS({
           t2.RegExpSourceList = p;
           var d = function(e3) {
             function t3(t4, n2, r2, i2, o2) {
-              var s3 = e3.call(this, t4, n2, r2, null) || this;
-              return s3._match = new h2(i2, s3.id), s3.captures = o2, s3._cachedCompiledPatterns = null, s3;
+              var s4 = e3.call(this, t4, n2, r2, null) || this;
+              return s4._match = new h2(i2, s4.id), s4.captures = o2, s4._cachedCompiledPatterns = null, s4;
             }
             return i(t3, e3), t3.prototype.dispose = function() {
               this._cachedCompiledPatterns && (this._cachedCompiledPatterns.dispose(), this._cachedCompiledPatterns = null);
@@ -19181,8 +19198,8 @@ var require_main = __commonJS({
           t2.MatchRule = d;
           var f = function(e3) {
             function t3(t4, n2, r2, i2, o2) {
-              var s3 = e3.call(this, t4, n2, r2, i2) || this;
-              return s3.patterns = o2.patterns, s3.hasMissingPatterns = o2.hasMissingPatterns, s3._cachedCompiledPatterns = null, s3;
+              var s4 = e3.call(this, t4, n2, r2, i2) || this;
+              return s4.patterns = o2.patterns, s4.hasMissingPatterns = o2.hasMissingPatterns, s4._cachedCompiledPatterns = null, s4;
             }
             return i(t3, e3), t3.prototype.dispose = function() {
               this._cachedCompiledPatterns && (this._cachedCompiledPatterns.dispose(), this._cachedCompiledPatterns = null);
@@ -19200,9 +19217,9 @@ var require_main = __commonJS({
           }(u);
           t2.IncludeOnlyRule = f;
           var g = function(e3) {
-            function t3(t4, n2, r2, i2, o2, s3, a2, c2, u2, l2) {
+            function t3(t4, n2, r2, i2, o2, s4, a2, c2, u2, l2) {
               var p2 = e3.call(this, t4, n2, r2, i2) || this;
-              return p2._begin = new h2(o2, p2.id), p2.beginCaptures = s3, p2._end = new h2(a2 || "\uFFFF", -1), p2.endHasBackReferences = p2._end.hasBackReferences, p2.endCaptures = c2, p2.applyEndPatternLast = u2 || false, p2.patterns = l2.patterns, p2.hasMissingPatterns = l2.hasMissingPatterns, p2._cachedCompiledPatterns = null, p2;
+              return p2._begin = new h2(o2, p2.id), p2.beginCaptures = s4, p2._end = new h2(a2 || "\uFFFF", -1), p2.endHasBackReferences = p2._end.hasBackReferences, p2.endCaptures = c2, p2.applyEndPatternLast = u2 || false, p2.patterns = l2.patterns, p2.hasMissingPatterns = l2.hasMissingPatterns, p2._cachedCompiledPatterns = null, p2;
             }
             return i(t3, e3), t3.prototype.dispose = function() {
               this._cachedCompiledPatterns && (this._cachedCompiledPatterns.dispose(), this._cachedCompiledPatterns = null);
@@ -19229,9 +19246,9 @@ var require_main = __commonJS({
           }(u);
           t2.BeginEndRule = g;
           var m = function(e3) {
-            function t3(t4, n2, r2, i2, o2, s3, a2, c2, u2) {
+            function t3(t4, n2, r2, i2, o2, s4, a2, c2, u2) {
               var l2 = e3.call(this, t4, n2, r2, i2) || this;
-              return l2._begin = new h2(o2, l2.id), l2.beginCaptures = s3, l2.whileCaptures = c2, l2._while = new h2(a2, -2), l2.whileHasBackReferences = l2._while.hasBackReferences, l2.patterns = u2.patterns, l2.hasMissingPatterns = u2.hasMissingPatterns, l2._cachedCompiledPatterns = null, l2._cachedCompiledWhilePatterns = null, l2;
+              return l2._begin = new h2(o2, l2.id), l2.beginCaptures = s4, l2.whileCaptures = c2, l2._while = new h2(a2, -2), l2.whileHasBackReferences = l2._while.hasBackReferences, l2.patterns = u2.patterns, l2.hasMissingPatterns = u2.hasMissingPatterns, l2._cachedCompiledPatterns = null, l2._cachedCompiledWhilePatterns = null, l2;
             }
             return i(t3, e3), t3.prototype.dispose = function() {
               this._cachedCompiledPatterns && (this._cachedCompiledPatterns.dispose(), this._cachedCompiledPatterns = null), this._cachedCompiledWhilePatterns && (this._cachedCompiledWhilePatterns.dispose(), this._cachedCompiledWhilePatterns = null);
@@ -19276,8 +19293,8 @@ var require_main = __commonJS({
                   return new d(t3.$vscodeTextmateLocation, t3.id, t3.name, t3.match, e3._compileCaptures(t3.captures, n2, r2));
                 if (t3.begin === void 0) {
                   t3.repository && (r2 = o.mergeObjects({}, r2, t3.repository));
-                  var s3 = t3.patterns;
-                  return s3 === void 0 && t3.include && (s3 = [{include: t3.include}]), new f(t3.$vscodeTextmateLocation, t3.id, t3.name, t3.contentName, e3._compilePatterns(s3, n2, r2));
+                  var s4 = t3.patterns;
+                  return s4 === void 0 && t3.include && (s4 = [{include: t3.include}]), new f(t3.$vscodeTextmateLocation, t3.id, t3.name, t3.contentName, e3._compilePatterns(s4, n2, r2));
                 }
                 return t3.while ? new m(t3.$vscodeTextmateLocation, t3.id, t3.name, t3.contentName, t3.begin, e3._compileCaptures(t3.beginCaptures || t3.captures, n2, r2), t3.while, e3._compileCaptures(t3.whileCaptures || t3.captures, n2, r2), e3._compilePatterns(t3.patterns, n2, r2)) : new g(t3.$vscodeTextmateLocation, t3.id, t3.name, t3.contentName, t3.begin, e3._compileCaptures(t3.beginCaptures || t3.captures, n2, r2), t3.end, e3._compileCaptures(t3.endCaptures || t3.captures, n2, r2), t3.applyEndPatternLast, e3._compilePatterns(t3.patterns, n2, r2));
               }), t3.id;
@@ -19285,21 +19302,21 @@ var require_main = __commonJS({
               var i2 = [];
               if (t3) {
                 var o2 = 0;
-                for (var s3 in t3)
-                  s3 !== "$vscodeTextmateLocation" && (c2 = parseInt(s3, 10)) > o2 && (o2 = c2);
+                for (var s4 in t3)
+                  s4 !== "$vscodeTextmateLocation" && (c2 = parseInt(s4, 10)) > o2 && (o2 = c2);
                 for (var a2 = 0; a2 <= o2; a2++)
                   i2[a2] = null;
-                for (var s3 in t3)
-                  if (s3 !== "$vscodeTextmateLocation") {
-                    var c2 = parseInt(s3, 10), u2 = 0;
-                    t3[s3].patterns && (u2 = e3.getCompiledRuleId(t3[s3], n2, r2)), i2[c2] = e3.createCaptureRule(n2, t3[s3].$vscodeTextmateLocation, t3[s3].name, t3[s3].contentName, u2);
+                for (var s4 in t3)
+                  if (s4 !== "$vscodeTextmateLocation") {
+                    var c2 = parseInt(s4, 10), u2 = 0;
+                    t3[s4].patterns && (u2 = e3.getCompiledRuleId(t3[s4], n2, r2)), i2[c2] = e3.createCaptureRule(n2, t3[s4].$vscodeTextmateLocation, t3[s4].name, t3[s4].contentName, u2);
                   }
               }
               return i2;
             }, e3._compilePatterns = function(t3, n2, r2) {
               var i2 = [];
               if (t3)
-                for (var o2 = 0, s3 = t3.length; o2 < s3; o2++) {
+                for (var o2 = 0, s4 = t3.length; o2 < s4; o2++) {
                   var a2 = t3[o2], c2 = -1;
                   if (a2.include)
                     if (a2.include.charAt(0) === "#") {
@@ -19344,8 +19361,8 @@ var require_main = __commonJS({
               return [];
             if (!e3.settings || !Array.isArray(e3.settings))
               return [];
-            for (var t3 = e3.settings, i2 = [], o2 = 0, s3 = 0, a2 = t3.length; s3 < a2; s3++) {
-              var c2 = t3[s3];
+            for (var t3 = e3.settings, i2 = [], o2 = 0, s4 = 0, a2 = t3.length; s4 < a2; s4++) {
+              var c2 = t3[s4];
               if (c2.settings) {
                 var u2 = void 0;
                 u2 = typeof c2.scope == "string" ? c2.scope.replace(/^[,]+/, "").replace(/[,]+$/, "").split(",") : Array.isArray(c2.scope) ? c2.scope : [""];
@@ -19369,7 +19386,7 @@ var require_main = __commonJS({
                 var f = null;
                 for (typeof c2.settings.background == "string" && r(c2.settings.background) && (f = c2.settings.background), h3 = 0, p = u2.length; h3 < p; h3++) {
                   var g, m = (g = u2[h3].trim().split(" "))[g.length - 1], _ = null;
-                  g.length > 1 && (_ = g.slice(0, g.length - 1)).reverse(), i2[o2++] = new n(m, _, s3, l2, d, f);
+                  g.length > 1 && (_ = g.slice(0, g.length - 1)).reverse(), i2[o2++] = new n(m, _, s4, l2, d, f);
                 }
               }
             }
@@ -19384,14 +19401,14 @@ var require_main = __commonJS({
               var o2 = e3.shift();
               o2.fontStyle !== -1 && (n2 = o2.fontStyle), o2.foreground !== null && (r2 = o2.foreground), o2.background !== null && (i2 = o2.background);
             }
-            for (var p = new s2(t3), d = new l(0, null, n2, p.getId(r2), p.getId(i2)), f = new h2(new l(0, null, -1, 0, 0), []), g = 0, m = e3.length; g < m; g++) {
+            for (var p = new s3(t3), d = new l(0, null, n2, p.getId(r2), p.getId(i2)), f = new h2(new l(0, null, -1, 0, 0), []), g = 0, m = e3.length; g < m; g++) {
               var _ = e3[g];
               f.insert(0, _.scope, _.parentScopes, _.fontStyle, p.getId(_.foreground), p.getId(_.background));
             }
             return new a(p, d, f);
           }
           t2.ParsedThemeRule = n, t2.parseTheme = i;
-          var s2 = function() {
+          var s3 = function() {
             function e3(e4) {
               if (this._lastColorId = 0, this._id2color = [], this._color2id = Object.create(null), Array.isArray(e4)) {
                 this._isFrozen = true;
@@ -19414,7 +19431,7 @@ var require_main = __commonJS({
               return this._id2color.slice(0);
             }, e3;
           }();
-          t2.ColorMap = s2;
+          t2.ColorMap = s3;
           var a = function() {
             function e3(e4, t3, n2) {
               this._colorMap = e4, this._root = n2, this._defaults = t3, this._cache = {};
@@ -19478,8 +19495,8 @@ var require_main = __commonJS({
               if (e4.scopeDepth === t3.scopeDepth) {
                 var n2 = e4.parentScopes, r2 = t3.parentScopes, i2 = n2 === null ? 0 : n2.length, o2 = r2 === null ? 0 : r2.length;
                 if (i2 === o2)
-                  for (var s3 = 0; s3 < i2; s3++) {
-                    var a2 = n2[s3].length, c2 = r2[s3].length;
+                  for (var s4 = 0; s4 < i2; s4++) {
+                    var a2 = n2[s4].length, c2 = r2[s4].length;
                     if (a2 !== c2)
                       return c2 - a2;
                   }
@@ -19491,15 +19508,15 @@ var require_main = __commonJS({
                 return e3._sortBySpecificity([].concat(this._mainRule).concat(this._rulesWithParentScopes));
               var n2, r2, i2 = t3.indexOf(".");
               return i2 === -1 ? (n2 = t3, r2 = "") : (n2 = t3.substring(0, i2), r2 = t3.substring(i2 + 1)), this._children.hasOwnProperty(n2) ? this._children[n2].match(r2) : e3._sortBySpecificity([].concat(this._mainRule).concat(this._rulesWithParentScopes));
-            }, e3.prototype.insert = function(t3, n2, r2, i2, o2, s3) {
+            }, e3.prototype.insert = function(t3, n2, r2, i2, o2, s4) {
               if (n2 !== "") {
                 var a2, c2, u2, h3 = n2.indexOf(".");
-                h3 === -1 ? (a2 = n2, c2 = "") : (a2 = n2.substring(0, h3), c2 = n2.substring(h3 + 1)), this._children.hasOwnProperty(a2) ? u2 = this._children[a2] : (u2 = new e3(this._mainRule.clone(), l.cloneArr(this._rulesWithParentScopes)), this._children[a2] = u2), u2.insert(t3 + 1, c2, r2, i2, o2, s3);
+                h3 === -1 ? (a2 = n2, c2 = "") : (a2 = n2.substring(0, h3), c2 = n2.substring(h3 + 1)), this._children.hasOwnProperty(a2) ? u2 = this._children[a2] : (u2 = new e3(this._mainRule.clone(), l.cloneArr(this._rulesWithParentScopes)), this._children[a2] = u2), u2.insert(t3 + 1, c2, r2, i2, o2, s4);
               } else
-                this._doInsertHere(t3, r2, i2, o2, s3);
+                this._doInsertHere(t3, r2, i2, o2, s4);
             }, e3.prototype._doInsertHere = function(e4, t3, n2, r2, i2) {
               if (t3 !== null) {
-                for (var o2 = 0, s3 = this._rulesWithParentScopes.length; o2 < s3; o2++) {
+                for (var o2 = 0, s4 = this._rulesWithParentScopes.length; o2 < s4; o2++) {
                   var a2 = this._rulesWithParentScopes[o2];
                   if (u(a2.parentScopes, t3) === 0)
                     return void a2.acceptOverwrite(e4, n2, r2, i2);
@@ -19545,10 +19562,10 @@ var require_main = __commonJS({
               return e4 !== null && (r.lastIndex = 0, r.test(e4));
             }, e3.replaceCaptures = function(e4, t3, n2) {
               return e4.replace(r, function(e5, r2, i2, o) {
-                var s2 = n2[parseInt(r2 || i2, 10)];
-                if (!s2)
+                var s3 = n2[parseInt(r2 || i2, 10)];
+                if (!s3)
                   return e5;
-                for (var a = t3.substring(s2.start, s2.end); a[0] === "."; )
+                for (var a = t3.substring(s3.start, s3.end); a[0] === "."; )
                   a = a.substring(1);
                 switch (o) {
                   case "downcase":
@@ -22319,141 +22336,1102 @@ var import_rehype_parse = __toModule(require_rehype_parse());
 var import_remark_parse = __toModule(require_remark_parse());
 var import_remark_rehype = __toModule(require_remark_rehype());
 
-// node_modules/unist-util-is/index.js
-var convert = function(test) {
-  if (test === void 0 || test === null) {
-    return ok;
+// node_modules/shiki/dist/index.esm.js
+var import_onigasm = __toModule(require_lib3());
+var import_vscode_textmate = __toModule(require_main());
+var languages = [
+  {
+    id: "abap",
+    scopeName: "source.abap",
+    path: "abap.tmLanguage.json"
+  },
+  {
+    id: "actionscript-3",
+    scopeName: "source.actionscript.3",
+    path: "actionscript-3.tmLanguage.json"
+  },
+  {
+    id: "ada",
+    scopeName: "source.ada",
+    path: "ada.tmLanguage.json"
+  },
+  {
+    id: "apex",
+    scopeName: "source.apex",
+    path: "apex.tmLanguage.json"
+  },
+  {
+    id: "applescript",
+    scopeName: "source.applescript",
+    path: "applescript.tmLanguage.json"
+  },
+  {
+    id: "asm",
+    scopeName: "source.asm.x86_64",
+    path: "asm.tmLanguage.json"
+  },
+  {
+    id: "asp-net-razor",
+    scopeName: "text.aspnetcorerazor",
+    path: "asp-net-razor.tmLanguage.json"
+  },
+  {
+    id: "awk",
+    scopeName: "source.awk",
+    path: "awk.tmLanguage.json"
+  },
+  {
+    id: "bat",
+    scopeName: "source.batchfile",
+    path: "bat.tmLanguage.json",
+    aliases: ["batch"]
+  },
+  {
+    id: "c",
+    scopeName: "source.c",
+    path: "c.tmLanguage.json"
+  },
+  {
+    id: "clojure",
+    scopeName: "source.clojure",
+    path: "clojure.tmLanguage.json",
+    aliases: ["clj"]
+  },
+  {
+    id: "cobol",
+    scopeName: "source.cobol",
+    path: "cobol.tmLanguage.json"
+  },
+  {
+    id: "coffee",
+    scopeName: "source.coffee",
+    path: "coffee.tmLanguage.json"
+  },
+  {
+    id: "cpp.embedded.macro",
+    scopeName: "source.cpp.embedded.macro",
+    path: "cpp.embedded.macro.tmLanguage.json"
+  },
+  {
+    id: "cpp",
+    scopeName: "source.cpp",
+    path: "cpp.tmLanguage.json"
+  },
+  {
+    id: "crystal",
+    scopeName: "source.crystal",
+    path: "crystal.tmLanguage.json"
+  },
+  {
+    id: "csharp",
+    scopeName: "source.cs",
+    path: "csharp.tmLanguage.json",
+    aliases: ["c#"]
+  },
+  {
+    id: "css",
+    scopeName: "source.css",
+    path: "css.tmLanguage.json"
+  },
+  {
+    id: "d",
+    scopeName: "source.d",
+    path: "d.tmLanguage.json"
+  },
+  {
+    id: "dart",
+    scopeName: "source.dart",
+    path: "dart.tmLanguage.json"
+  },
+  {
+    id: "diff",
+    scopeName: "source.diff",
+    path: "diff.tmLanguage.json"
+  },
+  {
+    id: "dockerfile",
+    scopeName: "source.dockerfile",
+    path: "dockerfile.tmLanguage.json"
+  },
+  {
+    id: "elixir",
+    scopeName: "source.elixir",
+    path: "elixir.tmLanguage.json"
+  },
+  {
+    id: "elm",
+    scopeName: "source.elm",
+    path: "elm.tmLanguage.json"
+  },
+  {
+    id: "erlang",
+    scopeName: "source.erlang",
+    path: "erlang.tmLanguage.json"
+  },
+  {
+    id: "fsharp",
+    scopeName: "source.fsharp",
+    path: "fsharp.tmLanguage.json",
+    aliases: ["f#"]
+  },
+  {
+    id: "git-commit",
+    scopeName: "text.git-commit",
+    path: "git-commit.tmLanguage.json"
+  },
+  {
+    id: "git-rebase",
+    scopeName: "text.git-rebase",
+    path: "git-rebase.tmLanguage.json"
+  },
+  {
+    id: "gnuplot",
+    scopeName: "source.gnuplot",
+    path: "gnuplot.tmLanguage.json"
+  },
+  {
+    id: "go",
+    scopeName: "source.go",
+    path: "go.tmLanguage.json"
+  },
+  {
+    id: "graphql",
+    scopeName: "source.graphql",
+    path: "graphql.tmLanguage.json"
+  },
+  {
+    id: "groovy",
+    scopeName: "source.groovy",
+    path: "groovy.tmLanguage.json"
+  },
+  {
+    id: "hack",
+    scopeName: "source.hack",
+    path: "hack.tmLanguage.json"
+  },
+  {
+    id: "haml",
+    scopeName: "text.haml",
+    path: "haml.tmLanguage.json"
+  },
+  {
+    id: "handlebars",
+    scopeName: "text.html.handlebars",
+    path: "handlebars.tmLanguage.json",
+    aliases: ["hbs"]
+  },
+  {
+    id: "haskell",
+    scopeName: "source.haskell",
+    path: "haskell.tmLanguage.json"
+  },
+  {
+    id: "hcl",
+    scopeName: "source.hcl",
+    path: "hcl.tmLanguage.json"
+  },
+  {
+    id: "hlsl",
+    scopeName: "source.hlsl",
+    path: "hlsl.tmLanguage.json"
+  },
+  {
+    id: "html-ruby-erb",
+    scopeName: "text.html.erb",
+    path: "html-ruby-erb.tmLanguage.json",
+    aliases: ["erb"]
+  },
+  {
+    id: "html",
+    scopeName: "text.html.basic",
+    path: "html.tmLanguage.json"
+  },
+  {
+    id: "ini",
+    scopeName: "source.ini",
+    path: "ini.tmLanguage.json"
+  },
+  {
+    id: "java",
+    scopeName: "source.java",
+    path: "java.tmLanguage.json"
+  },
+  {
+    id: "javascript",
+    scopeName: "source.js",
+    path: "javascript.tmLanguage.json",
+    aliases: ["js"]
+  },
+  {
+    id: "jinja-html",
+    scopeName: "text.html.jinja",
+    path: "jinja-html.tmLanguage.json"
+  },
+  {
+    id: "jinja",
+    scopeName: "source.jinja",
+    path: "jinja.tmLanguage.json"
+  },
+  {
+    id: "json",
+    scopeName: "source.json",
+    path: "json.tmLanguage.json"
+  },
+  {
+    id: "jsonc",
+    scopeName: "source.json.comments",
+    path: "jsonc.tmLanguage.json"
+  },
+  {
+    id: "jsonnet",
+    scopeName: "source.jsonnet",
+    path: "jsonnet.tmLanguage.json"
+  },
+  {
+    id: "jsx",
+    scopeName: "documentation.injection.js.jsx",
+    path: "jsx.tmLanguage.json"
+  },
+  {
+    id: "julia",
+    scopeName: "source.julia",
+    path: "julia.tmLanguage.json"
+  },
+  {
+    id: "kotlin",
+    scopeName: "source.kotlin",
+    path: "kotlin.tmLanguage.json"
+  },
+  {
+    id: "latex",
+    scopeName: "text.tex.latex",
+    path: "latex.tmLanguage.json",
+    aliases: ["tex"]
+  },
+  {
+    id: "less",
+    scopeName: "source.css.less",
+    path: "less.tmLanguage.json"
+  },
+  {
+    id: "lisp",
+    scopeName: "source.lisp",
+    path: "lisp.tmLanguage.json"
+  },
+  {
+    id: "logo",
+    scopeName: "source.logo",
+    path: "logo.tmLanguage.json"
+  },
+  {
+    id: "lua",
+    scopeName: "source.lua",
+    path: "lua.tmLanguage.json"
+  },
+  {
+    id: "makefile",
+    scopeName: "source.makefile",
+    path: "makefile.tmLanguage.json"
+  },
+  {
+    id: "markdown",
+    scopeName: "text.html.markdown",
+    path: "markdown.tmLanguage.json",
+    aliases: ["md"]
+  },
+  {
+    id: "matlab",
+    scopeName: "source.matlab",
+    path: "matlab.tmLanguage.json"
+  },
+  {
+    id: "mdx",
+    scopeName: "text.html.markdown.jsx",
+    path: "mdx.tmLanguage.json"
+  },
+  {
+    id: "nix",
+    scopeName: "source.nix",
+    path: "nix.tmLanguage.json"
+  },
+  {
+    id: "objective-c",
+    scopeName: "source.objcpp",
+    path: "objective-c.tmLanguage.json",
+    aliases: ["objc"]
+  },
+  {
+    id: "ocaml",
+    scopeName: "source.ocaml",
+    path: "ocaml.tmLanguage.json"
+  },
+  {
+    id: "pascal",
+    scopeName: "source.pascal",
+    path: "pascal.tmLanguage.json"
+  },
+  {
+    id: "perl",
+    scopeName: "source.perl",
+    path: "perl.tmLanguage.json"
+  },
+  {
+    id: "perl6",
+    scopeName: "source.perl.6",
+    path: "perl6.tmLanguage.json"
+  },
+  {
+    id: "php-html",
+    scopeName: "text.html.php",
+    path: "php-html.tmLanguage.json"
+  },
+  {
+    id: "php",
+    scopeName: "source.php",
+    path: "php.tmLanguage.json"
+  },
+  {
+    id: "pls",
+    scopeName: "source.plsql.oracle",
+    path: "pls.tmLanguage.json"
+  },
+  {
+    id: "postcss",
+    scopeName: "source.css.postcss",
+    path: "postcss.tmLanguage.json"
+  },
+  {
+    id: "powershell",
+    scopeName: "source.powershell",
+    path: "powershell.tmLanguage.json",
+    aliases: ["ps", "ps1"]
+  },
+  {
+    id: "prolog",
+    scopeName: "source.prolog",
+    path: "prolog.tmLanguage.json"
+  },
+  {
+    id: "pug",
+    scopeName: "text.pug",
+    path: "pug.tmLanguage.json",
+    aliases: ["jade"]
+  },
+  {
+    id: "puppet",
+    scopeName: "source.puppet",
+    path: "puppet.tmLanguage.json"
+  },
+  {
+    id: "purescript",
+    scopeName: "source.purescript",
+    path: "purescript.tmLanguage.json"
+  },
+  {
+    id: "python",
+    scopeName: "source.python",
+    path: "python.tmLanguage.json",
+    aliases: ["py"]
+  },
+  {
+    id: "r",
+    scopeName: "source.r",
+    path: "r.tmLanguage.json"
+  },
+  {
+    id: "razor",
+    scopeName: "text.html.cshtml",
+    path: "razor.tmLanguage.json"
+  },
+  {
+    id: "ruby",
+    scopeName: "source.ruby",
+    path: "ruby.tmLanguage.json",
+    aliases: ["rb"]
+  },
+  {
+    id: "rust",
+    scopeName: "source.rust",
+    path: "rust.tmLanguage.json"
+  },
+  {
+    id: "sas",
+    scopeName: "source.sas",
+    path: "sas.tmLanguage.json"
+  },
+  {
+    id: "sass",
+    scopeName: "source.sass",
+    path: "sass.tmLanguage.json"
+  },
+  {
+    id: "scala",
+    scopeName: "source.scala",
+    path: "scala.tmLanguage.json"
+  },
+  {
+    id: "scheme",
+    scopeName: "source.scheme",
+    path: "scheme.tmLanguage.json"
+  },
+  {
+    id: "scss",
+    scopeName: "source.css.scss",
+    path: "scss.tmLanguage.json"
+  },
+  {
+    id: "shaderlab",
+    scopeName: "source.shaderlab",
+    path: "shaderlab.tmLanguage.json",
+    aliases: ["shader"]
+  },
+  {
+    id: "shellscript",
+    scopeName: "source.shell",
+    path: "shellscript.tmLanguage.json",
+    aliases: ["shell", "bash", "sh", "zsh"]
+  },
+  {
+    id: "smalltalk",
+    scopeName: "source.smalltalk",
+    path: "smalltalk.tmLanguage.json"
+  },
+  {
+    id: "sql",
+    scopeName: "source.sql",
+    path: "sql.tmLanguage.json"
+  },
+  {
+    id: "ssh-config",
+    scopeName: "source.ssh-config",
+    path: "ssh-config.tmLanguage.json"
+  },
+  {
+    id: "stylus",
+    scopeName: "source.stylus",
+    path: "stylus.tmLanguage.json",
+    aliases: ["styl"]
+  },
+  {
+    id: "swift",
+    scopeName: "source.swift",
+    path: "swift.tmLanguage.json"
+  },
+  {
+    id: "tcl",
+    scopeName: "source.tcl",
+    path: "tcl.tmLanguage.json"
+  },
+  {
+    id: "toml",
+    scopeName: "source.toml",
+    path: "toml.tmLanguage.json"
+  },
+  {
+    id: "ts",
+    scopeName: "documentation.injection.ts",
+    path: "ts.tmLanguage.json"
+  },
+  {
+    id: "tsx",
+    scopeName: "source.tsx",
+    path: "tsx.tmLanguage.json"
+  },
+  {
+    id: "typescript",
+    scopeName: "source.ts",
+    path: "typescript.tmLanguage.json",
+    aliases: ["ts"]
+  },
+  {
+    id: "vb",
+    scopeName: "source.asp.vb.net",
+    path: "vb.tmLanguage.json",
+    aliases: ["cmd"]
+  },
+  {
+    id: "viml",
+    scopeName: "source.viml",
+    path: "viml.tmLanguage.json"
+  },
+  {
+    id: "vue-html",
+    scopeName: "text.html.vue-html",
+    path: "vue-html.tmLanguage.json"
+  },
+  {
+    id: "vue",
+    scopeName: "source.vue",
+    path: "vue.tmLanguage.json"
+  },
+  {
+    id: "wasm",
+    scopeName: "source.wat",
+    path: "wasm.tmLanguage.json"
+  },
+  {
+    id: "xml",
+    scopeName: "text.xml",
+    path: "xml.tmLanguage.json"
+  },
+  {
+    id: "xsl",
+    scopeName: "text.xml.xsl",
+    path: "xsl.tmLanguage.json"
+  },
+  {
+    id: "yaml",
+    scopeName: "source.yaml",
+    path: "yaml.tmLanguage.json"
+  },
+  {
+    id: "\u6587\u8A00",
+    scopeName: "source.wenyan",
+    path: "\u6587\u8A00.tmLanguage.json",
+    aliases: ["wenyan"]
   }
-  if (typeof test === "string") {
-    return typeFactory(test);
+];
+function trimEndSlash(str) {
+  if (str.endsWith("/") || str.endsWith("\\"))
+    return str.slice(0, -1);
+  return str;
+}
+function trimStartDot(str) {
+  if (str.startsWith("./"))
+    return str.slice(2);
+  return str;
+}
+function dirname(str) {
+  const parts = str.split(/[\/\\]/g);
+  return parts[parts.length - 2];
+}
+function join(...parts) {
+  return parts.map(trimEndSlash).map(trimStartDot).join("/");
+}
+var isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof fetch !== "undefined";
+var CDN_ROOT = "";
+var ONIGASM_WASM = "";
+function setCDN(root) {
+  CDN_ROOT = root;
+}
+var _onigasmPromise = null;
+async function getOnigasm() {
+  if (!_onigasmPromise) {
+    let loader;
+    if (isBrowser) {
+      loader = (0, import_onigasm.loadWASM)(ONIGASM_WASM || _resolvePath("dist/onigasm.wasm"));
+    } else {
+      const path = require_path();
+      const onigasmPath = path.join(require.resolve("onigasm"), "../onigasm.wasm");
+      const fs = require_fs();
+      const wasmBin = fs.readFileSync(onigasmPath).buffer;
+      loader = (0, import_onigasm.loadWASM)(wasmBin);
+    }
+    _onigasmPromise = loader.then(() => {
+      return {
+        createOnigScanner(patterns) {
+          return new import_onigasm.OnigScanner(patterns);
+        },
+        createOnigString(s3) {
+          return new import_onigasm.OnigString(s3);
+        }
+      };
+    });
   }
-  if (typeof test === "object") {
-    return "length" in test ? anyFactory(test) : propsFactory(test);
-  }
-  if (typeof test === "function") {
-    return castFactory(test);
-  }
-  throw new Error("Expected function, string, or object as test");
-};
-function anyFactory(tests) {
-  var checks2 = [];
-  var index = -1;
-  while (++index < tests.length) {
-    checks2[index] = convert(tests[index]);
-  }
-  return castFactory(any);
-  function any(...parameters) {
-    var index2 = -1;
-    while (++index2 < checks2.length) {
-      if (checks2[index2].call(this, ...parameters))
-        return true;
+  return _onigasmPromise;
+}
+function _resolvePath(filepath) {
+  if (isBrowser) {
+    if (!CDN_ROOT) {
+      console.warn("[Shiki] no CDN provider found, use `setCDN()` to specify the CDN for loading the resources before calling `getHighlighter()`");
+    }
+    return `${CDN_ROOT}${filepath}`;
+  } else {
+    const path = require_path();
+    if (path.isAbsolute(filepath)) {
+      return filepath;
+    } else {
+      return path.resolve(__dirname, "..", filepath);
     }
   }
 }
-function propsFactory(check) {
-  return castFactory(all);
-  function all(node) {
-    var key;
-    for (key in check) {
-      if (node[key] !== check[key])
-        return;
+async function _fetchAssets(filepath) {
+  const path = _resolvePath(filepath);
+  if (isBrowser) {
+    return await fetch(path).then((r) => r.text());
+  } else {
+    const fs = require_fs();
+    return await fs.promises.readFile(path, "utf-8");
+  }
+}
+async function _fetchJSONAssets(filepath) {
+  return JSON.parse(await _fetchAssets(filepath));
+}
+async function fetchTheme(themePath) {
+  let theme = await _fetchJSONAssets(themePath);
+  const shikiTheme = toShikiTheme(theme);
+  if (shikiTheme.include) {
+    const includedTheme = await fetchTheme(join(dirname(themePath), shikiTheme.include));
+    if (includedTheme.settings) {
+      shikiTheme.settings = shikiTheme.settings.concat(includedTheme.settings);
     }
-    return true;
+    if (includedTheme.bg && !shikiTheme.bg) {
+      shikiTheme.bg = includedTheme.bg;
+    }
   }
+  return shikiTheme;
 }
-function typeFactory(check) {
-  return castFactory(type);
-  function type(node) {
-    return node && node.type === check;
+async function fetchGrammar(filepath) {
+  const content = await _fetchAssets(filepath);
+  return JSON.parse(content);
+}
+function repairTheme(theme) {
+  if (theme.settings[0].settings && !theme.settings[0].scope) {
+    return;
   }
+  theme.settings.unshift({
+    settings: {
+      foreground: theme.fg,
+      background: theme.bg
+    }
+  });
 }
-function castFactory(check) {
-  return assertion;
-  function assertion(...parameters) {
-    return Boolean(check.call(this, ...parameters));
+function toShikiTheme(rawTheme) {
+  const shikiTheme = Object.assign(Object.assign({}, rawTheme), getThemeDefaultColors(rawTheme));
+  if (rawTheme.include) {
+    shikiTheme.include = rawTheme.include;
   }
-}
-function ok() {
-  return true;
-}
-
-// node_modules/unist-util-visit-parents/color.browser.js
-function color(d) {
-  return d;
-}
-
-// node_modules/unist-util-visit-parents/index.js
-var CONTINUE = true;
-var SKIP = "skip";
-var EXIT = false;
-var visitParents = function(tree, test, visitor, reverse) {
-  if (typeof test === "function" && typeof visitor !== "function") {
-    reverse = visitor;
-    visitor = test;
-    test = null;
+  if (rawTheme.tokenColors) {
+    shikiTheme.settings = rawTheme.tokenColors;
   }
-  var is = convert(test);
-  var step = reverse ? -1 : 1;
-  factory(tree, null, [])();
-  function factory(node, index, parents) {
-    var value = typeof node === "object" && node !== null ? node : {};
-    var name;
-    if (typeof value.type === "string") {
-      name = typeof value.tagName === "string" ? value.tagName : typeof value.name === "string" ? value.name : void 0;
-      Object.defineProperty(visit2, "name", {
-        value: "node (" + color(value.type + (name ? "<" + name + ">" : "")) + ")"
+  repairTheme(shikiTheme);
+  return shikiTheme;
+}
+var VSCODE_FALLBACK_EDITOR_FG = {light: "#333333", dark: "#bbbbbb"};
+var VSCODE_FALLBACK_EDITOR_BG = {light: "#fffffe", dark: "#1e1e1e"};
+function getThemeDefaultColors(theme) {
+  var _a, _b, _c, _d, _e, _f;
+  let fg, bg;
+  let settings = theme.settings ? theme.settings : theme.tokenColors;
+  const globalSetting = settings ? settings.find((s3) => {
+    return !s3.name && !s3.scope;
+  }) : void 0;
+  if ((_a = globalSetting === null || globalSetting === void 0 ? void 0 : globalSetting.settings) === null || _a === void 0 ? void 0 : _a.foreground) {
+    fg = globalSetting.settings.foreground;
+  }
+  if ((_b = globalSetting === null || globalSetting === void 0 ? void 0 : globalSetting.settings) === null || _b === void 0 ? void 0 : _b.background) {
+    bg = globalSetting.settings.background;
+  }
+  if (!fg && ((_d = (_c = theme) === null || _c === void 0 ? void 0 : _c.colors) === null || _d === void 0 ? void 0 : _d["editor.foreground"])) {
+    fg = theme.colors["editor.foreground"];
+  }
+  if (!bg && ((_f = (_e = theme) === null || _e === void 0 ? void 0 : _e.colors) === null || _f === void 0 ? void 0 : _f["editor.background"])) {
+    bg = theme.colors["editor.background"];
+  }
+  if (!fg) {
+    fg = theme.type === "light" ? VSCODE_FALLBACK_EDITOR_FG.light : VSCODE_FALLBACK_EDITOR_FG.dark;
+  }
+  if (!bg) {
+    bg = theme.type === "light" ? VSCODE_FALLBACK_EDITOR_BG.light : VSCODE_FALLBACK_EDITOR_BG.dark;
+  }
+  return {
+    fg,
+    bg
+  };
+}
+var Resolver = class {
+  constructor(onigLibPromise, onigLibName) {
+    this.languagesPath = "languages/";
+    this.languageMap = {};
+    this.scopeToLangMap = {};
+    this._onigLibPromise = onigLibPromise;
+    this._onigLibName = onigLibName;
+  }
+  get onigLib() {
+    return this._onigLibPromise;
+  }
+  getOnigLibName() {
+    return this._onigLibName;
+  }
+  getLangRegistration(langIdOrAlias) {
+    return this.languageMap[langIdOrAlias];
+  }
+  async loadGrammar(scopeName) {
+    const lang = this.scopeToLangMap[scopeName];
+    if (!lang) {
+      return null;
+    }
+    if (lang.grammar) {
+      return lang.grammar;
+    }
+    const g = await fetchGrammar(languages.includes(lang) ? `${this.languagesPath}${lang.path}` : lang.path);
+    lang.grammar = g;
+    return g;
+  }
+  addLanguage(l) {
+    this.languageMap[l.id] = l;
+    if (l.aliases) {
+      l.aliases.forEach((a) => {
+        this.languageMap[a] = l;
       });
     }
-    return visit2;
-    function visit2() {
-      var result = [];
-      var subresult;
-      var offset;
-      var grandparents;
-      if (!test || is(node, index, parents[parents.length - 1] || null)) {
-        result = toResult(visitor(node, parents));
-        if (result[0] === EXIT) {
-          return result;
+    this.scopeToLangMap[l.scopeName] = l;
+  }
+};
+var StackElementMetadata = class {
+  static toBinaryStr(metadata) {
+    let r = metadata.toString(2);
+    while (r.length < 32) {
+      r = "0" + r;
+    }
+    return r;
+  }
+  static printMetadata(metadata) {
+    let languageId = StackElementMetadata.getLanguageId(metadata);
+    let tokenType = StackElementMetadata.getTokenType(metadata);
+    let fontStyle = StackElementMetadata.getFontStyle(metadata);
+    let foreground = StackElementMetadata.getForeground(metadata);
+    let background = StackElementMetadata.getBackground(metadata);
+    console.log({
+      languageId,
+      tokenType,
+      fontStyle,
+      foreground,
+      background
+    });
+  }
+  static getLanguageId(metadata) {
+    return (metadata & 255) >>> 0;
+  }
+  static getTokenType(metadata) {
+    return (metadata & 1792) >>> 8;
+  }
+  static getFontStyle(metadata) {
+    return (metadata & 14336) >>> 11;
+  }
+  static getForeground(metadata) {
+    return (metadata & 8372224) >>> 14;
+  }
+  static getBackground(metadata) {
+    return (metadata & 4286578688) >>> 23;
+  }
+  static set(metadata, languageId, tokenType, fontStyle, foreground, background) {
+    let _languageId = StackElementMetadata.getLanguageId(metadata);
+    let _tokenType = StackElementMetadata.getTokenType(metadata);
+    let _fontStyle = StackElementMetadata.getFontStyle(metadata);
+    let _foreground = StackElementMetadata.getForeground(metadata);
+    let _background = StackElementMetadata.getBackground(metadata);
+    if (languageId !== 0) {
+      _languageId = languageId;
+    }
+    if (tokenType !== 0) {
+      _tokenType = tokenType === 8 ? 0 : tokenType;
+    }
+    if (fontStyle !== -1) {
+      _fontStyle = fontStyle;
+    }
+    if (foreground !== 0) {
+      _foreground = foreground;
+    }
+    if (background !== 0) {
+      _background = background;
+    }
+    return (_languageId << 0 | _tokenType << 8 | _fontStyle << 11 | _foreground << 14 | _background << 23) >>> 0;
+  }
+};
+function tokenizeWithTheme(theme, colorMap, fileContents, grammar, options) {
+  let lines = fileContents.split(/\r\n|\r|\n/);
+  let ruleStack = null;
+  let actual = [];
+  let final = [];
+  for (let i = 0, len = lines.length; i < len; i++) {
+    let line = lines[i];
+    if (line === "") {
+      actual = [];
+      final.push([]);
+      continue;
+    }
+    let resultWithScopes = grammar.tokenizeLine(line, ruleStack);
+    let tokensWithScopes = resultWithScopes.tokens;
+    let result = grammar.tokenizeLine2(line, ruleStack);
+    let tokensLength = result.tokens.length / 2;
+    let tokensWithScopesIndex = 0;
+    for (let j = 0; j < tokensLength; j++) {
+      let startIndex = result.tokens[2 * j];
+      let nextStartIndex = j + 1 < tokensLength ? result.tokens[2 * j + 2] : line.length;
+      if (startIndex === nextStartIndex) {
+        continue;
+      }
+      let metadata = result.tokens[2 * j + 1];
+      let foreground = StackElementMetadata.getForeground(metadata);
+      let foregroundColor = colorMap[foreground];
+      let explanation = [];
+      if (options.includeExplanation) {
+        let offset = 0;
+        while (startIndex + offset < nextStartIndex) {
+          let tokenWithScopes = tokensWithScopes[tokensWithScopesIndex];
+          let tokenWithScopesText = line.substring(tokenWithScopes.startIndex, tokenWithScopes.endIndex);
+          offset += tokenWithScopesText.length;
+          explanation.push({
+            content: tokenWithScopesText,
+            scopes: explainThemeScopes(theme, tokenWithScopes.scopes)
+          });
+          tokensWithScopesIndex++;
         }
       }
-      if (node.children && result[0] !== SKIP) {
-        offset = (reverse ? node.children.length : -1) + step;
-        grandparents = parents.concat(node);
-        while (offset > -1 && offset < node.children.length) {
-          subresult = factory(node.children[offset], offset, grandparents)();
-          if (subresult[0] === EXIT) {
-            return subresult;
-          }
-          offset = typeof subresult[1] === "number" ? subresult[1] : offset + step;
-        }
+      actual.push({
+        content: line.substring(startIndex, nextStartIndex),
+        color: foregroundColor,
+        explanation
+      });
+    }
+    final.push(actual);
+    actual = [];
+    ruleStack = result.ruleStack;
+  }
+  return final;
+}
+function explainThemeScopes(theme, scopes) {
+  let result = [];
+  for (let i = 0, len = scopes.length; i < len; i++) {
+    let parentScopes = scopes.slice(0, i);
+    let scope = scopes[i];
+    result[i] = {
+      scopeName: scope,
+      themeMatches: explainThemeScope(theme, scope, parentScopes)
+    };
+  }
+  return result;
+}
+function matchesOne(selector, scope) {
+  let selectorPrefix = selector + ".";
+  if (selector === scope || scope.substring(0, selectorPrefix.length) === selectorPrefix) {
+    return true;
+  }
+  return false;
+}
+function matches(selector, selectorParentScopes, scope, parentScopes) {
+  if (!matchesOne(selector, scope)) {
+    return false;
+  }
+  let selectorParentIndex = selectorParentScopes.length - 1;
+  let parentIndex = parentScopes.length - 1;
+  while (selectorParentIndex >= 0 && parentIndex >= 0) {
+    if (matchesOne(selectorParentScopes[selectorParentIndex], parentScopes[parentIndex])) {
+      selectorParentIndex--;
+    }
+    parentIndex--;
+  }
+  if (selectorParentIndex === -1) {
+    return true;
+  }
+  return false;
+}
+function explainThemeScope(theme, scope, parentScopes) {
+  let result = [], resultLen = 0;
+  for (let i = 0, len = theme.settings.length; i < len; i++) {
+    let setting = theme.settings[i];
+    let selectors;
+    if (typeof setting.scope === "string") {
+      selectors = setting.scope.split(/,/).map((scope2) => scope2.trim());
+    } else if (Array.isArray(setting.scope)) {
+      selectors = setting.scope;
+    } else {
+      continue;
+    }
+    for (let j = 0, lenJ = selectors.length; j < lenJ; j++) {
+      let rawSelector = selectors[j];
+      let rawSelectorPieces = rawSelector.split(/ /);
+      let selector = rawSelectorPieces[rawSelectorPieces.length - 1];
+      let selectorParentScopes = rawSelectorPieces.slice(0, rawSelectorPieces.length - 1);
+      if (matches(selector, selectorParentScopes, scope, parentScopes)) {
+        result[resultLen++] = setting;
+        j = lenJ;
       }
-      return result;
+    }
+  }
+  return result;
+}
+function renderToHtml(lines, options = {}) {
+  const bg = options.bg || "#fff";
+  let html3 = "";
+  html3 += `<pre class="shiki" style="background-color: ${bg}">`;
+  if (options.langId) {
+    html3 += `<div class="language-id">${options.langId}</div>`;
+  }
+  html3 += `<code>`;
+  lines.forEach((l) => {
+    html3 += `<span class="line">`;
+    l.forEach((token2) => {
+      html3 += `<span style="color: ${token2.color || options.fg}">${escapeHtml(token2.content)}</span>`;
+    });
+    html3 += `</span>
+`;
+  });
+  html3 = html3.replace(/\n*$/, "");
+  html3 += `</code></pre>`;
+  return html3;
+}
+var htmlEscapes = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;"
+};
+function escapeHtml(html3) {
+  return html3.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
+}
+var Registry = class extends import_vscode_textmate.Registry {
+  constructor(_resolver) {
+    super(_resolver);
+    this._resolver = _resolver;
+    this.themesPath = "themes/";
+    this._resolvedThemes = {};
+    this._resolvedGammer = {};
+  }
+  getTheme(theme) {
+    if (typeof theme === "string") {
+      return this._resolvedThemes[theme];
+    } else {
+      return theme;
+    }
+  }
+  async loadTheme(theme) {
+    if (typeof theme === "string") {
+      if (!this._resolvedThemes[theme]) {
+        this._resolvedThemes[theme] = await fetchTheme(`${this.themesPath}${theme}.json`);
+      }
+      return this._resolvedThemes[theme];
+    } else {
+      theme = toShikiTheme(theme);
+      if (theme.name) {
+        this._resolvedThemes[theme.name] = theme;
+      }
+      return theme;
+    }
+  }
+  async loadThemes(themes) {
+    return await Promise.all(themes.map((theme) => this.loadTheme(theme)));
+  }
+  getGrammer(name) {
+    return this._resolvedGammer[name];
+  }
+  async loadLanguage(lang) {
+    const g = await this.loadGrammar(lang.scopeName);
+    this._resolvedGammer[lang.id] = g;
+    if (lang.aliases) {
+      lang.aliases.forEach((la) => {
+        this._resolvedGammer[la] = g;
+      });
+    }
+  }
+  async loadLanguages(langs) {
+    for (const lang of langs) {
+      this._resolver.addLanguage(lang);
+    }
+    for (const lang of langs) {
+      await this.loadLanguage(lang);
     }
   }
 };
-function toResult(value) {
-  if (Array.isArray(value)) {
-    return value;
-  }
-  if (typeof value === "number") {
-    return [CONTINUE, value];
-  }
-  return [value];
+function resolveLang(lang) {
+  return typeof lang === "string" ? languages.find((l) => {
+    var _a;
+    return l.id === lang || ((_a = l.aliases) === null || _a === void 0 ? void 0 : _a.includes(lang));
+  }) : lang;
 }
-
-// node_modules/unist-util-visit/index.js
-var visit = function(tree, test, visitor, reverse) {
-  if (typeof test === "function" && typeof visitor !== "function") {
-    reverse = visitor;
-    visitor = test;
-    test = null;
+function resolveOptions(options) {
+  var _a;
+  let _languages = languages;
+  let _themes = options.themes || [];
+  if ((_a = options.langs) === null || _a === void 0 ? void 0 : _a.length) {
+    _languages = options.langs.map(resolveLang);
   }
-  visitParents(tree, test, overload, reverse);
-  function overload(node, parents) {
-    var parent = parents[parents.length - 1];
-    return visitor(node, parent ? parent.children.indexOf(node) : null, parent);
+  if (options.theme) {
+    _themes.unshift(options.theme);
   }
-};
+  if (!_themes.length) {
+    _themes = ["nord"];
+  }
+  return {_languages, _themes};
+}
+async function getHighlighter(options) {
+  var _a, _b;
+  const {_languages, _themes} = resolveOptions(options);
+  const _resolver = new Resolver(getOnigasm(), "onigasm");
+  const _registry = new Registry(_resolver);
+  const themes = await _registry.loadThemes(_themes);
+  const _defaultTheme = themes[0];
+  await _registry.loadLanguages(_languages);
+  if ((_a = options.paths) === null || _a === void 0 ? void 0 : _a.themes) {
+    _registry.themesPath = options.paths.themes;
+  }
+  if ((_b = options.paths) === null || _b === void 0 ? void 0 : _b.languages) {
+    _resolver.languagesPath = options.paths.languages;
+  }
+  function getTheme(theme) {
+    const _theme = theme ? _registry.getTheme(theme) : _defaultTheme;
+    if (!_theme) {
+      throw Error(`No theme registration for ${theme}`);
+    }
+    _registry.setTheme(_theme);
+    const _colorMap = _registry.getColorMap();
+    return {_theme, _colorMap};
+  }
+  function getGrammer(lang) {
+    const _grammer = _registry.getGrammer(lang);
+    if (!_grammer) {
+      throw Error(`No language registration for ${lang}`);
+    }
+    return {_grammer};
+  }
+  function codeToThemedTokens(code, lang = "text", theme, options2 = {includeExplanation: true}) {
+    if (isPlaintext(lang)) {
+      return [[{content: code}]];
+    }
+    const {_grammer} = getGrammer(lang);
+    const {_theme, _colorMap} = getTheme(theme);
+    return tokenizeWithTheme(_theme, _colorMap, code, _grammer, options2);
+  }
+  function codeToHtml(code, lang = "text", theme) {
+    const tokens = codeToThemedTokens(code, lang, theme, {
+      includeExplanation: false
+    });
+    const {_theme} = getTheme(theme);
+    return renderToHtml(tokens, {
+      fg: _theme.fg,
+      bg: _theme.bg
+    });
+  }
+  async function loadTheme(theme) {
+    await _registry.loadTheme(theme);
+  }
+  async function loadLanguage(lang) {
+    const _lang = resolveLang(lang);
+    _resolver.addLanguage(_lang);
+    await _registry.loadLanguage(_lang);
+  }
+  function getBackgroundColor(theme) {
+    const {_theme} = getTheme(theme);
+    return _theme.bg;
+  }
+  function getForegroundColor(theme) {
+    const {_theme} = getTheme(theme);
+    return _theme.fg;
+  }
+  return {
+    codeToThemedTokens,
+    codeToHtml,
+    loadTheme,
+    loadLanguage,
+    getBackgroundColor,
+    getForegroundColor
+  };
+}
+function isPlaintext(lang) {
+  return !lang || ["plaintext", "txt", "text"].includes(lang);
+}
 
 // node_modules/property-information/lib/util/schema.js
 var Schema = class {
@@ -23620,15 +24598,15 @@ function parse2(value) {
   var index = input.indexOf(",");
   var start = 0;
   var end;
-  var token;
+  var token2;
   while (!end) {
     if (index === -1) {
       index = input.length;
       end = true;
     }
-    token = input.slice(start, index).trim();
-    if (token || !end) {
-      tokens.push(token);
+    token2 = input.slice(start, index).trim();
+    if (token2 || !end) {
+      tokens.push(token2);
     }
     start = index + 1;
     index = input.indexOf(",", start);
@@ -23782,1101 +24760,220 @@ function createAdjustMap(values) {
 // node_modules/hastscript/lib/html.js
 var h = core(html2, "div");
 
-// node_modules/shiki/dist/index.esm.js
-var import_onigasm = __toModule(require_lib3());
-var import_vscode_textmate = __toModule(require_main());
-var languages = [
-  {
-    id: "abap",
-    scopeName: "source.abap",
-    path: "abap.tmLanguage.json"
-  },
-  {
-    id: "actionscript-3",
-    scopeName: "source.actionscript.3",
-    path: "actionscript-3.tmLanguage.json"
-  },
-  {
-    id: "ada",
-    scopeName: "source.ada",
-    path: "ada.tmLanguage.json"
-  },
-  {
-    id: "apex",
-    scopeName: "source.apex",
-    path: "apex.tmLanguage.json"
-  },
-  {
-    id: "applescript",
-    scopeName: "source.applescript",
-    path: "applescript.tmLanguage.json"
-  },
-  {
-    id: "asm",
-    scopeName: "source.asm.x86_64",
-    path: "asm.tmLanguage.json"
-  },
-  {
-    id: "asp-net-razor",
-    scopeName: "text.aspnetcorerazor",
-    path: "asp-net-razor.tmLanguage.json"
-  },
-  {
-    id: "awk",
-    scopeName: "source.awk",
-    path: "awk.tmLanguage.json"
-  },
-  {
-    id: "bat",
-    scopeName: "source.batchfile",
-    path: "bat.tmLanguage.json",
-    aliases: ["batch"]
-  },
-  {
-    id: "c",
-    scopeName: "source.c",
-    path: "c.tmLanguage.json"
-  },
-  {
-    id: "clojure",
-    scopeName: "source.clojure",
-    path: "clojure.tmLanguage.json",
-    aliases: ["clj"]
-  },
-  {
-    id: "cobol",
-    scopeName: "source.cobol",
-    path: "cobol.tmLanguage.json"
-  },
-  {
-    id: "coffee",
-    scopeName: "source.coffee",
-    path: "coffee.tmLanguage.json"
-  },
-  {
-    id: "cpp.embedded.macro",
-    scopeName: "source.cpp.embedded.macro",
-    path: "cpp.embedded.macro.tmLanguage.json"
-  },
-  {
-    id: "cpp",
-    scopeName: "source.cpp",
-    path: "cpp.tmLanguage.json"
-  },
-  {
-    id: "crystal",
-    scopeName: "source.crystal",
-    path: "crystal.tmLanguage.json"
-  },
-  {
-    id: "csharp",
-    scopeName: "source.cs",
-    path: "csharp.tmLanguage.json",
-    aliases: ["c#"]
-  },
-  {
-    id: "css",
-    scopeName: "source.css",
-    path: "css.tmLanguage.json"
-  },
-  {
-    id: "d",
-    scopeName: "source.d",
-    path: "d.tmLanguage.json"
-  },
-  {
-    id: "dart",
-    scopeName: "source.dart",
-    path: "dart.tmLanguage.json"
-  },
-  {
-    id: "diff",
-    scopeName: "source.diff",
-    path: "diff.tmLanguage.json"
-  },
-  {
-    id: "dockerfile",
-    scopeName: "source.dockerfile",
-    path: "dockerfile.tmLanguage.json"
-  },
-  {
-    id: "elixir",
-    scopeName: "source.elixir",
-    path: "elixir.tmLanguage.json"
-  },
-  {
-    id: "elm",
-    scopeName: "source.elm",
-    path: "elm.tmLanguage.json"
-  },
-  {
-    id: "erlang",
-    scopeName: "source.erlang",
-    path: "erlang.tmLanguage.json"
-  },
-  {
-    id: "fsharp",
-    scopeName: "source.fsharp",
-    path: "fsharp.tmLanguage.json",
-    aliases: ["f#"]
-  },
-  {
-    id: "git-commit",
-    scopeName: "text.git-commit",
-    path: "git-commit.tmLanguage.json"
-  },
-  {
-    id: "git-rebase",
-    scopeName: "text.git-rebase",
-    path: "git-rebase.tmLanguage.json"
-  },
-  {
-    id: "gnuplot",
-    scopeName: "source.gnuplot",
-    path: "gnuplot.tmLanguage.json"
-  },
-  {
-    id: "go",
-    scopeName: "source.go",
-    path: "go.tmLanguage.json"
-  },
-  {
-    id: "graphql",
-    scopeName: "source.graphql",
-    path: "graphql.tmLanguage.json"
-  },
-  {
-    id: "groovy",
-    scopeName: "source.groovy",
-    path: "groovy.tmLanguage.json"
-  },
-  {
-    id: "hack",
-    scopeName: "source.hack",
-    path: "hack.tmLanguage.json"
-  },
-  {
-    id: "haml",
-    scopeName: "text.haml",
-    path: "haml.tmLanguage.json"
-  },
-  {
-    id: "handlebars",
-    scopeName: "text.html.handlebars",
-    path: "handlebars.tmLanguage.json",
-    aliases: ["hbs"]
-  },
-  {
-    id: "haskell",
-    scopeName: "source.haskell",
-    path: "haskell.tmLanguage.json"
-  },
-  {
-    id: "hcl",
-    scopeName: "source.hcl",
-    path: "hcl.tmLanguage.json"
-  },
-  {
-    id: "hlsl",
-    scopeName: "source.hlsl",
-    path: "hlsl.tmLanguage.json"
-  },
-  {
-    id: "html-ruby-erb",
-    scopeName: "text.html.erb",
-    path: "html-ruby-erb.tmLanguage.json",
-    aliases: ["erb"]
-  },
-  {
-    id: "html",
-    scopeName: "text.html.basic",
-    path: "html.tmLanguage.json"
-  },
-  {
-    id: "ini",
-    scopeName: "source.ini",
-    path: "ini.tmLanguage.json"
-  },
-  {
-    id: "java",
-    scopeName: "source.java",
-    path: "java.tmLanguage.json"
-  },
-  {
-    id: "javascript",
-    scopeName: "source.js",
-    path: "javascript.tmLanguage.json",
-    aliases: ["js"]
-  },
-  {
-    id: "jinja-html",
-    scopeName: "text.html.jinja",
-    path: "jinja-html.tmLanguage.json"
-  },
-  {
-    id: "jinja",
-    scopeName: "source.jinja",
-    path: "jinja.tmLanguage.json"
-  },
-  {
-    id: "json",
-    scopeName: "source.json",
-    path: "json.tmLanguage.json"
-  },
-  {
-    id: "jsonc",
-    scopeName: "source.json.comments",
-    path: "jsonc.tmLanguage.json"
-  },
-  {
-    id: "jsonnet",
-    scopeName: "source.jsonnet",
-    path: "jsonnet.tmLanguage.json"
-  },
-  {
-    id: "jsx",
-    scopeName: "documentation.injection.js.jsx",
-    path: "jsx.tmLanguage.json"
-  },
-  {
-    id: "julia",
-    scopeName: "source.julia",
-    path: "julia.tmLanguage.json"
-  },
-  {
-    id: "kotlin",
-    scopeName: "source.kotlin",
-    path: "kotlin.tmLanguage.json"
-  },
-  {
-    id: "latex",
-    scopeName: "text.tex.latex",
-    path: "latex.tmLanguage.json",
-    aliases: ["tex"]
-  },
-  {
-    id: "less",
-    scopeName: "source.css.less",
-    path: "less.tmLanguage.json"
-  },
-  {
-    id: "lisp",
-    scopeName: "source.lisp",
-    path: "lisp.tmLanguage.json"
-  },
-  {
-    id: "logo",
-    scopeName: "source.logo",
-    path: "logo.tmLanguage.json"
-  },
-  {
-    id: "lua",
-    scopeName: "source.lua",
-    path: "lua.tmLanguage.json"
-  },
-  {
-    id: "makefile",
-    scopeName: "source.makefile",
-    path: "makefile.tmLanguage.json"
-  },
-  {
-    id: "markdown",
-    scopeName: "text.html.markdown",
-    path: "markdown.tmLanguage.json",
-    aliases: ["md"]
-  },
-  {
-    id: "matlab",
-    scopeName: "source.matlab",
-    path: "matlab.tmLanguage.json"
-  },
-  {
-    id: "mdx",
-    scopeName: "text.html.markdown.jsx",
-    path: "mdx.tmLanguage.json"
-  },
-  {
-    id: "nix",
-    scopeName: "source.nix",
-    path: "nix.tmLanguage.json"
-  },
-  {
-    id: "objective-c",
-    scopeName: "source.objcpp",
-    path: "objective-c.tmLanguage.json",
-    aliases: ["objc"]
-  },
-  {
-    id: "ocaml",
-    scopeName: "source.ocaml",
-    path: "ocaml.tmLanguage.json"
-  },
-  {
-    id: "pascal",
-    scopeName: "source.pascal",
-    path: "pascal.tmLanguage.json"
-  },
-  {
-    id: "perl",
-    scopeName: "source.perl",
-    path: "perl.tmLanguage.json"
-  },
-  {
-    id: "perl6",
-    scopeName: "source.perl.6",
-    path: "perl6.tmLanguage.json"
-  },
-  {
-    id: "php-html",
-    scopeName: "text.html.php",
-    path: "php-html.tmLanguage.json"
-  },
-  {
-    id: "php",
-    scopeName: "source.php",
-    path: "php.tmLanguage.json"
-  },
-  {
-    id: "pls",
-    scopeName: "source.plsql.oracle",
-    path: "pls.tmLanguage.json"
-  },
-  {
-    id: "postcss",
-    scopeName: "source.css.postcss",
-    path: "postcss.tmLanguage.json"
-  },
-  {
-    id: "powershell",
-    scopeName: "source.powershell",
-    path: "powershell.tmLanguage.json",
-    aliases: ["ps", "ps1"]
-  },
-  {
-    id: "prolog",
-    scopeName: "source.prolog",
-    path: "prolog.tmLanguage.json"
-  },
-  {
-    id: "pug",
-    scopeName: "text.pug",
-    path: "pug.tmLanguage.json",
-    aliases: ["jade"]
-  },
-  {
-    id: "puppet",
-    scopeName: "source.puppet",
-    path: "puppet.tmLanguage.json"
-  },
-  {
-    id: "purescript",
-    scopeName: "source.purescript",
-    path: "purescript.tmLanguage.json"
-  },
-  {
-    id: "python",
-    scopeName: "source.python",
-    path: "python.tmLanguage.json",
-    aliases: ["py"]
-  },
-  {
-    id: "r",
-    scopeName: "source.r",
-    path: "r.tmLanguage.json"
-  },
-  {
-    id: "razor",
-    scopeName: "text.html.cshtml",
-    path: "razor.tmLanguage.json"
-  },
-  {
-    id: "ruby",
-    scopeName: "source.ruby",
-    path: "ruby.tmLanguage.json",
-    aliases: ["rb"]
-  },
-  {
-    id: "rust",
-    scopeName: "source.rust",
-    path: "rust.tmLanguage.json"
-  },
-  {
-    id: "sas",
-    scopeName: "source.sas",
-    path: "sas.tmLanguage.json"
-  },
-  {
-    id: "sass",
-    scopeName: "source.sass",
-    path: "sass.tmLanguage.json"
-  },
-  {
-    id: "scala",
-    scopeName: "source.scala",
-    path: "scala.tmLanguage.json"
-  },
-  {
-    id: "scheme",
-    scopeName: "source.scheme",
-    path: "scheme.tmLanguage.json"
-  },
-  {
-    id: "scss",
-    scopeName: "source.css.scss",
-    path: "scss.tmLanguage.json"
-  },
-  {
-    id: "shaderlab",
-    scopeName: "source.shaderlab",
-    path: "shaderlab.tmLanguage.json",
-    aliases: ["shader"]
-  },
-  {
-    id: "shellscript",
-    scopeName: "source.shell",
-    path: "shellscript.tmLanguage.json",
-    aliases: ["shell", "bash", "sh", "zsh"]
-  },
-  {
-    id: "smalltalk",
-    scopeName: "source.smalltalk",
-    path: "smalltalk.tmLanguage.json"
-  },
-  {
-    id: "sql",
-    scopeName: "source.sql",
-    path: "sql.tmLanguage.json"
-  },
-  {
-    id: "ssh-config",
-    scopeName: "source.ssh-config",
-    path: "ssh-config.tmLanguage.json"
-  },
-  {
-    id: "stylus",
-    scopeName: "source.stylus",
-    path: "stylus.tmLanguage.json",
-    aliases: ["styl"]
-  },
-  {
-    id: "swift",
-    scopeName: "source.swift",
-    path: "swift.tmLanguage.json"
-  },
-  {
-    id: "tcl",
-    scopeName: "source.tcl",
-    path: "tcl.tmLanguage.json"
-  },
-  {
-    id: "toml",
-    scopeName: "source.toml",
-    path: "toml.tmLanguage.json"
-  },
-  {
-    id: "ts",
-    scopeName: "documentation.injection.ts",
-    path: "ts.tmLanguage.json"
-  },
-  {
-    id: "tsx",
-    scopeName: "source.tsx",
-    path: "tsx.tmLanguage.json"
-  },
-  {
-    id: "typescript",
-    scopeName: "source.ts",
-    path: "typescript.tmLanguage.json",
-    aliases: ["ts"]
-  },
-  {
-    id: "vb",
-    scopeName: "source.asp.vb.net",
-    path: "vb.tmLanguage.json",
-    aliases: ["cmd"]
-  },
-  {
-    id: "viml",
-    scopeName: "source.viml",
-    path: "viml.tmLanguage.json"
-  },
-  {
-    id: "vue-html",
-    scopeName: "text.html.vue-html",
-    path: "vue-html.tmLanguage.json"
-  },
-  {
-    id: "vue",
-    scopeName: "source.vue",
-    path: "vue.tmLanguage.json"
-  },
-  {
-    id: "wasm",
-    scopeName: "source.wat",
-    path: "wasm.tmLanguage.json"
-  },
-  {
-    id: "xml",
-    scopeName: "text.xml",
-    path: "xml.tmLanguage.json"
-  },
-  {
-    id: "xsl",
-    scopeName: "text.xml.xsl",
-    path: "xsl.tmLanguage.json"
-  },
-  {
-    id: "yaml",
-    scopeName: "source.yaml",
-    path: "yaml.tmLanguage.json"
-  },
-  {
-    id: "\u6587\u8A00",
-    scopeName: "source.wenyan",
-    path: "\u6587\u8A00.tmLanguage.json",
-    aliases: ["wenyan"]
+// node_modules/unist-util-is/index.js
+var convert = function(test) {
+  if (test === void 0 || test === null) {
+    return ok;
   }
-];
-function trimEndSlash(str) {
-  if (str.endsWith("/") || str.endsWith("\\"))
-    return str.slice(0, -1);
-  return str;
-}
-function trimStartDot(str) {
-  if (str.startsWith("./"))
-    return str.slice(2);
-  return str;
-}
-function dirname(str) {
-  const parts = str.split(/[\/\\]/g);
-  return parts[parts.length - 2];
-}
-function join(...parts) {
-  return parts.map(trimEndSlash).map(trimStartDot).join("/");
-}
-var isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof fetch !== "undefined";
-var CDN_ROOT = "";
-var ONIGASM_WASM = "";
-function setCDN(root) {
-  CDN_ROOT = root;
-}
-var _onigasmPromise = null;
-async function getOnigasm() {
-  if (!_onigasmPromise) {
-    let loader;
-    if (isBrowser) {
-      loader = (0, import_onigasm.loadWASM)(ONIGASM_WASM || _resolvePath("dist/onigasm.wasm"));
-    } else {
-      const path = require_path();
-      const onigasmPath = path.join(require.resolve("onigasm"), "../onigasm.wasm");
-      const fs = require_fs();
-      const wasmBin = fs.readFileSync(onigasmPath).buffer;
-      loader = (0, import_onigasm.loadWASM)(wasmBin);
-    }
-    _onigasmPromise = loader.then(() => {
-      return {
-        createOnigScanner(patterns) {
-          return new import_onigasm.OnigScanner(patterns);
-        },
-        createOnigString(s2) {
-          return new import_onigasm.OnigString(s2);
-        }
-      };
-    });
+  if (typeof test === "string") {
+    return typeFactory(test);
   }
-  return _onigasmPromise;
-}
-function _resolvePath(filepath) {
-  if (isBrowser) {
-    if (!CDN_ROOT) {
-      console.warn("[Shiki] no CDN provider found, use `setCDN()` to specify the CDN for loading the resources before calling `getHighlighter()`");
-    }
-    return `${CDN_ROOT}${filepath}`;
-  } else {
-    const path = require_path();
-    if (path.isAbsolute(filepath)) {
-      return filepath;
-    } else {
-      return path.resolve(__dirname, "..", filepath);
-    }
+  if (typeof test === "object") {
+    return "length" in test ? anyFactory(test) : propsFactory(test);
   }
-}
-async function _fetchAssets(filepath) {
-  const path = _resolvePath(filepath);
-  if (isBrowser) {
-    return await fetch(path).then((r) => r.text());
-  } else {
-    const fs = require_fs();
-    return await fs.promises.readFile(path, "utf-8");
+  if (typeof test === "function") {
+    return castFactory(test);
   }
-}
-async function _fetchJSONAssets(filepath) {
-  return JSON.parse(await _fetchAssets(filepath));
-}
-async function fetchTheme(themePath) {
-  let theme = await _fetchJSONAssets(themePath);
-  const shikiTheme = toShikiTheme(theme);
-  if (shikiTheme.include) {
-    const includedTheme = await fetchTheme(join(dirname(themePath), shikiTheme.include));
-    if (includedTheme.settings) {
-      shikiTheme.settings = shikiTheme.settings.concat(includedTheme.settings);
-    }
-    if (includedTheme.bg && !shikiTheme.bg) {
-      shikiTheme.bg = includedTheme.bg;
-    }
-  }
-  return shikiTheme;
-}
-async function fetchGrammar(filepath) {
-  const content = await _fetchAssets(filepath);
-  return JSON.parse(content);
-}
-function repairTheme(theme) {
-  if (theme.settings[0].settings && !theme.settings[0].scope) {
-    return;
-  }
-  theme.settings.unshift({
-    settings: {
-      foreground: theme.fg,
-      background: theme.bg
-    }
-  });
-}
-function toShikiTheme(rawTheme) {
-  const shikiTheme = Object.assign(Object.assign({}, rawTheme), getThemeDefaultColors(rawTheme));
-  if (rawTheme.include) {
-    shikiTheme.include = rawTheme.include;
-  }
-  if (rawTheme.tokenColors) {
-    shikiTheme.settings = rawTheme.tokenColors;
-  }
-  repairTheme(shikiTheme);
-  return shikiTheme;
-}
-var VSCODE_FALLBACK_EDITOR_FG = {light: "#333333", dark: "#bbbbbb"};
-var VSCODE_FALLBACK_EDITOR_BG = {light: "#fffffe", dark: "#1e1e1e"};
-function getThemeDefaultColors(theme) {
-  var _a, _b, _c, _d, _e, _f;
-  let fg, bg;
-  let settings = theme.settings ? theme.settings : theme.tokenColors;
-  const globalSetting = settings ? settings.find((s2) => {
-    return !s2.name && !s2.scope;
-  }) : void 0;
-  if ((_a = globalSetting === null || globalSetting === void 0 ? void 0 : globalSetting.settings) === null || _a === void 0 ? void 0 : _a.foreground) {
-    fg = globalSetting.settings.foreground;
-  }
-  if ((_b = globalSetting === null || globalSetting === void 0 ? void 0 : globalSetting.settings) === null || _b === void 0 ? void 0 : _b.background) {
-    bg = globalSetting.settings.background;
-  }
-  if (!fg && ((_d = (_c = theme) === null || _c === void 0 ? void 0 : _c.colors) === null || _d === void 0 ? void 0 : _d["editor.foreground"])) {
-    fg = theme.colors["editor.foreground"];
-  }
-  if (!bg && ((_f = (_e = theme) === null || _e === void 0 ? void 0 : _e.colors) === null || _f === void 0 ? void 0 : _f["editor.background"])) {
-    bg = theme.colors["editor.background"];
-  }
-  if (!fg) {
-    fg = theme.type === "light" ? VSCODE_FALLBACK_EDITOR_FG.light : VSCODE_FALLBACK_EDITOR_FG.dark;
-  }
-  if (!bg) {
-    bg = theme.type === "light" ? VSCODE_FALLBACK_EDITOR_BG.light : VSCODE_FALLBACK_EDITOR_BG.dark;
-  }
-  return {
-    fg,
-    bg
-  };
-}
-var Resolver = class {
-  constructor(onigLibPromise, onigLibName) {
-    this.languagesPath = "languages/";
-    this.languageMap = {};
-    this.scopeToLangMap = {};
-    this._onigLibPromise = onigLibPromise;
-    this._onigLibName = onigLibName;
-  }
-  get onigLib() {
-    return this._onigLibPromise;
-  }
-  getOnigLibName() {
-    return this._onigLibName;
-  }
-  getLangRegistration(langIdOrAlias) {
-    return this.languageMap[langIdOrAlias];
-  }
-  async loadGrammar(scopeName) {
-    const lang = this.scopeToLangMap[scopeName];
-    if (!lang) {
-      return null;
-    }
-    if (lang.grammar) {
-      return lang.grammar;
-    }
-    const g = await fetchGrammar(languages.includes(lang) ? `${this.languagesPath}${lang.path}` : lang.path);
-    lang.grammar = g;
-    return g;
-  }
-  addLanguage(l) {
-    this.languageMap[l.id] = l;
-    if (l.aliases) {
-      l.aliases.forEach((a) => {
-        this.languageMap[a] = l;
-      });
-    }
-    this.scopeToLangMap[l.scopeName] = l;
-  }
+  throw new Error("Expected function, string, or object as test");
 };
-var StackElementMetadata = class {
-  static toBinaryStr(metadata) {
-    let r = metadata.toString(2);
-    while (r.length < 32) {
-      r = "0" + r;
+function anyFactory(tests) {
+  var checks2 = [];
+  var index = -1;
+  while (++index < tests.length) {
+    checks2[index] = convert(tests[index]);
+  }
+  return castFactory(any);
+  function any(...parameters) {
+    var index2 = -1;
+    while (++index2 < checks2.length) {
+      if (checks2[index2].call(this, ...parameters))
+        return true;
     }
-    return r;
   }
-  static printMetadata(metadata) {
-    let languageId = StackElementMetadata.getLanguageId(metadata);
-    let tokenType = StackElementMetadata.getTokenType(metadata);
-    let fontStyle = StackElementMetadata.getFontStyle(metadata);
-    let foreground = StackElementMetadata.getForeground(metadata);
-    let background = StackElementMetadata.getBackground(metadata);
-    console.log({
-      languageId,
-      tokenType,
-      fontStyle,
-      foreground,
-      background
-    });
-  }
-  static getLanguageId(metadata) {
-    return (metadata & 255) >>> 0;
-  }
-  static getTokenType(metadata) {
-    return (metadata & 1792) >>> 8;
-  }
-  static getFontStyle(metadata) {
-    return (metadata & 14336) >>> 11;
-  }
-  static getForeground(metadata) {
-    return (metadata & 8372224) >>> 14;
-  }
-  static getBackground(metadata) {
-    return (metadata & 4286578688) >>> 23;
-  }
-  static set(metadata, languageId, tokenType, fontStyle, foreground, background) {
-    let _languageId = StackElementMetadata.getLanguageId(metadata);
-    let _tokenType = StackElementMetadata.getTokenType(metadata);
-    let _fontStyle = StackElementMetadata.getFontStyle(metadata);
-    let _foreground = StackElementMetadata.getForeground(metadata);
-    let _background = StackElementMetadata.getBackground(metadata);
-    if (languageId !== 0) {
-      _languageId = languageId;
-    }
-    if (tokenType !== 0) {
-      _tokenType = tokenType === 8 ? 0 : tokenType;
-    }
-    if (fontStyle !== -1) {
-      _fontStyle = fontStyle;
-    }
-    if (foreground !== 0) {
-      _foreground = foreground;
-    }
-    if (background !== 0) {
-      _background = background;
-    }
-    return (_languageId << 0 | _tokenType << 8 | _fontStyle << 11 | _foreground << 14 | _background << 23) >>> 0;
-  }
-};
-function tokenizeWithTheme(theme, colorMap, fileContents, grammar, options) {
-  let lines = fileContents.split(/\r\n|\r|\n/);
-  let ruleStack = null;
-  let actual = [];
-  let final = [];
-  for (let i = 0, len = lines.length; i < len; i++) {
-    let line = lines[i];
-    if (line === "") {
-      actual = [];
-      final.push([]);
-      continue;
-    }
-    let resultWithScopes = grammar.tokenizeLine(line, ruleStack);
-    let tokensWithScopes = resultWithScopes.tokens;
-    let result = grammar.tokenizeLine2(line, ruleStack);
-    let tokensLength = result.tokens.length / 2;
-    let tokensWithScopesIndex = 0;
-    for (let j = 0; j < tokensLength; j++) {
-      let startIndex = result.tokens[2 * j];
-      let nextStartIndex = j + 1 < tokensLength ? result.tokens[2 * j + 2] : line.length;
-      if (startIndex === nextStartIndex) {
-        continue;
-      }
-      let metadata = result.tokens[2 * j + 1];
-      let foreground = StackElementMetadata.getForeground(metadata);
-      let foregroundColor = colorMap[foreground];
-      let explanation = [];
-      if (options.includeExplanation) {
-        let offset = 0;
-        while (startIndex + offset < nextStartIndex) {
-          let tokenWithScopes = tokensWithScopes[tokensWithScopesIndex];
-          let tokenWithScopesText = line.substring(tokenWithScopes.startIndex, tokenWithScopes.endIndex);
-          offset += tokenWithScopesText.length;
-          explanation.push({
-            content: tokenWithScopesText,
-            scopes: explainThemeScopes(theme, tokenWithScopes.scopes)
-          });
-          tokensWithScopesIndex++;
-        }
-      }
-      actual.push({
-        content: line.substring(startIndex, nextStartIndex),
-        color: foregroundColor,
-        explanation
-      });
-    }
-    final.push(actual);
-    actual = [];
-    ruleStack = result.ruleStack;
-  }
-  return final;
 }
-function explainThemeScopes(theme, scopes) {
-  let result = [];
-  for (let i = 0, len = scopes.length; i < len; i++) {
-    let parentScopes = scopes.slice(0, i);
-    let scope = scopes[i];
-    result[i] = {
-      scopeName: scope,
-      themeMatches: explainThemeScope(theme, scope, parentScopes)
-    };
-  }
-  return result;
-}
-function matchesOne(selector, scope) {
-  let selectorPrefix = selector + ".";
-  if (selector === scope || scope.substring(0, selectorPrefix.length) === selectorPrefix) {
+function propsFactory(check) {
+  return castFactory(all);
+  function all(node) {
+    var key;
+    for (key in check) {
+      if (node[key] !== check[key])
+        return;
+    }
     return true;
   }
-  return false;
 }
-function matches(selector, selectorParentScopes, scope, parentScopes) {
-  if (!matchesOne(selector, scope)) {
-    return false;
+function typeFactory(check) {
+  return castFactory(type);
+  function type(node) {
+    return node && node.type === check;
   }
-  let selectorParentIndex = selectorParentScopes.length - 1;
-  let parentIndex = parentScopes.length - 1;
-  while (selectorParentIndex >= 0 && parentIndex >= 0) {
-    if (matchesOne(selectorParentScopes[selectorParentIndex], parentScopes[parentIndex])) {
-      selectorParentIndex--;
-    }
-    parentIndex--;
-  }
-  if (selectorParentIndex === -1) {
-    return true;
-  }
-  return false;
 }
-function explainThemeScope(theme, scope, parentScopes) {
-  let result = [], resultLen = 0;
-  for (let i = 0, len = theme.settings.length; i < len; i++) {
-    let setting = theme.settings[i];
-    let selectors;
-    if (typeof setting.scope === "string") {
-      selectors = setting.scope.split(/,/).map((scope2) => scope2.trim());
-    } else if (Array.isArray(setting.scope)) {
-      selectors = setting.scope;
-    } else {
-      continue;
-    }
-    for (let j = 0, lenJ = selectors.length; j < lenJ; j++) {
-      let rawSelector = selectors[j];
-      let rawSelectorPieces = rawSelector.split(/ /);
-      let selector = rawSelectorPieces[rawSelectorPieces.length - 1];
-      let selectorParentScopes = rawSelectorPieces.slice(0, rawSelectorPieces.length - 1);
-      if (matches(selector, selectorParentScopes, scope, parentScopes)) {
-        result[resultLen++] = setting;
-        j = lenJ;
-      }
-    }
+function castFactory(check) {
+  return assertion;
+  function assertion(...parameters) {
+    return Boolean(check.call(this, ...parameters));
   }
-  return result;
 }
-function renderToHtml(lines, options = {}) {
-  const bg = options.bg || "#fff";
-  let html3 = "";
-  html3 += `<pre class="shiki" style="background-color: ${bg}">`;
-  if (options.langId) {
-    html3 += `<div class="language-id">${options.langId}</div>`;
-  }
-  html3 += `<code>`;
-  lines.forEach((l) => {
-    html3 += `<span class="line">`;
-    l.forEach((token) => {
-      html3 += `<span style="color: ${token.color || options.fg}">${escapeHtml(token.content)}</span>`;
-    });
-    html3 += `</span>
-`;
-  });
-  html3 = html3.replace(/\n*$/, "");
-  html3 += `</code></pre>`;
-  return html3;
+function ok() {
+  return true;
 }
-var htmlEscapes = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#39;"
-};
-function escapeHtml(html3) {
-  return html3.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
+
+// node_modules/unist-util-visit-parents/color.browser.js
+function color(d) {
+  return d;
 }
-var Registry = class extends import_vscode_textmate.Registry {
-  constructor(_resolver) {
-    super(_resolver);
-    this._resolver = _resolver;
-    this.themesPath = "themes/";
-    this._resolvedThemes = {};
-    this._resolvedGammer = {};
+
+// node_modules/unist-util-visit-parents/index.js
+var CONTINUE = true;
+var SKIP = "skip";
+var EXIT = false;
+var visitParents = function(tree, test, visitor, reverse) {
+  if (typeof test === "function" && typeof visitor !== "function") {
+    reverse = visitor;
+    visitor = test;
+    test = null;
   }
-  getTheme(theme) {
-    if (typeof theme === "string") {
-      return this._resolvedThemes[theme];
-    } else {
-      return theme;
-    }
-  }
-  async loadTheme(theme) {
-    if (typeof theme === "string") {
-      if (!this._resolvedThemes[theme]) {
-        this._resolvedThemes[theme] = await fetchTheme(`${this.themesPath}${theme}.json`);
-      }
-      return this._resolvedThemes[theme];
-    } else {
-      theme = toShikiTheme(theme);
-      if (theme.name) {
-        this._resolvedThemes[theme.name] = theme;
-      }
-      return theme;
-    }
-  }
-  async loadThemes(themes) {
-    return await Promise.all(themes.map((theme) => this.loadTheme(theme)));
-  }
-  getGrammer(name) {
-    return this._resolvedGammer[name];
-  }
-  async loadLanguage(lang) {
-    const g = await this.loadGrammar(lang.scopeName);
-    this._resolvedGammer[lang.id] = g;
-    if (lang.aliases) {
-      lang.aliases.forEach((la) => {
-        this._resolvedGammer[la] = g;
+  var is = convert(test);
+  var step = reverse ? -1 : 1;
+  factory(tree, null, [])();
+  function factory(node, index, parents) {
+    var value = typeof node === "object" && node !== null ? node : {};
+    var name;
+    if (typeof value.type === "string") {
+      name = typeof value.tagName === "string" ? value.tagName : typeof value.name === "string" ? value.name : void 0;
+      Object.defineProperty(visit2, "name", {
+        value: "node (" + color(value.type + (name ? "<" + name + ">" : "")) + ")"
       });
     }
-  }
-  async loadLanguages(langs) {
-    for (const lang of langs) {
-      this._resolver.addLanguage(lang);
-    }
-    for (const lang of langs) {
-      await this.loadLanguage(lang);
+    return visit2;
+    function visit2() {
+      var result = [];
+      var subresult;
+      var offset;
+      var grandparents;
+      if (!test || is(node, index, parents[parents.length - 1] || null)) {
+        result = toResult(visitor(node, parents));
+        if (result[0] === EXIT) {
+          return result;
+        }
+      }
+      if (node.children && result[0] !== SKIP) {
+        offset = (reverse ? node.children.length : -1) + step;
+        grandparents = parents.concat(node);
+        while (offset > -1 && offset < node.children.length) {
+          subresult = factory(node.children[offset], offset, grandparents)();
+          if (subresult[0] === EXIT) {
+            return subresult;
+          }
+          offset = typeof subresult[1] === "number" ? subresult[1] : offset + step;
+        }
+      }
+      return result;
     }
   }
 };
-function resolveLang(lang) {
-  return typeof lang === "string" ? languages.find((l) => {
-    var _a;
-    return l.id === lang || ((_a = l.aliases) === null || _a === void 0 ? void 0 : _a.includes(lang));
-  }) : lang;
+function toResult(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  if (typeof value === "number") {
+    return [CONTINUE, value];
+  }
+  return [value];
 }
-function resolveOptions(options) {
-  var _a;
-  let _languages = languages;
-  let _themes = options.themes || [];
-  if ((_a = options.langs) === null || _a === void 0 ? void 0 : _a.length) {
-    _languages = options.langs.map(resolveLang);
+
+// node_modules/unist-util-visit/index.js
+var visit = function(tree, test, visitor, reverse) {
+  if (typeof test === "function" && typeof visitor !== "function") {
+    reverse = visitor;
+    visitor = test;
+    test = null;
   }
-  if (options.theme) {
-    _themes.unshift(options.theme);
+  visitParents(tree, test, overload, reverse);
+  function overload(node, parents) {
+    var parent = parents[parents.length - 1];
+    return visitor(node, parent ? parent.children.indexOf(node) : null, parent);
   }
-  if (!_themes.length) {
-    _themes = ["nord"];
-  }
-  return {_languages, _themes};
+};
+
+// src/utils.ts
+function s2(css) {
+  const toKebabCase = (s3) => s3.replace(/(.)([A-Z])/g, "$1-$2").toLowerCase();
+  return Object.entries(css).map(([k, v]) => `${toKebabCase(k)}: ${v}`).join("; ");
 }
-async function getHighlighter(options) {
-  var _a, _b;
-  const {_languages, _themes} = resolveOptions(options);
-  const _resolver = new Resolver(getOnigasm(), "onigasm");
-  const _registry = new Registry(_resolver);
-  const themes = await _registry.loadThemes(_themes);
-  const _defaultTheme = themes[0];
-  await _registry.loadLanguages(_languages);
-  if ((_a = options.paths) === null || _a === void 0 ? void 0 : _a.themes) {
-    _registry.themesPath = options.paths.themes;
-  }
-  if ((_b = options.paths) === null || _b === void 0 ? void 0 : _b.languages) {
-    _resolver.languagesPath = options.paths.languages;
-  }
-  function getTheme(theme) {
-    const _theme = theme ? _registry.getTheme(theme) : _defaultTheme;
-    if (!_theme) {
-      throw Error(`No theme registration for ${theme}`);
-    }
-    _registry.setTheme(_theme);
-    const _colorMap = _registry.getColorMap();
-    return {_theme, _colorMap};
-  }
-  function getGrammer(lang) {
-    const _grammer = _registry.getGrammer(lang);
-    if (!_grammer) {
-      throw Error(`No language registration for ${lang}`);
-    }
-    return {_grammer};
-  }
-  function codeToThemedTokens(code, lang = "text", theme, options2 = {includeExplanation: true}) {
-    if (isPlaintext(lang)) {
-      return [[{content: code}]];
-    }
-    const {_grammer} = getGrammer(lang);
-    const {_theme, _colorMap} = getTheme(theme);
-    return tokenizeWithTheme(_theme, _colorMap, code, _grammer, options2);
-  }
-  function codeToHtml(code, lang = "text", theme) {
-    const tokens = codeToThemedTokens(code, lang, theme, {
-      includeExplanation: false
-    });
-    const {_theme} = getTheme(theme);
-    return renderToHtml(tokens, {
-      fg: _theme.fg,
-      bg: _theme.bg
-    });
-  }
-  async function loadTheme(theme) {
-    await _registry.loadTheme(theme);
-  }
-  async function loadLanguage(lang) {
-    const _lang = resolveLang(lang);
-    _resolver.addLanguage(_lang);
-    await _registry.loadLanguage(_lang);
-  }
-  function getBackgroundColor(theme) {
-    const {_theme} = getTheme(theme);
-    return _theme.bg;
-  }
-  function getForegroundColor(theme) {
-    const {_theme} = getTheme(theme);
-    return _theme.fg;
-  }
-  return {
-    codeToThemedTokens,
-    codeToHtml,
-    loadTheme,
-    loadLanguage,
-    getBackgroundColor,
-    getForegroundColor
-  };
+function findCodeNodes(tree) {
+  const nodes = [];
+  visit(tree, {type: "element", tagName: "code"}, (node, index, parent) => nodes.push({node, index, parent}));
+  return nodes;
 }
-function isPlaintext(lang) {
-  return !lang || ["plaintext", "txt", "text"].includes(lang);
+function findHeadNode(tree) {
+  let headNode = null;
+  visit(tree, {type: "element", tagName: "head"}, (head) => {
+    headNode = head;
+  });
+  return headNode;
+}
+
+// src/style.css
+var style_default = 'pre.advanced-code {\n    padding-top: 0.5em;\n    padding-bottom: 0.5em;\n    counter-reset: lineNumbers;\n}\n\npre.advanced-code .codeblock-line:before {\n    counter-increment: lineNumbers;\n    content: counter(lineNumbers);\n    text-align: right;\n    display: inline-block;\n    width: 2rem;\n    margin-right: 20px;\n    color: dimgrey;\n    border-right: 1px dotted dimgrey;\n    padding-right: 3px;\n}\n\npre.advanced-code .codeblock-line[data-highlight="true"] {\n    background-color: darkgreen;\n}\n\npre.advanced-code .codeblock-line[data-highlight="true"]:before {\n    color: white;\n}';
+
+// src/elements.ts
+function token(color2, content) {
+  const style2 = color2 ? s2({color: color2}) : s2({});
+  return h("span", {style: style2}, content);
+}
+function codeblockLine(highlighted, children) {
+  const props = highlighted ? {dataHighlight: "true"} : {};
+  const c = children.length === 0 ? " " : children;
+  return h(".codeblock-line", props, c);
+}
+function stylesheet() {
+  return h("style", {type: "text/css"}, style_default);
+}
+
+// node_modules/clsx/dist/clsx.m.js
+function toVal(mix) {
+  var k, y, str = "";
+  if (typeof mix === "string" || typeof mix === "number") {
+    str += mix;
+  } else if (typeof mix === "object") {
+    if (Array.isArray(mix)) {
+      for (k = 0; k < mix.length; k++) {
+        if (mix[k]) {
+          if (y = toVal(mix[k])) {
+            str && (str += " ");
+            str += y;
+          }
+        }
+      }
+    } else {
+      for (k in mix) {
+        if (mix[k]) {
+          str && (str += " ");
+          str += k;
+        }
+      }
+    }
+  }
+  return str;
+}
+function clsx_m_default() {
+  var i = 0, tmp, x, str = "";
+  while (i < arguments.length) {
+    if (tmp = arguments[i++]) {
+      if (x = toVal(tmp)) {
+        str && (str += " ");
+        str += x;
+      }
+    }
+  }
+  return str;
+}
+
+// src/cleanupCode.ts
+function cleanupCode(rawCode) {
+  const trimEmptyLines = (code) => code.replace(/(^\n+)|(\n+$)/g, "");
+  return trimEmptyLines(rawCode);
 }
 
 // src/index.ts
@@ -24894,13 +24991,20 @@ function transformInlineCode(highlighter, lang, node) {
 function transformCodeBlock(highlighter, lang, node, parent) {
   var _a;
   const meta = parseMeta((_a = node.data) == null ? void 0 : _a.meta);
-  const code = node.children[0].value;
-  const tokens = highlighter.codeToThemedTokens(code, lang);
-  node.children = tokens.map((line, zeroIndexedLineNumber) => h(".codeblock-line", meta.highlightedLines.includes(zeroIndexedLineNumber + 1) ? {dataHighlight: true} : {}, line.length === 0 ? " " : line.map((token) => h("span", {style: `color: ${token.color || "inherit"}`}, token.content))));
+  const rawCode = node.children[0].value;
+  const code = cleanupCode(rawCode);
+  const lines = highlighter.codeToThemedTokens(code, lang);
+  node.children = lines.map((line, zeroIndexedLineNumber) => codeblockLine(meta.highlightedLines.includes(zeroIndexedLineNumber + 1), line.map((t) => token(t.color, t.content))));
   if (!parent.properties) {
     parent.properties = {style: ""};
   }
-  parent.properties.style = `padding: 0.5em; color: ${highlighter.getForegroundColor()}; background-color: ${highlighter.getBackgroundColor()}; ${parent.properties.style || ""}`;
+  parent.properties = __spreadProps(__spreadValues({}, parent.properties), {
+    className: clsx_m_default("advanced-code", parent.properties.className)
+  });
+  parent.properties.style = s2({
+    color: highlighter.getForegroundColor(),
+    backgroundColor: highlighter.getBackgroundColor()
+  }) + (parent.properties.style || "");
 }
 var advancedCodeBlock = function advancedCodeBlock2() {
   const transformCode = async (node, index, parent) => {
@@ -24924,8 +25028,16 @@ var advancedCodeBlock = function advancedCodeBlock2() {
     }
   };
   return async function codeBlockProcessor(tree) {
-    const nodes = [];
-    visit(tree, {type: "element", tagName: "code"}, (node, index, parent) => nodes.push({node, index, parent}));
+    const nodes = findCodeNodes(tree);
+    const headNode = findHeadNode(tree);
+    if (headNode && !headNode.children) {
+      headNode.children = [stylesheet()];
+    } else if (headNode) {
+      headNode.children.push(stylesheet());
+    } else if (nodes.length > 0) {
+      const root = tree;
+      root.children = [stylesheet(), ...root.children];
+    }
     await Promise.all(nodes.map(({node, index, parent}) => transformCode(node, index, parent)));
   };
 };
