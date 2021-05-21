@@ -2,10 +2,14 @@ const esbuild = require("esbuild");
 
 const commonOptions = {
   entryPoints: ["./src/index.ts"],
+  bundle: true,
   platform: "node",
   target: "node14",
   logLevel: "debug",
   watch: process.env.WATCH === "true",
+  loader: {
+    ".css": "text",
+  },
 };
 
 const buildEsm = () =>
@@ -18,7 +22,6 @@ const buildEsm = () =>
 const buildCjs = () =>
   esbuild.build({
     ...commonOptions,
-    bundle: true,
     external: ["shiki"],
     format: "cjs",
     outdir: "dist/cjs",
@@ -28,7 +31,6 @@ const buildDemo = () =>
   esbuild.build({
     ...commonOptions,
     entryPoints: ["demo/demo.src.js"],
-    bundle: true,
     platform: "browser",
     format: "esm",
     outfile: "demo/demo.mjs",

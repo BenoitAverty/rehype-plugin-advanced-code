@@ -21,7 +21,7 @@ describe("Remark / Rehype", () => {
     await page.setContent(withDocument(result.contents));
     const screenshot = await page.screenshot();
     expect(screenshot).toMatchImageSnapshot({
-      failureThreshold: 0.01,
+      failureThreshold: 0.001,
       failureThresholdType: "percent",
     });
   });
@@ -43,9 +43,6 @@ function withDocument(markup) {
   <html>
   <head>
     <title>Sample document</title>
-    <style type="text/css">
-    pre > code { display: block; }
-    </style>
   </head>
   <body>
   <h1>Plugin result: </h1>

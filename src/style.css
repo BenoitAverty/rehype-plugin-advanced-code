@@ -1,0 +1,25 @@
+pre.advanced-code {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    counter-reset: lineNumbers;
+}
+
+pre.advanced-code .codeblock-line:before {
+    counter-increment: lineNumbers;
+    content: counter(lineNumbers);
+    text-align: right;
+    display: inline-block;
+    width: 2rem;
+    margin-right: 20px;
+    color: dimgrey;
+    border-right: 1px dotted dimgrey;
+    padding-right: 3px;
+}
+
+pre.advanced-code .codeblock-line[data-highlight="true"] {
+    background-color: darkgreen;
+}
+
+pre.advanced-code .codeblock-line[data-highlight="true"]:before {
+    color: white;
+}

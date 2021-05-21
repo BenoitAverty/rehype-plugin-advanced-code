@@ -20,6 +20,9 @@
           height: 300px;
           resize: vertical;
       }
+      body {
+          font-size: 1.5em;
+      }
   </style>
 </head>
 <body>
@@ -43,7 +46,7 @@ fn main() {
   <form>
     <button id="submitRemark">Convert Markdown</button>
     <textarea id="editorRemark">
-```javascript
+```javascript [1,2]
 function hello(name) {
   console.log(`Hello, ${name}!`);
 }

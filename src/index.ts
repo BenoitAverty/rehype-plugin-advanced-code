@@ -1,16 +1,11 @@
 import type { Attacher } from "unified";
 import type { Element, Properties } from "hast";
-import { visit } from "unist-util-visit";
-import { h } from "hastscript";
 import { getHighlighter, Highlighter, Lang } from "shiki";
 import { Parent } from "unist";
-
-interface CodeNode extends Element {
-  tagName: "code";
-  data?: {
-    meta?: string;
-  };
-}
+import { codeblockLine, stylesheet, token } from "./elements";
+import type { CodeNode } from "./utils";
+import { findCodeNodes, findHeadNode, s } from "./utils";
+import clsx from "clsx";
 
 interface PreNode extends Element {
   tagName: "pre";
@@ -57,22 +52,11 @@ function transformCodeBlock(
   const meta = parseMeta(node.data?.meta);
 
   const code = node.children[0].value as string; // We know it's a string because of the condition in `transformCode`
-  const tokens = highlighter.codeToThemedTokens(code, lang);
-  node.children = tokens.map((line, zeroIndexedLineNumber) =>
-    h(
-      ".codeblock-line",
-      meta.highlightedLines.includes(zeroIndexedLineNumber + 1)
-        ? { dataHighlight: true }
-        : {},
-      line.length === 0
-        ? " " // empty div would collapse to zero height.
-        : line.map((token) =>
-            h(
-              "span",
-              { style: `color: ${token.color || "inherit"}` },
-              token.content,
-            ),
-          ),
+  const lines = highlighter.codeToThemedTokens(code, lang);
+  node.children = lines.map((line, zeroIndexedLineNumber) =>
+    codeblockLine(
+      meta.highlightedLines.includes(zeroIndexedLineNumber + 1),
+      line.map((t) => token(t.color, t.content)),
     ),
   );
 
@@ -81,9 +65,16 @@ function transformCodeBlock(
     parent.properties = { style: "" };
   }
 
-  parent.properties.style = `padding: 0.5em; color: ${highlighter.getForegroundColor()}; background-color: ${highlighter.getBackgroundColor()}; ${
-    parent.properties.style || ""
-  }`;
+  parent.properties = {
+    ...parent.properties,
+    className: clsx("advanced-code", parent.properties.className),
+  };
+
+  parent.properties.style =
+    s({
+      color: highlighter.getForegroundColor(),
+      backgroundColor: highlighter.getBackgroundColor(),
+    }) + (parent.properties.style || "");
 }
 
 const advancedCodeBlock: Attacher = function advancedCodeBlock() {
@@ -122,16 +113,17 @@ const advancedCodeBlock: Attacher = function advancedCodeBlock() {
   };
 
   return async function codeBlockProcessor(tree) {
-    const nodes: Array<{
-      node: CodeNode;
-      index: number | null;
-      parent: Parent | null;
-    }> = [];
-    visit<CodeNode>(
-      tree,
-      { type: "element", tagName: "code" },
-      (node, index, parent) => nodes.push({ node, index, parent }),
-    );
+    const nodes = findCodeNodes(tree);
+    const headNode = findHeadNode(tree);
+
+    if (headNode && !headNode.children) {
+      headNode.children = [stylesheet()];
+    } else if (headNode) {
+      (headNode as Parent).children.push(stylesheet());
+    } else if (nodes.length > 0) {
+      const root = tree as Parent;
+      root.children = [stylesheet(), ...root.children];
+    }
 
     await Promise.all(
       nodes.map(({ node, index, parent }) =>

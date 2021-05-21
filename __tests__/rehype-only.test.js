@@ -22,7 +22,7 @@ describe("Rehype only", () => {
     await page.setContent(result.contents);
     const screenshot = await page.screenshot();
     expect(screenshot).toMatchImageSnapshot({
-      failureThreshold: 0.01,
+      failureThreshold: 0.001,
       failureThresholdType: "percent",
     });
   });
