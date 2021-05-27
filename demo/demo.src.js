@@ -8,6 +8,7 @@ import { setCDN } from "shiki";
 
 setCDN("https://unpkg.com/shiki/");
 
+const themeSelector = document.getElementById("themeSelector");
 const previewRemarkDiv = document.getElementById("previewRemark");
 const previewRehypeDiv = document.getElementById("previewRehype");
 const editorRemark = document.getElementById("editorRemark");
@@ -18,7 +19,7 @@ const submitRehype = document.getElementById("submitRehype");
 function convertRehype() {
   unified()
     .use(rehypeParse)
-    .use(rehypePluginAdvancedCode)
+    .use(rehypePluginAdvancedCode, { theme: themeSelector.value })
     .use(rehypeStringify)
     .process(editorRehype.value)
     .then((newMarkup) => {
@@ -43,7 +44,7 @@ function convertRemark() {
   unified()
     .use(remarkParse)
     .use(remarkRehype)
-    .use(rehypePluginAdvancedCode)
+    .use(rehypePluginAdvancedCode, { theme: themeSelector.value })
     .use(rehypeStringify)
     .process(editorRemark.value)
     .then((newMarkup) => {

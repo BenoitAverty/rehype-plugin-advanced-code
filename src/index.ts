@@ -1,36 +1,22 @@
 import type { Attacher } from "unified";
 import type { Element, Properties } from "hast";
-import { getHighlighter, Highlighter, Lang } from "shiki";
+import { getHighlighter, Highlighter, IThemeRegistration, Lang } from "shiki";
 import { Parent } from "unist";
 import { codeblockLine, stylesheet, token } from "./elements";
 import type { CodeNode } from "./utils";
-import { findCodeNodes, findHeadNode, s } from "./utils";
+import {
+  findCodeNodes,
+  findHeadNode,
+  parseLanguage,
+  parseMeta,
+  s,
+} from "./utils";
 import clsx from "clsx";
 import cleanupCode from "./cleanupCode";
 
 interface PreNode extends Element {
   tagName: "pre";
   properties?: Properties;
-}
-
-type CodeMetadata = {
-  highlightedLines: number[];
-};
-
-function parseMeta(value: string | null | undefined): CodeMetadata {
-  return value
-    ? { highlightedLines: JSON.parse(value) }
-    : { highlightedLines: [] };
-}
-
-function parseLanguage(className?: string): Lang | null {
-  if (!className || className === "") return null;
-
-  const languageClasses = className
-    .split(" ")
-    .filter((c) => c.startsWith("language-"))
-    .map((c) => c.substring(c.indexOf("-") + 1));
-  return languageClasses.length > 0 ? (languageClasses[0] as Lang) : null;
 }
 
 function transformInlineCode(
@@ -79,60 +65,69 @@ function transformCodeBlock(
     }) + (parent.properties.style || "");
 }
 
-const advancedCodeBlock: Attacher = function advancedCodeBlock() {
-  const transformCode = async (
-    node: CodeNode,
-    index: number | null,
-    parent: Parent | null,
-  ) => {
-    const lang: Lang | null = parseLanguage(String(node.properties?.className));
-
-    if (
-      lang === null ||
-      node.children.length !== 1 ||
-      node.children[0].type !== "text"
-    ) {
-      return;
-    }
-
-    if (
-      parent === null ||
-      parent.type !== "element" ||
-      parent.tagName !== "pre"
-    ) {
-      const highlighter = await getHighlighter({
-        theme: "monokai",
-        langs: [lang],
-      });
-      return transformInlineCode(highlighter, lang, node);
-    } else {
-      const highlighter = await getHighlighter({
-        theme: "monokai",
-        langs: [lang],
-      });
-      return transformCodeBlock(highlighter, lang, node, parent as PreNode);
-    }
-  };
-
-  return async function codeBlockProcessor(tree) {
-    const nodes = findCodeNodes(tree);
-    const headNode = findHeadNode(tree);
-
-    if (headNode && !headNode.children) {
-      headNode.children = [stylesheet()];
-    } else if (headNode) {
-      (headNode as Parent).children.push(stylesheet());
-    } else if (nodes.length > 0) {
-      const root = tree as Parent;
-      root.children = [stylesheet(), ...root.children];
-    }
-
-    await Promise.all(
-      nodes.map(({ node, index, parent }) =>
-        transformCode(node, index, parent),
-      ),
-    );
-  };
+export type AdvancedCodeSettings = {
+  theme?: IThemeRegistration;
 };
+
+const advancedCodeBlock: Attacher<AdvancedCodeSettings[]> =
+  function advancedCodeBlock(settings: AdvancedCodeSettings) {
+    const theme = (settings && settings.theme) || "monokai";
+
+    const transformCode = async (
+      node: CodeNode,
+      index: number | null,
+      parent: Parent | null,
+    ) => {
+      const lang: Lang | null = parseLanguage(
+        String(node.properties?.className),
+      );
+
+      if (
+        lang === null ||
+        node.children.length !== 1 ||
+        node.children[0].type !== "text"
+      ) {
+        return;
+      }
+
+      if (
+        parent === null ||
+        parent.type !== "element" ||
+        parent.tagName !== "pre"
+      ) {
+        const highlighter = await getHighlighter({
+          theme,
+          langs: [lang],
+        });
+        return transformInlineCode(highlighter, lang, node);
+      } else {
+        const highlighter = await getHighlighter({
+          theme,
+          langs: [lang],
+        });
+        return transformCodeBlock(highlighter, lang, node, parent as PreNode);
+      }
+    };
+
+    return async function codeBlockProcessor(tree) {
+      const nodes = findCodeNodes(tree);
+      const headNode = findHeadNode(tree);
+
+      if (headNode && !headNode.children) {
+        headNode.children = [stylesheet()];
+      } else if (headNode) {
+        (headNode as Parent).children.push(stylesheet());
+      } else if (nodes.length > 0) {
+        const root = tree as Parent;
+        root.children = [stylesheet(), ...root.children];
+      }
+
+      await Promise.all(
+        nodes.map(({ node, index, parent }) =>
+          transformCode(node, index, parent),
+        ),
+      );
+    };
+  };
 
 export default advancedCodeBlock;

@@ -2,6 +2,7 @@ import { Properties as CssProperties } from "csstype";
 import { Parent } from "unist";
 import { visit } from "unist-util-visit";
 import type { Element, Node } from "hast";
+import { Lang } from "shiki";
 
 export interface CodeNode extends Element {
   tagName: "code";
@@ -9,6 +10,10 @@ export interface CodeNode extends Element {
     meta?: string;
   };
 }
+
+export type CodeMetadata = {
+  highlightedLines: number[];
+};
 
 export function s(css: CssProperties): string {
   // This doesn't work for 1 letter words. aBCd => a-bcd instead of a-b-cd.
@@ -30,7 +35,9 @@ export function findCodeNodes(tree: Node) {
   visit<CodeNode>(
     tree,
     { type: "element", tagName: "code" },
-    (node, index, parent) => nodes.push({ node, index, parent }),
+    (node, index, parent) => {
+      nodes.push({ node, index, parent });
+    },
   );
 
   return nodes;
@@ -44,4 +51,20 @@ export function findHeadNode(tree: Node): Node | null {
   });
 
   return headNode;
+}
+
+export function parseMeta(value: string | null | undefined): CodeMetadata {
+  return value
+    ? { highlightedLines: JSON.parse(value) }
+    : { highlightedLines: [] };
+}
+
+export function parseLanguage(className?: string): Lang | null {
+  if (!className || className === "") return null;
+
+  const languageClasses = className
+    .split(" ")
+    .filter((c) => c.startsWith("language-"))
+    .map((c) => c.substring(c.indexOf("-") + 1));
+  return languageClasses.length > 0 ? (languageClasses[0] as Lang) : null;
 }

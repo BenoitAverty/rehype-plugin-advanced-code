@@ -16,7 +16,9 @@ const testCases = fs
 
 describe("Remark / Rehype", () => {
   test.each(testCases)("%s", async (name, markdown) => {
-    const result = await processMarkdown(markdown);
+    const matches = name.match(/[a-zA-Z0-9-]+\.([a-z-]+)\.md/);
+    const theme = matches ? matches[1] : undefined;
+    const result = await processMarkdown(theme, markdown);
 
     await page.setContent(withDocument(result.contents));
     const screenshot = await page.screenshot();
@@ -27,11 +29,11 @@ describe("Remark / Rehype", () => {
   });
 });
 
-function processMarkdown(input) {
+function processMarkdown(theme, input) {
   return unified()
     .use(remarkParse)
     .use(remarkRehype)
-    .use(advancedCodeBlock)
+    .use(advancedCodeBlock, { theme })
     .use(rehypeFormat)
     .use(rehypeStringify)
     .process(`${input}`);

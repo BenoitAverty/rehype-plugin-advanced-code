@@ -16,8 +16,10 @@ const testCases = fs
 describe("Rehype only", () => {
   test.each(testCases)("%s", async (name, markup) => {
     const input = withDocument(markup);
+    const matches = name.match(/[a-zA-Z0-9-]+\.([a-z-]+)\.html/);
+    const theme = matches ? matches[1] : undefined;
 
-    const result = await processMarkup(input);
+    const result = await processMarkup(theme, input);
 
     await page.setContent(result.contents);
     const screenshot = await page.screenshot();
@@ -28,10 +30,10 @@ describe("Rehype only", () => {
   });
 });
 
-function processMarkup(input) {
+function processMarkup(theme, input) {
   return unified()
     .use(rehypeParse)
-    .use(advancedCodeBlock)
+    .use(advancedCodeBlock, { theme })
     .use(rehypeFormat)
     .use(rehypeStringify)
     .process(input);
